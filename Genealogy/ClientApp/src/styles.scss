@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+
+* {
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+@media (min-width: 768px) {
+    .sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    .page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .wrapper.toggled .sidebar-wrapper {
+        margin-left: -15rem;
+    }
+}
