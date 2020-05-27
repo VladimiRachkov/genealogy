@@ -1,25 +1,26 @@
 using System;
 using Genealogy.Models;
+using Genealogy.Repository.Abstract;
 
 namespace Genealogy.Repository.Concrete
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        private readonly GenealogyContext _GenealogyContext;
+        private readonly GenealogyContext _genealogyContext;
 
-        public PersonRepository PersonRepository => personRepository ?? new PersonRepository(_GenealogyContext);
+        public PersonRepository PersonRepository => personRepository ?? new PersonRepository(_genealogyContext);
         private PersonRepository personRepository;
-        public CemeteryRepository CemeteryRepository => cemeteryRepository ?? new CemeteryRepository(_GenealogyContext);
+        public CemeteryRepository CemeteryRepository => cemeteryRepository ?? new CemeteryRepository(_genealogyContext);
         private CemeteryRepository cemeteryRepository;
 
-        public UnitOfWork(GenealogyContext GenealogyContext)
+        public UnitOfWork(GenealogyContext genealogyContext)
         {
-            _GenealogyContext = GenealogyContext;
+            _genealogyContext = genealogyContext;
         }
 
         public void Save()
         {
-            _GenealogyContext.SaveChanges();
+            _genealogyContext.SaveChanges();
         }
 
         #region Disposed
@@ -31,7 +32,7 @@ namespace Genealogy.Repository.Concrete
             {
                 if (disposing)
                 {
-                    _GenealogyContext.Dispose();
+                    _genealogyContext.Dispose();
                 }
             }
             this.disposed = true;
