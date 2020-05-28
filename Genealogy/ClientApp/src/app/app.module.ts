@@ -5,13 +5,15 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { ComponentModule } from "./components/component.module";
 import { PageModule } from './pages/page.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule.withServerTransition({ appId: "serverApp" }),
+    BrowserModule.withServerTransition({ appId: "genealogy" }),
     ComponentModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule.forRoot(),
   ],
   exports: [],
   providers: [],

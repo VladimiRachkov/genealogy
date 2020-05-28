@@ -1,20 +1,8 @@
-@import "~bootstrap/dist/css/bootstrap.css";
+@import "../node_modules/modern-css-reset/dist/reset.css";
 
-* {
-    font-family: Georgia, "Times New Roman", Times, serif;
-}
-
-@media (min-width: 768px) {
-    .sidebar-wrapper {
-        margin-left: 0;
-    }
-
-    .page-content-wrapper {
-        min-width: 0;
-        width: 100%;
-    }
-
-    .wrapper.toggled .sidebar-wrapper {
-        margin-left: -15rem;
-    }
+*,
+body {
+    overflow-x: hidden;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 14px;
 }

@@ -30,6 +30,5 @@ namespace Genealogy.Controllers
             }
             return Ok(resultCemetery);
         }
-
     }
 }
