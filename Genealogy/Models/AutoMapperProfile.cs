@@ -10,6 +10,8 @@ namespace Genealogy.Models
         {
             CreateMap<CemeteryDto, Cemetery>();
             CreateMap<Cemetery, CemeteryDto>();
+            CreateMap<PersonDto, Person>();
+            CreateMap<Person, PersonDto>();
         }
     }
 }

@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { ArchiveComponent } from './archive.component';
+import { GakoComponent } from './gako.component';
 
-describe('ArchiveComponent', () => {
-  let component: ArchiveComponent;
-  let fixture: ComponentFixture<ArchiveComponent>;
+describe('GakoComponent', () => {
+  let component: GakoComponent;
+  let fixture: ComponentFixture<GakoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ArchiveComponent ]
+      declarations: [ GakoComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ArchiveComponent);
+    fixture = TestBed.createComponent(GakoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

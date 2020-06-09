@@ -28,6 +28,8 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<bool>("Removed");
+
                     b.HasKey("Id");
 
                     b.ToTable("Cemeteries");
@@ -40,7 +42,7 @@ namespace Genealogy.Migrations
 
                     b.Property<Guid?>("CemeteryId");
 
-                    b.Property<DateTime>("FinishDate");
+                    b.Property<string>("FinishDate");
 
                     b.Property<string>("Firstname");
 
@@ -48,9 +50,11 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("Patronymic");
 
+                    b.Property<bool>("Removed");
+
                     b.Property<string>("Source");
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<string>("StartDate");
 
                     b.HasKey("Id");
 

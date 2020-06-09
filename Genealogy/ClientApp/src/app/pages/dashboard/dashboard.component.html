@@ -3,25 +3,23 @@
     <div class="col-12">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#description">Кладбища</a>
+          <a class="nav-link active" data-toggle="tab" href="#gako">Описи ГАКО</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#characteristics">Описи ГАКО</a>
+          <a class="nav-link" data-toggle="tab" href="#cemeteries">Места захоронения</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" data-toggle="tab" href="#opinion">Справочник</a>
         </li>
       </ul>
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="description">
+        <div class="tab-pane fade show active" id="gako">
+          <app-gako></app-gako>
+        </div>
+        <div class="tab-pane fade" id="cemeteries">
           <app-cemetery></app-cemetery>
         </div>
-        <div class="tab-pane fade" id="characteristics">
-          Характеристики товара...
-        </div>
-        <div class="tab-pane fade" id="opinion">
-          Отзывы...
-        </div>
+        <div class="tab-pane fade" id="opinion"></div>
       </div>
     </div>
   </div>

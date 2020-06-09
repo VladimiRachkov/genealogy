@@ -1,0 +1,81 @@
+<div class="row pt-2">
+  <div class="col-md-6 col-lg-8">
+    <app-table
+      [data]="tableData"
+      [selectedId]="selectedPerson?.id"
+      (onChange)="changePerson($event)"
+      (onRemove)="markAsRemovedPerson($event)"
+    ></app-table>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <form [formGroup]="personForm" (ngSubmit)="addPerson()">
+      <div class="form-group">
+        <label for="lastname">Фамилия</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lastname"
+          aria-describedby="lastname"
+          placeholder="Введите фамилию"
+          formControlName="lastname"
+        />
+      </div>
+      <div class="form-group">
+        <label for="firstname">Имя</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstname"
+          aria-describedby="firstname"
+          placeholder="Введите имя"
+          formControlName="firstname"
+        />
+      </div>
+      <div class="form-group">
+        <label for="patronymic">Отчество</label>
+        <input
+          type="text"
+          class="form-control"
+          id="patronymic"
+          aria-describedby="patronymic"
+          placeholder="Введите имя"
+          formControlName="patronymic"
+        />
+      </div>
+      <div class="form-group">
+        <label for="startDate">Дата рождения</label>
+        <input
+          type="text"
+          class="form-control"
+          id="startDate"
+          aria-describedby="startDate"
+          placeholder="Введите имя"
+          formControlName="startDate"
+        />
+      </div>
+      <div class="form-group">
+        <label for="finishDate">Дата смерти</label>
+        <input
+          type="text"
+          class="form-control"
+          id="finishDate"
+          aria-describedby="finishDate"
+          placeholder="Введите имя"
+          formControlName="finishDate"
+        />
+      </div>
+      <div class="form-group" *ngIf="cemeteryList$ | async as cemeteryList">
+        <label for="finishDate">Место захоронения</label>
+        <select class="form-control" formControlName="cemeteryId">
+          <option *ngFor="let item of cemeteryList" [value]="item.id">{{ item.name }}</option>
+        </select>
+      </div>
+      <input type="hidden" formControlName="id" />
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="submit" class="btn btn-primary" [disabled]="personForm.invalid || selectedPerson">Добавить</button>
+        <button type="button" class="btn btn-primary" [disabled]="selectedPerson === null" (click)="updatePerson()">Изменить</button>
+        <button type="reset" class="btn btn-primary" (click)="resetForm()">Очистить</button>
+      </div>
+    </form>
+  </div>
+</div>

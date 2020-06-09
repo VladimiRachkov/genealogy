@@ -4,9 +4,8 @@ import { PageModule } from './pages/page.module';
 import { StartComponent } from './pages/start/start.component';
 import { CatalogComponent } from './pages/catalog/catalog.component';
 import { NecropolisComponent } from './pages/necropolis/necropolis.component';
-import { ArchiveComponent } from './pages/archive/archive.component';
 import { LoginComponent } from './pages/login/login.component';
-import { DashboardModule } from './pages/dashboard/dashboard.module';
+import { GakoComponent } from './pages/gako/gako.component';
 
 const routes: Routes = [
   {
@@ -22,8 +21,8 @@ const routes: Routes = [
     component: CatalogComponent,
   },
   {
-    path: 'archive',
-    component: ArchiveComponent,
+    path: 'gako',
+    component: GakoComponent,
   },
   {
     path: 'dashboard',

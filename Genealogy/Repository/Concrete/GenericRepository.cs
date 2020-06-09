@@ -58,7 +58,7 @@ namespace Genealogy.Repository.Concrete
                 dbSet.Add(entity);
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }
