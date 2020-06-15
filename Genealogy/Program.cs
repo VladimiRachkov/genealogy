@@ -1,6 +1,6 @@
+
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-
 
 namespace SpaPrerendering
 {
@@ -8,11 +8,14 @@ namespace SpaPrerendering
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            //DataBaseAccess.CreateDB();
+            BuildWebHost(args).Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
     }
 }

@@ -6,6 +6,7 @@ using Genealogy.Service.Astract;
 using Genealogy.Service.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
@@ -58,6 +59,20 @@ namespace SpaPrerendering
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+
+            app.UseStaticFiles();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseMvc(routes =>
             {
