@@ -20,9 +20,12 @@ namespace Genealogy.Service.Concrete
             {
                 var names = filter.Fio.Split(' ').ToList();
 
-                int[] scores = new int[7] { 1, 2, 3, 4, 5, 6, 7 };
+                int[] scores = null;
                 switch (names.Count())
                 {
+                    case 1:
+                        scores = new int[7] { 1, 2, 3, 4, 5, 6, 7 };
+                        break;
                     case 2:
                         scores = new int[5] { 3, 5, 6, 7, 8 };
                         break;

@@ -6,6 +6,11 @@ export class FetchPersonList {
   constructor(readonly payload: PersonFilter) {}
 }
 
+export class ClearPersonList {
+  static readonly type = '[Person] Clear Person List';
+  constructor() {}
+}
+
 export class GetPerson {
   static readonly type = '[Person] Get Person';
   constructor(readonly payload: PersonFilter) {}

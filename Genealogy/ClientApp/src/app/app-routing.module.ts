@@ -9,7 +9,7 @@ import { GakoComponent } from './pages/gako/gako.component';
 
 const routes: Routes = [
   {
-    path: 'start',
+    path: '',
     component: StartComponent,
   },
   {
@@ -33,7 +33,7 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: '*',
+    path: '**',
     component: StartComponent,
   },
 ];
