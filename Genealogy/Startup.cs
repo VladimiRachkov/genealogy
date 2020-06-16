@@ -1,3 +1,4 @@
+using System.IO;
 using AutoMapper;
 using Genealogy.Models;
 using Genealogy.Repository.Abstract;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 namespace SpaPrerendering
 {
@@ -29,11 +31,13 @@ namespace SpaPrerendering
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // In production, the Angular files will be served from this directory
+            // ConfigureServices
+            // Correct RootPath to your angular app build, based on angular.json prop
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "ClientApp/dist/browser";
             });
+
             services.AddScoped<IGenealogyService, GenealogyService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<DbContext, GenealogyContext>();
@@ -60,10 +64,13 @@ namespace SpaPrerendering
                 app.UseDeveloperExceptionPage();
             }
 
-            var provider = new FileExtensionContentTypeProvider();
+            // Configure
+            // In order to serve files
             app.UseStaticFiles(new StaticFileOptions
             {
-                ContentTypeProvider = provider // this is not set by default
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "ClientApp", "dist/browser")),
+                RequestPath = ""
             });
 
             app.UseMvc(routes =>
