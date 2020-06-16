@@ -64,14 +64,7 @@ namespace SpaPrerendering
                 app.UseDeveloperExceptionPage();
             }
 
-            // Configure
-            // In order to serve files
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "ClientApp", "dist/browser")),
-                RequestPath = ""
-            });
+
 
             app.UseMvc(routes =>
             {
@@ -100,7 +93,19 @@ namespace SpaPrerendering
 
                 if (env.IsDevelopment())
                 {
+
                     spa.UseAngularCliServer(npmScript: "start");
+                }
+                else
+                {
+                    // Configure
+                    // In order to serve files
+                    app.UseStaticFiles(new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), "ClientApp", "dist/browser")),
+                        RequestPath = ""
+                    });
                 }
             });
         }

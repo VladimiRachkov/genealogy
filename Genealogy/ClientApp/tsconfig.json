@@ -20,7 +20,8 @@
       "@mdl/*": ["app/models/*"],
       "@shared/*": ["app/shared/*"],
       "@act/*": ["app/actions/*"],
-      "@state/*": ["app/states/*"]
+      "@state/*": ["app/states/*"],
+      "@enums/*": ["app/enums/*"]
     }
   },
   "angularCompilerOptions": {

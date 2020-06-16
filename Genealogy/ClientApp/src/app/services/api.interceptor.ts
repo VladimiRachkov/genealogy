@@ -2,14 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { NotifierService } from 'angular-notifier';
+import { NOTIFICATIONS } from '@enums/notifications';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
+  constructor(private notifierService: NotifierService) {}
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     req.headers.set('Content-Type', 'application/json');
     req.headers.set('Session', '123456789');
 
-    const authReq = req.clone({ 
+    const authReq = req.clone({
       headers: req.headers,
     });
     return next.handle(authReq).pipe(
@@ -19,7 +22,14 @@ export class ApiInterceptor implements HttpInterceptor {
         },
         err => {
           if (err instanceof HttpErrorResponse) {
-            if (err.status == 401) console.log('Unauthorized');
+            switch (err.status) {
+              case 401:
+                this.notifierService.notify('error', NOTIFICATIONS.NOT_AUTHORIZED, 'NOT_AUTHORIZED');
+                break;
+              case 500:
+                this.notifierService.notify('error', NOTIFICATIONS.SERVER_ERROR, 'SERVER_ERROR');
+                break;
+            }
           }
         }
       )

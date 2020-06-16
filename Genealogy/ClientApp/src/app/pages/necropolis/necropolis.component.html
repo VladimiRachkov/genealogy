@@ -1,3 +1,37 @@
-<p>
-  Раздел в разработке
-</p>
+<div class="auth-container" *ngIf="!hasAuth; else searchPanel">
+  <p>Для доступа к разделу выполните вход или зарегистрируйтесь</p>
+  <p class="text-danger">В данный момент этот функционал не реализован. Нажмите на кнопку "Открыть"</p>
+  <app-auth-form></app-auth-form>
+  <button class="btn btn-danger" (click)="open()">Открыть</button>
+</div>
+
+<ng-template #searchPanel>
+  <div class="row justify-content-center">
+    <div class="col-3 pt-2">
+      <form class="form-inline md-form mr-auto mb-4" [formGroup]="searchForm" (ngSubmit)="search()">
+        <input class="form-control" type="text" placeholder="Поиск по ФИО" aria-label="Search" formControlName="fio" required />
+        <button class="btn btn-link" type="submit">Искать</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <table class="table" *ngIf="personList">
+        <thead>
+          <tr>
+            <th scope="col">ФИО</th>
+            <th scope="col">Даты</th>
+            <th scope="col">Место захоронения</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of personList">
+            <td>{{ item.lastname }} {{ item.firstname }} {{ item.patronymic }}</td>
+            <td>{{ item.startDate }} - {{ item.finishDate }}</td>
+            <td>{{ item.cemetery.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

@@ -13,6 +13,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SharedModule } from '@shared/shared.module';
 import { PersonState } from './states/person.state';
 import { CemeteryState } from '@state/cemetery.state';
+import { NotifierModule } from "angular-notifier";
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { CemeteryState } from '@state/cemetery.state';
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     SharedModule,
+    NotifierModule
   ],
   exports: [],
   providers: [

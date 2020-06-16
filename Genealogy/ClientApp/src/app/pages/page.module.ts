@@ -6,10 +6,12 @@ import { NecropolisComponent } from './necropolis/necropolis.component';
 import { LoginComponent } from './login/login.component';
 import { GakoComponent } from './gako/gako.component';
 import { SharedModule } from '@shared/shared.module';
+import { NotifierService } from 'angular-notifier';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
   exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent],
   declarations: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent],
+  providers: [NotifierService]
 })
 export class PageModule {}
