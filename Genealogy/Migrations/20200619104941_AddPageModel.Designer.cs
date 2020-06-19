@@ -3,15 +3,17 @@ using System;
 using Genealogy.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Genealogy.Migrations
 {
     [DbContext(typeof(GenealogyContext))]
-    partial class GenealogyContextModelSnapshot : ModelSnapshot
+    [Migration("20200619104941_AddPageModel")]
+    partial class AddPageModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,24 +35,6 @@ namespace Genealogy.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cemeteries");
-                });
-
-            modelBuilder.Entity("Genealogy.Models.Page", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Content");
-
-                    b.Property<string>("Name");
-
-                    b.Property<bool>("Removed");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Page");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Person", b =>

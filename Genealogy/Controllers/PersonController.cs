@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Genealogy.Models.Domain.Dtos;
 using Genealogy.Service.Helpers;
 using Genealogy.Service.Astract;
 using Genealogy.Models;
 using System.Collections.Generic;
 using System;
-using Genealogy.Models.Domain.Filters;
+
 
 namespace Genealogy.Controllers
 {

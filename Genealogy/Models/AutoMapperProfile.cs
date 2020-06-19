@@ -1,6 +1,5 @@
 using AutoMapper;
 using Genealogy.Models;
-using Genealogy.Models.Domain.Dtos;
 
 namespace Genealogy.Models
 {
@@ -10,8 +9,12 @@ namespace Genealogy.Models
         {
             CreateMap<CemeteryDto, Cemetery>();
             CreateMap<Cemetery, CemeteryDto>();
+
             CreateMap<PersonDto, Person>();
             CreateMap<Person, PersonDto>();
+            
+            CreateMap<PageDto, Page>();
+            CreateMap<Page, PageDto>();
         }
     }
 }

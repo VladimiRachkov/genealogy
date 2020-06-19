@@ -5,49 +5,50 @@ using Genealogy.Models;
 using System.Collections.Generic;
 using System;
 
+
 namespace Genealogy.Controllers
 {
     [Produces("application/json")]
-    [Route("api/cemetery")]
-    public class CemeteryController : Controller
+    [Route("api/page")]
+    public class PageController : Controller
     {
         private IGenealogyService _genealogyService;
-        public CemeteryController(IGenealogyService genealogyService)
+        public PageController(IGenealogyService genealogyService)
         {
             _genealogyService = genealogyService;
         }
-
         /// <summary>
-        /// Добавить кладбище
+        /// Добавить страницу
         /// </summary>
-        /// <param name="newCemetery"></param>
+        /// <param name="newPage"></param>-
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Add([FromBody] CemeteryDto newCemetery)
+        public IActionResult Add([FromBody] PageDto newPage)
         {
-            CemeteryDto resultCemetery = null;
+            PageDto resultPage = null;
             try
             {
-                resultCemetery = _genealogyService.AddCemetery(newCemetery);
+                resultPage = _genealogyService.AddPage(newPage);
             }
             catch (AppException ex)
             {
                 return BadRequest(ex.Message);
             }
-            return Ok(resultCemetery);
+            return Ok(resultPage);
         }
 
         /// <summary>
-        /// Получить список кладбищ
+        /// Получить страницу
         /// </summary>
+        /// <param name="filter"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get([FromQuery] CemeteryFilter filter)
+        public IActionResult Get([FromQuery] PageFilter filter)
         {
-            List<CemeteryDto> result = null;
+            PageDto result = null;
             try
             {
-                result = _genealogyService.GetCemetery(filter);
+                result = _genealogyService.GetPage(filter);
             }
             catch (AppException ex)
             {
@@ -57,44 +58,49 @@ namespace Genealogy.Controllers
         }
 
         /// <summary>
-        /// Изменить поля 
+        /// Пометить как удаленное
         /// </summary>
-        /// <param name="changedCemetery"></param>
+        /// <param name="changedPage"></param>
         /// <returns></returns>
         [HttpPost("markasremoved")]
-        public IActionResult MarkAsRemoved([FromBody] CemeteryDto changedCemetery)
+        public IActionResult MarkAsRemoved([FromBody] PageDto changedPage)
         {
-            CemeteryDto resultCemetery = null;
-            if (changedCemetery != null && changedCemetery.Id != null && changedCemetery.Id != Guid.Empty)
+            PageDto resultPage = null;
+            if (changedPage != null && changedPage.Id != null && changedPage.Id != Guid.Empty)
             {
                 try
                 {
-                    resultCemetery = _genealogyService.MarkAsRemovedCemetery(changedCemetery.Id.Value);
+                    resultPage = _genealogyService.MarkAsRemovedPage(changedPage.Id);
                 }
                 catch (AppException ex)
                 {
                     return BadRequest(ex.Message);
                 }
-                return Ok(resultCemetery);
+                return Ok(resultPage);
             }
             return new NoContentResult();
         }
 
+        /// <summary>
+        /// Изменить страницу
+        /// </summary>
+        /// <param name="changedPage"></param>
+        /// <returns></returns>
         [HttpPut]
-        public IActionResult Put([FromBody] CemeteryDto changedCemetery)
+        public IActionResult Put([FromBody] PageDto changedPage)
         {
-            CemeteryDto resultCemetery = null;
-            if (changedCemetery != null && changedCemetery.Id != null && changedCemetery.Id != Guid.Empty)
+            PageDto resultPage = null;
+            if (changedPage != null && changedPage.Id != null && changedPage.Id != Guid.Empty)
             {
                 try
                 {
-                    resultCemetery = _genealogyService.ChangeCemetery(changedCemetery);
+                    resultPage = _genealogyService.ChangePage(changedPage);
                 }
                 catch (AppException ex)
                 {
                     return BadRequest(ex.Message);
                 }
-                return Ok(resultCemetery);
+                return Ok(resultPage);
             }
             return new NoContentResult();
         }

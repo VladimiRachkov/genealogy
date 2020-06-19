@@ -2,10 +2,8 @@ using System;
 
 namespace Genealogy.Models
 {
-    public class CemeteryFilter
+    public class PageFilter
     {
         public Guid Id { get; set; }
-        public bool Removed { get; set; }
-
     }
 }

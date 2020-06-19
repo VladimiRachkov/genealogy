@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Genealogy.Models.Domain.Dtos;
-using Genealogy.Models.Domain.Filters;
+using Genealogy.Models;
 
 namespace Genealogy.Service.Astract
 {

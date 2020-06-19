@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Genealogy.Models;
-using Genealogy.Models.Domain.Dtos;
-using Genealogy.Models.Domain.Filters;
 using Genealogy.Service.Astract;
+
 
 namespace Genealogy.Service.Concrete
 {

@@ -12,6 +12,8 @@ namespace Genealogy.Repository.Concrete
         private PersonRepository personRepository;
         public CemeteryRepository CemeteryRepository => cemeteryRepository ?? new CemeteryRepository(_genealogyContext);
         private CemeteryRepository cemeteryRepository;
+        public PageRepository PageRepository => pageRepository ?? new PageRepository(_genealogyContext);
+        private PageRepository pageRepository;
 
         public UnitOfWork(GenealogyContext genealogyContext)
         {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Genealogy.Models.Domain.Filters
+namespace Genealogy.Models
 {
     public class PersonFilter
     {

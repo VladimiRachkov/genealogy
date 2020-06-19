@@ -1,6 +1,6 @@
 using System;
 
-namespace Genealogy.Models.Domain.Dtos
+namespace Genealogy.Models
 {
     public class CemeteryDto
     {

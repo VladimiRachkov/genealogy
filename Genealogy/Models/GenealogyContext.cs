@@ -6,6 +6,7 @@ namespace Genealogy.Models
     {
         public DbSet<Person> Persons { get; set; }
         public DbSet<Cemetery> Cemeteries { get; set; }
+        public DbSet<Page> Page { get; set; }
         public GenealogyContext(DbContextOptions<GenealogyContext> options) : base(options) { }
 
     }
