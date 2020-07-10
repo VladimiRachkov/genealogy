@@ -3,6 +3,7 @@ import { Store } from '@ngxs/store';
 import { GetPage } from '@act/page.actions';
 import { PageFilter } from '@mdl/filters/page.filter';
 import { SafeHtmlPipe } from '@shared/pipes/safehtml.pipe';
+import { Page } from '@mdl/page';
 
 @Component({
   selector: 'app-start',
@@ -11,7 +12,7 @@ import { SafeHtmlPipe } from '@shared/pipes/safehtml.pipe';
   providers: [],
 })
 export class StartComponent implements OnInit {
-  page: string;
+  page: Page;
   constructor(private store: Store) {}
 
   ngOnInit() {
