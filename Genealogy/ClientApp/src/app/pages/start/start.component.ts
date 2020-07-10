@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { GetPage } from '@act/page.actions';
 import { PageFilter } from '@mdl/filters/page.filter';
-import { SafeHtmlPipe } from '@shared/pipes/safehtml.pipe';
 import { Page } from '@mdl/page';
 
 @Component({
