@@ -13,7 +13,10 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SharedModule } from '@shared/shared.module';
 import { PersonState } from './states/person.state';
 import { CemeteryState } from '@state/cemetery.state';
-import { NotifierModule } from "angular-notifier";
+import { NotifierModule } from 'angular-notifier';
+import { PageState } from '@state/page.state';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,13 +25,15 @@ import { NotifierModule } from "angular-notifier";
     ComponentModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([PersonState, CemeteryState], {
+    NgxsModule.forRoot([PersonState, CemeteryState, PageState], {
       developmentMode: !environment.production,
     }),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     SharedModule,
-    NotifierModule
+    NotifierModule,
+    NgbModule,
+    AngularEditorModule
   ],
   exports: [],
   providers: [
@@ -38,6 +43,7 @@ import { NotifierModule } from "angular-notifier";
       useClass: ApiInterceptor,
       multi: true,
     },
+    NgbModal,
   ],
   bootstrap: [AppComponent],
 })

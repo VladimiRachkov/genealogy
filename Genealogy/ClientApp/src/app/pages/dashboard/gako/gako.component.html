@@ -3,8 +3,8 @@
     <app-table
       [data]="tableData"
       [selectedId]="selectedPerson?.id"
-      (onChange)="changePerson($event)"
-      (onRemove)="markAsRemovedPerson($event)"
+      (change)="changePerson($event)"
+      (remove)="markAsRemovedPerson($event)"
     ></app-table>
   </div>
   <div class="col-md-6 col-lg-4">

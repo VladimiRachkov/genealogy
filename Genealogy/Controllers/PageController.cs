@@ -45,7 +45,7 @@ namespace Genealogy.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery] PageFilter filter)
         {
-            PageDto result = null;
+            List<PageDto> result = null;
             try
             {
                 result = _genealogyService.GetPage(filter);
@@ -70,7 +70,7 @@ namespace Genealogy.Controllers
             {
                 try
                 {
-                    resultPage = _genealogyService.MarkAsRemovedPage(changedPage.Id);
+                    resultPage = _genealogyService.MarkAsRemovedPage(changedPage.Id.Value);
                 }
                 catch (AppException ex)
                 {

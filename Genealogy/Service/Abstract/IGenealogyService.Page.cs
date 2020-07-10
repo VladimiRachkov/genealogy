@@ -6,7 +6,7 @@ namespace Genealogy.Service.Astract
 {
     partial interface IGenealogyService
     {
-        PageDto GetPage(PageFilter filter);
+        List<PageDto> GetPage(PageFilter filter);
         PageDto AddPage(PageDto newPage);
         PageDto MarkAsRemovedPage(Guid id);
         PageDto ChangePage(PageDto pageDto);

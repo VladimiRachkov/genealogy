@@ -3,8 +3,8 @@
     <app-table
       [data]="tableData"
       [selectedId]="selectedCemetery?.id"
-      (onChange)="changeCemetery($event)"
-      (onRemove)="markAsRemovedCemetery($event)"
+      (change)="changeCemetery($event)"
+      (remove)="markAsRemovedCemetery($event)"
     ></app-table>
   </div>
   <div class="col-md-6 col-lg-4">

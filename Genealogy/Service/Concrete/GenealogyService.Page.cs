@@ -9,10 +9,10 @@ namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
-        public PageDto GetPage(PageFilter filter)
+        public List<PageDto> GetPage(PageFilter filter)
         {
             return _unitOfWork.PageRepository.Get(x =>
-            (filter.Id != Guid.Empty ? x.Id == filter.Id : true)).Select(i => _mapper.Map<PageDto>(i)).FirstOrDefault();
+            (filter.Id != Guid.Empty ? x.Id == filter.Id : true)).Select(i => _mapper.Map<PageDto>(i)).ToList();
         }
 
         public PageDto AddPage(PageDto newPage)

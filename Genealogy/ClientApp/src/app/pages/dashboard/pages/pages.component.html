@@ -1,0 +1,29 @@
+<div class="row pt-2">
+  <div class="col-md-6 col-lg-8">
+    <app-table
+      [data]="tableData"
+      [selectedId]="selectedPage?.id"
+      (change)="onChange($event)"
+      (remove)="markAsRemovedPage($event)"
+    ></app-table>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <form [formGroup]="pageForm" (ngSubmit)="addPage()">
+      <div class="form-group">
+        <label for="name">Название</label>
+        <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Введите название" formControlName="name" />
+      </div>
+      <div class="form-group">
+        <label for="location">Расположение</label>
+        <input type="text" class="form-control" id="title" placeholder="Укажите расположение" formControlName="title" />
+      </div>
+      <input type="hidden" formControlName="id" />
+      <div class="btn-group" role="group" aria-label="Toolbar">
+        <button type="submit" class="btn btn-primary" [disabled]="pageForm.invalid || selectedPage">Добавить</button>
+        <button type="button" class="btn btn-primary" [disabled]="selectedPage === null" (click)="updatePage()">Изменить</button>
+        <button type="reset" class="btn btn-primary" (click)="resetForm()">Очистить</button>
+      </div>
+    </form>
+  </div>
+</div>
+<genealogy-page-editor (result)="onEditorClose($event)"></genealogy-page-editor>

@@ -12,7 +12,7 @@ import { Cemetery } from '@mdl/cemetery';
 import { PersonFilter } from '@mdl/filters/person.filter';
 
 @Component({
-  selector: 'app-gako',
+  selector: 'dashboard-gako',
   templateUrl: './gako.component.html',
   styleUrls: ['./gako.component.scss'],
 })

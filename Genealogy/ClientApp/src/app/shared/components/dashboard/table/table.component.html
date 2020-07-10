@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table table-striped" *ngIf="data?.items?.length > 0; else emptyList">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -9,7 +9,7 @@
   <tbody>
     <tr
       *ngFor="let item of data?.items; let itemIndex = index"
-      (click)="onChange.emit(item.id)"
+      (click)="onChange(item.id)"
       [ngClass]="{ 'bg-success': item.id == selectedId }"
     >
       <th scope="row">{{ itemIndex + 1 }}</th>
@@ -17,8 +17,11 @@
         {{ val }}
       </td>
       <td class="text-right">
-        <a (click)="handleRemove($event, item.id)"><fa-icon class="remove-icon" icon="times"></fa-icon></a>
+        <a (click)="onRemove(item.id)"><fa-icon class="remove-icon" icon="times"></fa-icon></a>
       </td>
     </tr>
   </tbody>
 </table>
+<ng-template #emptyList>
+  <h4 class="text-center">Список пуст</h4>
+</ng-template>

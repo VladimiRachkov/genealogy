@@ -10,15 +10,19 @@ export class TableComponent implements OnInit {
   @Input() data: Table.Data;
   @Input() selectedId: string;
 
-  @Output() onChange: EventEmitter<string> = new EventEmitter();
-  @Output() onRemove: EventEmitter<string> = new EventEmitter();
+  @Output() change: EventEmitter<string> = new EventEmitter();
+  @Output() remove: EventEmitter<string> = new EventEmitter();
   constructor() {}
 
   ngOnInit() {}
 
-  handleRemove(event, value) {
-    console.log(typeof event);
+  onRemove(value: string) {
     event.stopPropagation();
-    this.onRemove.emit(value);
+    this.remove.emit(value);
+  }
+
+  onChange(value: string) {
+    event.stopPropagation();
+    this.change.emit(value);
   }
 }

@@ -9,7 +9,7 @@ import { Table } from '@shared/components/dashboard/table/table';
 import { CemeteryState } from '@state/cemetery.state';
 
 @Component({
-  selector: 'app-cemetery',
+  selector: 'dashboard-cemetery',
   templateUrl: './cemetery.component.html',
   styleUrls: ['./cemetery.component.scss'],
   providers: [FormBuilder],
@@ -20,7 +20,7 @@ export class CemeteryComponent implements OnInit {
   selectedCemetery: Cemetery;
   tableData: Table.Data;
 
-  constructor(private store: Store, private fb: FormBuilder) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.updateList();

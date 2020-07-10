@@ -1,0 +1,12 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    Название страницы
+  </div>
+  <div class="modal-body">
+    <angular-editor [placeholder]="'Enter text here...'" [config]="editorConfig" [(ngModel)]="htmlContent"></angular-editor>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('cancel')">Отменить</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close('save')">Сохранить</button>
+  </div>
+</ng-template>
