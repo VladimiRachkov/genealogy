@@ -3,7 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, Htt
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { NotifierService } from 'angular-notifier';
-import { NOTIFICATIONS } from '@enums/notifications';
+import { NOTIFICATIONS } from '@enums';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {

@@ -62,7 +62,7 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="changedPerson"></param>
         /// <returns></returns>
-        [HttpPost("markasremoved")]
+        [HttpPost("remove")]
         public IActionResult MarkAsRemoved([FromBody] PersonDto changedPerson)
         {
             PersonDto resultPerson = null;

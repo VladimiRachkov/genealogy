@@ -1,5 +1,4 @@
-import { PageFilter } from '@mdl/filters/page.filter';
-import { PageDto } from '@mdl/dtos/page.dto';
+import { PageFilter, PageDto } from '@models';
 
 export class FetchPageList {
   static readonly type = '[Page] Fetch Page List';

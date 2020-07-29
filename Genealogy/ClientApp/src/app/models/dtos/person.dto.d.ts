@@ -1,4 +1,4 @@
-import { Cemetery } from '@mdl/cemetery';
+import { Cemetery } from '@models';
 
 export interface PersonDto {
   id?: string;

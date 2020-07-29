@@ -1,10 +1,8 @@
 @import "../node_modules/modern-css-reset/dist/reset.css";
 @import "~angular-notifier/styles";
-@import "~bootstrap/scss/bootstrap";
 
 *,
 body {
-    overflow-x: hidden;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
     font-size: 14px;
 }

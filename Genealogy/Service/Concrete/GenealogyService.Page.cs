@@ -12,7 +12,7 @@ namespace Genealogy.Service.Concrete
         public List<PageDto> GetPage(PageFilter filter)
         {
             return _unitOfWork.PageRepository.Get(x =>
-            (filter.Id != Guid.Empty ? x.Id == filter.Id : true)).Select(i => _mapper.Map<PageDto>(i)).ToList();
+            (filter.Id != Guid.Empty ? x.Id == filter.Id : true) && (filter.Name != null ? x.Name == filter.Name : true) && !x.Removed).Select(i => _mapper.Map<PageDto>(i)).ToList();
         }
 
         public PageDto AddPage(PageDto newPage)
@@ -65,6 +65,14 @@ namespace Genealogy.Service.Concrete
             _unitOfWork.PageRepository.Update(page);
             _unitOfWork.Save();
             return _unitOfWork.PageRepository.GetByID(page.Id);
+        }
+
+        public List<PageListItemDto> GetPages(PageFilter filter)
+        {
+            return _unitOfWork.PageRepository.Get(x =>
+                (filter.isSection != null ? x.isSection == filter.isSection : true) &&
+                (filter.isRemoved != null ? x.Removed == filter.isRemoved : true))
+                    .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
         }
     }
 }

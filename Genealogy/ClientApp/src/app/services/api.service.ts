@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { from } from 'rxjs';
-import { RequestOptions } from 'https';
 
 @Injectable({
   providedIn: 'root',

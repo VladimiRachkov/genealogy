@@ -10,5 +10,6 @@ namespace Genealogy.Service.Astract
         PageDto AddPage(PageDto newPage);
         PageDto MarkAsRemovedPage(Guid id);
         PageDto ChangePage(PageDto pageDto);
+        List<PageListItemDto> GetPages(PageFilter filter);
     }
 }

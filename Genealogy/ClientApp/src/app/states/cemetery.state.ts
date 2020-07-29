@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { GetCemetery, AddCemetery, MarkAsRemovedCemetery, FetchCemeteryList, UpdateCemetery } from '../actions/cemetery.actions';
-import { Cemetery } from '@mdl/cemetery';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { ApiService } from '@srv/api.service';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { CemeteryDto } from '@mdl/dtos/cemetery.dto';
 import { HttpParams } from '@angular/common/http';
+import { CemeteryDto, Cemetery } from '@models';
+import { ApiService } from '@services';
 
 export interface CemeteryStateModel {
   cemeteryList: Array<CemeteryDto>;
@@ -52,7 +51,7 @@ export class CemeteryState {
   @Action(MarkAsRemovedCemetery)
   markAsRemovedCemetery(ctx: StateContext<CemeteryStateModel>, { payload: id }: MarkAsRemovedCemetery): Observable<any> {
     const cemeteryDto: CemeteryDto = { id, name: null, location: null };
-    return this.apiService.post<CemeteryDto>('cemetery/markasremoved', cemeteryDto);
+    return this.apiService.post<CemeteryDto>('cemetery/remove', cemeteryDto);
   }
 
   @Action(UpdateCemetery)

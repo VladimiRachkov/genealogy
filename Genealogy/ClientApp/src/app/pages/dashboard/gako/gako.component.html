@@ -2,13 +2,13 @@
   <div class="col-md-6 col-lg-8">
     <app-table
       [data]="tableData"
-      [selectedId]="selectedPerson?.id"
-      (change)="changePerson($event)"
-      (remove)="markAsRemovedPerson($event)"
+      [selectedId]="person?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
     ></app-table>
   </div>
   <div class="col-md-6 col-lg-4">
-    <form [formGroup]="personForm" (ngSubmit)="addPerson()">
+    <form [formGroup]="personForm" (ngSubmit)="onAdd()">
       <div class="form-group">
         <label for="lastname">Фамилия</label>
         <input
@@ -72,9 +72,9 @@
       </div>
       <input type="hidden" formControlName="id" />
       <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="submit" class="btn btn-primary" [disabled]="personForm.invalid || selectedPerson">Добавить</button>
-        <button type="button" class="btn btn-primary" [disabled]="selectedPerson === null" (click)="updatePerson()">Изменить</button>
-        <button type="reset" class="btn btn-primary" (click)="resetForm()">Очистить</button>
+        <button type="submit" class="btn btn-primary" [disabled]="personForm.invalid || person">Добавить</button>
+        <button type="button" class="btn btn-primary" [disabled]="person === null" (click)="onUpdate()">Изменить</button>
+        <button type="reset" class="btn btn-primary" (click)="onReset()">Очистить</button>
       </div>
     </form>
   </div>

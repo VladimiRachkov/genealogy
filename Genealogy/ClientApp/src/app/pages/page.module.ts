@@ -5,14 +5,14 @@ import { CatalogComponent } from './catalog/catalog.component';
 import { NecropolisComponent } from './necropolis/necropolis.component';
 import { LoginComponent } from './login/login.component';
 import { GakoComponent } from './gako/gako.component';
-import { SharedModule } from '@shared/shared.module';
 import { NotifierService } from 'angular-notifier';
-import { SafeHtmlPipe } from '@shared/pipes/safehtml.pipe';
+import { SharedModule } from '@shared';
+import { ShowComponent } from './show/show.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
-  exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent],
-  declarations: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent, SafeHtmlPipe],
-  providers: [NotifierService]
+  exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent, ShowComponent],
+  declarations: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent, ShowComponent],
+  providers: [NotifierService],
 })
 export class PageModule {}

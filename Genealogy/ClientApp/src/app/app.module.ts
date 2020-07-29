@@ -10,13 +10,11 @@ import { environment } from '@env/environment';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { SharedModule } from '@shared/shared.module';
-import { PersonState } from './states/person.state';
-import { CemeteryState } from '@state/cemetery.state';
-import { NotifierModule } from 'angular-notifier';
-import { PageState } from '@state/page.state';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { PersonState, CemeteryState, PageState } from '@states';
+import { SharedModule } from '@shared';
+import { NotifierModule } from 'angular-notifier';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,7 +31,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     SharedModule,
     NotifierModule,
     NgbModule,
-    AngularEditorModule
+    AngularEditorModule,
   ],
   exports: [],
   providers: [

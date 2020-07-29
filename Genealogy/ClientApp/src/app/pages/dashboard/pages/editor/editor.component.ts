@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, TemplateRef, ContentChild, Output, EventEmitter } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { EditorConfig } from './editor.config';
-import { GetPage, UpdatePage } from '@act/page.actions';
-import { PageFilter } from '@mdl/filters/page.filter';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Store } from '@ngxs/store';
-import { Page } from '@mdl/page';
-import { PageDto } from '@mdl/dtos/page.dto';
+import { Page, PageFilter, PageDto } from '@models';
+import { GetPage, UpdatePage } from '@actions';
 
 @Component({
   selector: 'genealogy-page-editor',
@@ -15,7 +14,7 @@ import { PageDto } from '@mdl/dtos/page.dto';
 export class EditorComponent implements OnInit {
   @ViewChild('content', { static: false }) content;
   @Output() result = new EventEmitter<string>();
-
+  Editor = ClassicEditor;
   closeResult: string = null;
   editorConfig = EditorConfig;
   htmlContent: string = '';

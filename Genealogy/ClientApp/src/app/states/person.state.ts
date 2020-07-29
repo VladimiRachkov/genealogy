@@ -1,12 +1,11 @@
-import { PersonDto } from '@mdl/dtos/person.dto';
 import { State, Selector, StateContext, Action } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { ApiService } from '@srv/api.service';
-import { Person } from '@mdl/person';
 import { FetchPersonList, GetPerson, AddPerson, MarkAsRemovedPerson, UpdatePerson, ClearPersonList } from 'app/actions/person.actions';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http';
+import { PersonDto, Person } from '@models';
+import { ApiService } from '@services';
 
 export interface PersonStateModel {
   personList: Array<PersonDto>;
@@ -59,7 +58,7 @@ export class PersonState {
   @Action(MarkAsRemovedPerson)
   markAsRemovedPerson(ctx: StateContext<PersonStateModel>, { payload: id }: MarkAsRemovedPerson): Observable<any> {
     const personDto: PersonDto = { id };
-    return this.apiService.post<PersonDto>('person/markasremoved', personDto);
+    return this.apiService.post<PersonDto>('person/remove', personDto);
   }
 
   @Action(UpdatePerson)

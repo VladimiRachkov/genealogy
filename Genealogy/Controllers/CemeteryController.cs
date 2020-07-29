@@ -61,7 +61,7 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="changedCemetery"></param>
         /// <returns></returns>
-        [HttpPost("markasremoved")]
+        [HttpPost("remove")]
         public IActionResult MarkAsRemoved([FromBody] CemeteryDto changedCemetery)
         {
             CemeteryDto resultCemetery = null;

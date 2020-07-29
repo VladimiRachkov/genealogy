@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TableComponent } from './dashboard/table/table.component';
-import { AssetsModule } from '@shared/assets/assets.module';
+
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthFormComponent } from './auth-form/auth-form.component';
+import { AssetsModule } from '../assets';
+import { TableComponent } from './dashboard';
 
 @NgModule({
   imports: [CommonModule, AssetsModule, ReactiveFormsModule, FormsModule],

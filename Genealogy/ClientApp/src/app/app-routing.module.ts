@@ -6,6 +6,7 @@ import { CatalogComponent } from './pages/catalog/catalog.component';
 import { NecropolisComponent } from './pages/necropolis/necropolis.component';
 import { LoginComponent } from './pages/login/login.component';
 import { GakoComponent } from './pages/gako/gako.component';
+import { ShowComponent } from './pages/show/show.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'page/:name',
+    component: ShowComponent,
   },
   {
     path: '**',

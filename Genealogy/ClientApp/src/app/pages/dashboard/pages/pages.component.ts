@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Page } from '@mdl/page';
-import { FetchPageList, AddPage, MarkAsRemovedPage, GetPage, UpdatePage } from '@act/page.actions';
-import { PageState } from '@state/page.state';
-import { Table } from '@shared/components/dashboard/table/table';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PageDto } from '@mdl/dtos/page.dto';
-import { PageFilter } from '@mdl/filters/page.filter';
 import { EditorComponent } from './editor/editor.component';
+import { Page, PageFilter, PageDto, Table } from '@models';
+import { AddPage, MarkAsRemovedPage, GetPage, UpdatePage, FetchPageList } from '@actions';
+import { PageState } from '@states';
 
 @Component({
   selector: 'dashboard-pages',
@@ -31,6 +28,7 @@ export class PagesComponent implements OnInit {
       id: new FormControl(null),
       name: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [Validators.required]),
+      isSection: new FormControl(null),
     });
     this.selectedPage = null;
   }
@@ -44,16 +42,6 @@ export class PagesComponent implements OnInit {
     this.store.dispatch(new MarkAsRemovedPage(id)).subscribe(() => this.updateList());
   }
 
-  changeCemetery(id: string) {
-    const filter: PageFilter = { id };
-    this.store.dispatch(new GetPage(filter)).subscribe(() => {
-      const page = this.store.selectSnapshot<Page>(PageState.page);
-      const { id, name, title } = page;
-      this.selectedPage = page;
-      this.pageForm.setValue({ id, name, title });
-    });
-  }
-
   updatePage() {
     const page = this.pageForm.value;
     this.store.dispatch(new UpdatePage(page)).subscribe(() => this.updateList());
@@ -64,8 +52,18 @@ export class PagesComponent implements OnInit {
     this.selectedPage = null;
   }
 
-  onChange(pageId: string) {
-    this.editor.open(pageId);
+  onSelect(id: string) {
+    const filter: PageFilter = { id };
+    this.store.dispatch(new GetPage(filter)).subscribe(() => {
+      const page = this.store.selectSnapshot<PageDto>(PageState.page);
+      const { id, title, name, isSection } = page;
+      this.selectedPage = page as Page;
+      this.pageForm.setValue({ id, name, title, isSection });
+    });
+  }
+
+  onEditorOpen() {
+    this.editor.open(this.selectedPage.id);
   }
 
   onEditorClose(result: string) {

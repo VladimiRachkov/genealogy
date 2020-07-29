@@ -12,9 +12,11 @@ namespace Genealogy.Models
 
             CreateMap<PersonDto, Person>();
             CreateMap<Person, PersonDto>();
-            
+
             CreateMap<PageDto, Page>();
             CreateMap<Page, PageDto>();
+
+            CreateMap<Page, PageListItemDto>();
         }
     }
 }

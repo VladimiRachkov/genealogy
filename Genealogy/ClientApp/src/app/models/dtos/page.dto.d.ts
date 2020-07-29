@@ -4,5 +4,6 @@ export interface PageDto {
     title?: string;
     content?: string;
     removed?: boolean;
+    isSection?: boolean;
   }
   

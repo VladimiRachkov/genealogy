@@ -1,15 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Table } from '@shared/components/dashboard/table/table';
 import { Store, Select } from '@ngxs/store';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Person } from '@mdl/person';
-import { PersonState } from '@state/person.state';
-import { FetchPersonList, AddPerson, MarkAsRemovedPerson, GetPerson, UpdatePerson } from '@act/person.actions';
-import { PersonDto } from '@mdl/dtos/person.dto';
-import { CemeteryState } from '@state/cemetery.state';
 import { Observable } from 'rxjs';
-import { Cemetery } from '@mdl/cemetery';
-import { PersonFilter } from '@mdl/filters/person.filter';
+import { Table, Person, Cemetery, PersonDto, PersonFilter } from '@models';
+import { CemeteryState, PersonState } from '@states';
+import { AddPerson, GetPerson, MarkAsRemovedPerson, UpdatePerson, FetchPersonList } from '@actions';
 
 @Component({
   selector: 'dashboard-gako',
@@ -20,7 +15,7 @@ export class GakoComponent implements OnInit {
   tableData: Table.Data;
   personList: Array<Person>;
   personForm: FormGroup;
-  selectedPerson: Person;
+  person: Person;
 
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
 
@@ -37,38 +32,37 @@ export class GakoComponent implements OnInit {
       finishDate: new FormControl(null, [Validators.required]),
       cemeteryId: new FormControl(null, null),
     });
-    this.selectedPerson = null;
+    this.person = null;
     this.personForm.valueChanges.subscribe(data => console.log(data));
   }
 
-  resetForm() {
+  onReset() {
     this.personForm.getRawValue();
   }
 
-  addPerson() {
+  onAdd() {
     const person = this.personForm.value as PersonDto;
 
     this.personForm.value.cemeteryId;
     this.store.dispatch(new AddPerson(person)).subscribe(() => this.updateList());
   }
 
-  changePerson(id: string) {
+  onSelect(id: string) {
     const filter: PersonFilter = { id };
     this.store.dispatch(new GetPerson(filter)).subscribe(() => {
       const person = this.store.selectSnapshot<PersonDto>(PersonState.person);
       const { id, lastname, firstname, patronymic, cemeteryId, startDate, finishDate } = person;
-      this.selectedPerson = person as Person;
+      this.person = person as Person;
       this.personForm.setValue({ id, lastname, firstname, patronymic, cemeteryId, startDate, finishDate });
     });
   }
 
-  markAsRemovedPerson(id: string) {
+  onRemove(id: string) {
     this.store.dispatch(new MarkAsRemovedPerson(id)).subscribe(() => this.updateList());
   }
 
-  updatePerson() {
+  onUpdate() {
     const person: PersonDto = this.personForm.value;
-    console.log('SEND', person);
     this.store.dispatch(new UpdatePerson(person)).subscribe(() => this.updateList());
   }
 
@@ -90,7 +84,7 @@ export class GakoComponent implements OnInit {
         fields: ['ФИО', 'Дата рождения', 'Дата смерти', 'Место захоронения'],
         items,
       };
-      this.resetForm();
+      this.personForm.getRawValue();
     });
   }
 }

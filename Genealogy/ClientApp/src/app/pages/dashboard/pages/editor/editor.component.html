@@ -3,7 +3,7 @@
     Название страницы
   </div>
   <div class="modal-body">
-    <angular-editor [placeholder]="'Enter text here...'" [config]="editorConfig" [(ngModel)]="htmlContent"></angular-editor>
+    <ckeditor [editor]="Editor" [(ngModel)]="htmlContent"></ckeditor>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="modal.close('cancel')">Отменить</button>

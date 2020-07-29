@@ -62,8 +62,8 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="changedPage"></param>
         /// <returns></returns>
-        [HttpPost("markasremoved")]
-        public IActionResult MarkAsRemoved([FromBody] PageDto changedPage)
+        [HttpPost("remove")]
+        public IActionResult Remove([FromBody] PageDto changedPage)
         {
             PageDto resultPage = null;
             if (changedPage != null && changedPage.Id != null && changedPage.Id != Guid.Empty)
@@ -103,6 +103,27 @@ namespace Genealogy.Controllers
                 return Ok(resultPage);
             }
             return new NoContentResult();
+        }
+
+
+        /// <summary>
+        /// Получить страницу
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet("list")]
+        public IActionResult GetPages([FromQuery] PageFilter filter)
+        {
+            List<PageListItemDto> result = null;
+            try
+            {
+                result = _genealogyService.GetPages(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
         }
     }
 }

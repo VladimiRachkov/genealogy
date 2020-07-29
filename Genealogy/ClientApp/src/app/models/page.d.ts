@@ -4,4 +4,5 @@ export interface Page {
   title: string;
   content: string;
   removed: boolean;
+  isSection: boolean;
 }

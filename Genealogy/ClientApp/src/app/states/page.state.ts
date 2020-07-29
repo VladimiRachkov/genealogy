@@ -1,21 +1,21 @@
 import { Action, StateContext, State, Selector } from '@ngxs/store';
-import { MarkAsRemovedPage, AddPage, GetPage, FetchPageList, UpdatePage } from '@act/page.actions';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PageDto } from '@mdl/dtos/page.dto';
-import { Page } from '@mdl/page';
 import { Injectable } from '@angular/core';
-import { ApiService } from '@srv/api.service';
 import { tap } from 'rxjs/operators';
+import { PageDto, Page, Section } from '@models';
+import { ApiService } from '@services';
+import { FetchPageList, GetPage, AddPage, MarkAsRemovedPage, UpdatePage } from '@actions';
 
 export interface PageStateModel {
   pageList: Array<PageDto>;
   page: PageDto;
+  sections: Array<Section>;
 }
 
 @State<PageStateModel>({
   name: 'page',
-  defaults: { pageList: [], page: null },
+  defaults: { pageList: [], page: null, sections: [] },
 })
 @Injectable()
 export class PageState {
@@ -34,7 +34,7 @@ export class PageState {
   @Action(FetchPageList)
   fetchPageList(ctx: StateContext<PageStateModel>, { payload: filter }): Observable<Array<PageDto>> {
     const params: HttpParams = filter;
-    return this.apiService.get<Array<PageDto>>('page', params).pipe(
+    return this.apiService.get<Array<PageDto>>('page/list', params).pipe(
       tap(data => console.log('FETCH', data)),
       tap(pageList => ctx.patchState({ pageList }))
     );
@@ -54,7 +54,7 @@ export class PageState {
   @Action(MarkAsRemovedPage)
   markAsRemovedPage(ctx: StateContext<PageStateModel>, { payload: id }: MarkAsRemovedPage): Observable<any> {
     const pageDto: PageDto = { id };
-    return this.apiService.post<PageDto>('page/markasremoved', pageDto);
+    return this.apiService.post<PageDto>('page/remove', pageDto);
   }
 
   @Action(UpdatePage)

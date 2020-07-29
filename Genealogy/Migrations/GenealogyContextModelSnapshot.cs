@@ -48,6 +48,8 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<bool>("isSection");
+
                     b.HasKey("Id");
 
                     b.ToTable("Page");

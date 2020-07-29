@@ -9,7 +9,7 @@
   <tbody>
     <tr
       *ngFor="let item of data?.items; let itemIndex = index"
-      (click)="onChange(item.id)"
+      (click)="onSelect(item.id)"
       [ngClass]="{ 'bg-success': item.id == selectedId }"
     >
       <th scope="row">{{ itemIndex + 1 }}</th>

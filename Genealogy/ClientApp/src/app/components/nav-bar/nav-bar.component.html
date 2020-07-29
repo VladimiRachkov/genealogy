@@ -14,8 +14,7 @@
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link" routerLink="necropolis">Некрополь</a>
-      <a class="nav-item nav-link" routerLink="catalog">Справочник</a>
-      <a class="nav-item nav-link" routerLink="gako">Описи ГАКО</a>
+      <a class="nav-item nav-link" *ngFor="let section of sections" routerLink="page/{{ section.name }}">{{ section.title }}</a>
       <a class="nav-item nav-link" routerLink="dashboard">Администрирование</a>
     </div>
   </div>
