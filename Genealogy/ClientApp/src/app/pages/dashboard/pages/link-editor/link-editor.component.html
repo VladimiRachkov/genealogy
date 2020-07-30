@@ -1,0 +1,13 @@
+<ng-template #content let-modal>
+  <div class="modal-body d-flex flex-row" *ngIf="freePageList$ | async as pages">
+    <div class="card m-2" style="width: 18rem;" *ngFor="let page of pages" (click)="onSelect(page.id)">
+      <div class="card-body">
+        <h5 class="card-title">{{ page.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ page.name }}</h6>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('cancel')">Закрыть</button>
+  </div>
+</ng-template>

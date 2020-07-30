@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Table, Person, Cemetery, PersonDto, PersonFilter } from '@models';
 import { CemeteryState, PersonState } from '@states';
 import { AddPerson, GetPerson, MarkAsRemovedPerson, UpdatePerson, FetchPersonList } from '@actions';
+import { untilDestroyed } from 'ngx-take-until-destroy';
 
 @Component({
   selector: 'dashboard-gako',
   templateUrl: './gako.component.html',
   styleUrls: ['./gako.component.scss'],
 })
-export class GakoComponent implements OnInit {
+export class GakoComponent implements OnInit, OnDestroy {
   tableData: Table.Data;
   personList: Array<Person>;
   personForm: FormGroup;
@@ -33,8 +34,10 @@ export class GakoComponent implements OnInit {
       cemeteryId: new FormControl(null, null),
     });
     this.person = null;
-    this.personForm.valueChanges.subscribe(data => console.log(data));
+    this.personForm.valueChanges.pipe(untilDestroyed(this)).subscribe(data => console.log(data));
   }
+
+  ngOnDestroy() {}
 
   onReset() {
     this.personForm.getRawValue();

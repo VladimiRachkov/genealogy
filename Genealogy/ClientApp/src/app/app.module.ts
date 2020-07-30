@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComponentModule } from './components/component.module';
@@ -15,6 +15,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { PersonState, CemeteryState, PageState } from '@states';
 import { SharedModule } from '@shared';
 import { NotifierModule } from 'angular-notifier';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +34,8 @@ import { NotifierModule } from 'angular-notifier';
     NotifierModule,
     NgbModule,
     AngularEditorModule,
+    NgxSpinnerModule,
+    BrowserAnimationsModule
   ],
   exports: [],
   providers: [
@@ -44,5 +48,6 @@ import { NotifierModule } from 'angular-notifier';
     NgbModal,
   ],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

@@ -8,6 +8,7 @@ namespace Genealogy.Repository.Abstract
         PersonRepository PersonRepository { get; }
         CemeteryRepository CemeteryRepository { get; }
         PageRepository PageRepository { get; }
+        LinkRepository LinkRepository { get; }
         void Save();
     }
 }

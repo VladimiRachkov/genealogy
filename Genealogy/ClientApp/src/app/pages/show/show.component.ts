@@ -1,28 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { GetPage } from '@actions';
-import { PageDto, PageFilter } from '@models';
+import { PageFilter } from '@models';
 import { ActivatedRoute } from '@angular/router';
-import { PageState } from '@states';
+import { untilDestroyed } from 'ngx-take-until-destroy';
 
 @Component({
   selector: 'app-show',
   templateUrl: './show.component.html',
   styleUrls: ['./show.component.scss'],
 })
-export class ShowComponent implements OnInit {
+export class ShowComponent implements OnInit, OnDestroy {
   pageName = '';
   content: string = null;
   constructor(private store: Store, private activateRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.activateRoute.params.subscribe(params => {
+    this.activateRoute.params.pipe(untilDestroyed(this)).subscribe(params => {
       const name = params['name'];
       this.fetchPage(name);
     });
     const name = this.activateRoute.snapshot.params['name'];
     this.fetchPage(name);
   }
+
+  ngOnDestroy() {}
 
   fetchPage(name: string) {
     const filter: PageFilter = { name };

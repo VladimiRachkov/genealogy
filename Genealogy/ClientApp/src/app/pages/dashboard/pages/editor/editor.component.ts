@@ -7,7 +7,7 @@ import { Page, PageFilter, PageDto } from '@models';
 import { GetPage, UpdatePage } from '@actions';
 
 @Component({
-  selector: 'genealogy-page-editor',
+  selector: 'app-page-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss'],
 })
@@ -15,8 +15,32 @@ export class EditorComponent implements OnInit {
   @ViewChild('content', { static: false }) content;
   @Output() result = new EventEmitter<string>();
   Editor = ClassicEditor;
+  editorConfig = {
+    toolbar: [
+      'undo',
+      'redo',
+      'bold',
+      'italic',
+      'blockQuote',
+      'ckfinder',
+      'imageTextAlternative',
+      'imageUpload',
+      'heading',
+      'imageStyle:full',
+      'imageStyle:side',
+      'link',
+      'numberedList',
+      'bulletedList',
+      'mediaEmbed',
+      'insertTable',
+      'tableColumn',
+      'tableRow',
+      'mergeTableCells',
+    ],
+  };
+
   closeResult: string = null;
-  editorConfig = EditorConfig;
+  //editorConfig = EditorConfig;
   htmlContent: string = '';
   page: Page;
   constructor(private modalService: NgbModal, private store: Store) {}

@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { EditorComponent } from './editor/editor.component';
 import { Page, PageFilter, PageDto, Table } from '@models';
 import { AddPage, MarkAsRemovedPage, GetPage, UpdatePage, FetchPageList } from '@actions';
 import { PageState } from '@states';
+import { EditorComponent } from './editor/editor.component';
+import { LinkEditorComponent } from './link-editor/link-editor.component';
 
 @Component({
   selector: 'dashboard-pages',
@@ -12,7 +13,8 @@ import { PageState } from '@states';
   styleUrls: ['./pages.component.scss'],
 })
 export class PagesComponent implements OnInit {
-  @ViewChild(EditorComponent, { static: true }) editor: EditorComponent;
+  @ViewChild(LinkEditorComponent, { static: false }) linkEditor: LinkEditorComponent;
+  @ViewChild(EditorComponent, { static: false }) editor: EditorComponent;
 
   pageForm: FormGroup;
   selectedPage: Page;
@@ -68,6 +70,10 @@ export class PagesComponent implements OnInit {
 
   onEditorClose(result: string) {
     console.log(result);
+  }
+
+  onLinkEditorOpen() {
+    this.linkEditor.open(this.selectedPage.id);
   }
 
   private updateList() {

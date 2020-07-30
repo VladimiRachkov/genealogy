@@ -7,13 +7,14 @@ namespace Genealogy.Repository.Concrete
     public class UnitOfWork : IUnitOfWork
     {
         private readonly GenealogyContext _genealogyContext;
-
         public PersonRepository PersonRepository => personRepository ?? new PersonRepository(_genealogyContext);
         private PersonRepository personRepository;
         public CemeteryRepository CemeteryRepository => cemeteryRepository ?? new CemeteryRepository(_genealogyContext);
         private CemeteryRepository cemeteryRepository;
         public PageRepository PageRepository => pageRepository ?? new PageRepository(_genealogyContext);
         private PageRepository pageRepository;
+        public LinkRepository LinkRepository => linkRepository ?? new LinkRepository(_genealogyContext);
+        private LinkRepository linkRepository;
 
         public UnitOfWork(GenealogyContext genealogyContext)
         {

@@ -19,9 +19,16 @@
       </div>
       <div class="form-check">
         <input type="checkbox" class="form-check-input" id="isSection" formControlName="isSection" />
-        <label class="form-check-label" for="isSection">Раздел</label>
+        <label class="form-check-label" for="isSection">Раздел главного меню</label>
       </div>
       <input type="hidden" formControlName="id" />
+      <hr />
+      <div class="btn-group" role="group" aria-label="PageOptions">
+        <button type="button" class="btn btn-outline-secondary" [disabled]="selectedPage === null" (click)="onLinkEditorOpen()">
+          Добавить ссылки
+        </button>
+      </div>
+      <hr />
       <div class="btn-group" role="group" aria-label="Toolbar">
         <button type="button" class="btn btn-primary" [disabled]="selectedPage === null" (click)="onEditorOpen()">Редактировать</button>
         <button type="submit" class="btn btn-primary" [disabled]="pageForm.invalid || selectedPage">Добавить</button>
@@ -30,4 +37,5 @@
     </form>
   </div>
 </div>
-<genealogy-page-editor (result)="onEditorClose($event)"></genealogy-page-editor>
+<app-page-editor (result)="onEditorClose($event)"></app-page-editor>
+<app-link-editor></app-link-editor>

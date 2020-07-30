@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { GetPage, FetchPageList } from '@actions';
+import { FetchPageList } from '@actions';
 import { PageFilter, Section, Page } from '@models';
 import { PageState } from '@states';
 

@@ -5,7 +5,6 @@ using Genealogy.Models;
 using System.Collections.Generic;
 using System;
 
-
 namespace Genealogy.Controllers
 {
     [Produces("application/json")]
@@ -118,6 +117,26 @@ namespace Genealogy.Controllers
             try
             {
                 result = _genealogyService.GetPages(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Получить список страниц для ссылок
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet("freelist")]
+        public IActionResult GetFreePages()
+        {
+            List<PageListItemDto> result = null;
+            try
+            {
+                result = _genealogyService.GetFreePages();
             }
             catch (AppException ex)
             {

@@ -3,19 +3,20 @@ import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
-import { PageDto, Page, Section } from '@models';
+import { PageDto, Page, Section, PageFilter, LinkDto } from '@models';
 import { ApiService } from '@services';
-import { FetchPageList, GetPage, AddPage, MarkAsRemovedPage, UpdatePage } from '@actions';
+import { FetchPageList, GetPage, AddPage, MarkAsRemovedPage, UpdatePage, AddLink, FetchFreePageList } from '@actions';
 
 export interface PageStateModel {
   pageList: Array<PageDto>;
   page: PageDto;
   sections: Array<Section>;
+  freePageList: Array<PageDto>;
 }
 
 @State<PageStateModel>({
   name: 'page',
-  defaults: { pageList: [], page: null, sections: [] },
+  defaults: { pageList: [], page: null, sections: [], freePageList: [] },
 })
 @Injectable()
 export class PageState {
@@ -29,6 +30,11 @@ export class PageState {
   @Selector()
   static pageList({ pageList }: PageStateModel): Array<Page> {
     return pageList.filter(item => !item.removed) as Array<Page>;
+  }
+
+  @Selector()
+  static freePageList({ freePageList }: PageStateModel): Array<Page> {
+    return freePageList.filter(item => !item.removed) as Array<Page>;
   }
 
   @Action(FetchPageList)
@@ -61,5 +67,15 @@ export class PageState {
   updatePage(ctx: StateContext<PageStateModel>, { payload: Page }: UpdatePage): Observable<any> {
     console.log('Page', Page);
     return this.apiService.put<PageDto>('page', Page);
+  }
+
+  @Action(AddLink)
+  addLink(ctx: StateContext<PageStateModel>, { payload: link }: AddLink): Observable<any> {
+    return this.apiService.post<LinkDto>('link', link).pipe(tap(data => console.log('ADD', data)));
+  }
+
+  @Action(FetchFreePageList)
+  fetchFreePageList(ctx: StateContext<PageStateModel>): Observable<any> {
+    return this.apiService.get<Array<PageDto>>('page/list', null).pipe(tap(pageList => ctx.patchState({ freePageList: pageList })));
   }
 }

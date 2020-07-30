@@ -74,5 +74,14 @@ namespace Genealogy.Service.Concrete
                 (filter.isRemoved != null ? x.Removed == filter.isRemoved : true))
                     .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
         }
+
+        public List<PageListItemDto> GetFreePages()
+        {
+            var linkedPageId = _unitOfWork.LinkRepository.Get().Select(item => item.TargetPageId);
+            var result = _unitOfWork.PageRepository.Get()
+                .Where(item => !item.Removed && linkedPageId.Any(linkedId => !(linkedId == item.Id)))
+                .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
+            return result;
+        }
     }
 }

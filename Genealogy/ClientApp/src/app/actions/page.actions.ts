@@ -1,4 +1,4 @@
-import { PageFilter, PageDto } from '@models';
+import { PageFilter, PageDto, LinkDto } from '@models';
 
 export class FetchPageList {
   static readonly type = '[Page] Fetch Page List';
@@ -23,4 +23,13 @@ export class MarkAsRemovedPage {
 export class UpdatePage {
   static readonly type = '[Page] Update Page';
   constructor(readonly payload: PageDto) {}
+}
+
+export class AddLink {
+  static readonly type = '[Page] Add Link';
+  constructor(readonly payload: LinkDto) {}
+}
+
+export class FetchFreePageList {
+  static readonly type = '[Page] Free Page List';
 }

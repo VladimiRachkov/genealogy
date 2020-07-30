@@ -11,5 +11,6 @@ namespace Genealogy.Service.Astract
         PageDto MarkAsRemovedPage(Guid id);
         PageDto ChangePage(PageDto pageDto);
         List<PageListItemDto> GetPages(PageFilter filter);
+        List<PageListItemDto> GetFreePages();
     }
 }
