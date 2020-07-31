@@ -25,11 +25,7 @@ export class UpdatePage {
   constructor(readonly payload: PageDto) {}
 }
 
-export class AddLink {
-  static readonly type = '[Page] Add Link';
-  constructor(readonly payload: LinkDto) {}
-}
-
 export class FetchFreePageList {
   static readonly type = '[Page] Free Page List';
+  constructor(readonly payload: string) {}
 }

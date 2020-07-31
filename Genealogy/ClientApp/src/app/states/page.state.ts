@@ -2,8 +2,8 @@ import { Action, StateContext, State, Selector } from '@ngxs/store';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
-import { PageDto, Page, Section, PageFilter, LinkDto } from '@models';
+import { tap, map } from 'rxjs/operators';
+import { PageDto, Page, Section } from '@models';
 import { ApiService } from '@services';
 import { FetchPageList, GetPage, AddPage, MarkAsRemovedPage, UpdatePage, AddLink, FetchFreePageList } from '@actions';
 
@@ -65,17 +65,14 @@ export class PageState {
 
   @Action(UpdatePage)
   updatePage(ctx: StateContext<PageStateModel>, { payload: Page }: UpdatePage): Observable<any> {
-    console.log('Page', Page);
     return this.apiService.put<PageDto>('page', Page);
   }
 
-  @Action(AddLink)
-  addLink(ctx: StateContext<PageStateModel>, { payload: link }: AddLink): Observable<any> {
-    return this.apiService.post<LinkDto>('link', link).pipe(tap(data => console.log('ADD', data)));
-  }
-
   @Action(FetchFreePageList)
-  fetchFreePageList(ctx: StateContext<PageStateModel>): Observable<any> {
-    return this.apiService.get<Array<PageDto>>('page/list', null).pipe(tap(pageList => ctx.patchState({ freePageList: pageList })));
+  fetchFreePageList(ctx: StateContext<PageStateModel>, { payload: pageId }: FetchFreePageList): Observable<any> {
+    return this.apiService.get<Array<PageDto>>('page/list', null).pipe(
+      map(pageList => pageList.filter(page => page.id !== pageId)),
+      tap(pageList => ctx.patchState({ freePageList: pageList }))
+    );
   }
 }

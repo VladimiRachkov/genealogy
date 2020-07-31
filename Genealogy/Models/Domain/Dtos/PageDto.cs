@@ -8,7 +8,7 @@ namespace Genealogy.Models
         public string Name { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public bool? Removed { get; set; }
-        public bool? isSection { get; set; }
+        public bool? isRemoved { get; set; }
+        public bool? IsSection { get; set; }
     }
 }

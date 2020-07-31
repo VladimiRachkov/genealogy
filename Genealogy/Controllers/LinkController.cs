@@ -44,7 +44,7 @@ namespace Genealogy.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] LinkDto newLink)
         {
-            LinkDto resultPage = null;
+            List<LinkDto> resultPage = null;
             try
             {
                 resultPage = _genealogyService.AddLink(newLink);

@@ -12,7 +12,7 @@ namespace Genealogy.Service.Concrete
         public List<PageDto> GetPage(PageFilter filter)
         {
             return _unitOfWork.PageRepository.Get(x =>
-            (filter.Id != Guid.Empty ? x.Id == filter.Id : true) && (filter.Name != null ? x.Name == filter.Name : true) && !x.Removed).Select(i => _mapper.Map<PageDto>(i)).ToList();
+            (filter.Id != Guid.Empty ? x.Id == filter.Id : true) && (filter.Name != null ? x.Name == filter.Name : true) && !x.isRemoved).Select(i => _mapper.Map<PageDto>(i)).ToList();
         }
 
         public PageDto AddPage(PageDto newPage)
@@ -40,7 +40,7 @@ namespace Genealogy.Service.Concrete
                 var page = _unitOfWork.PageRepository.GetByID(id);
                 if (page != null)
                 {
-                    page.Removed = true;
+                    page.isRemoved = true;
                     var updatedPage = UpdatePage(page);
                     return _mapper.Map<PageDto>(updatedPage);
                 }
@@ -71,7 +71,7 @@ namespace Genealogy.Service.Concrete
         {
             return _unitOfWork.PageRepository.Get(x =>
                 (filter.isSection != null ? x.isSection == filter.isSection : true) &&
-                (filter.isRemoved != null ? x.Removed == filter.isRemoved : true))
+                (filter.isRemoved != null ? x.isRemoved == filter.isRemoved : true))
                     .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
         }
 
@@ -79,7 +79,7 @@ namespace Genealogy.Service.Concrete
         {
             var linkedPageId = _unitOfWork.LinkRepository.Get().Select(item => item.TargetPageId);
             var result = _unitOfWork.PageRepository.Get()
-                .Where(item => !item.Removed && linkedPageId.Any(linkedId => !(linkedId == item.Id)))
+                .Where(item => !item.isRemoved && linkedPageId.Any(linkedId => !(linkedId == item.Id)))
                 .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
             return result;
         }

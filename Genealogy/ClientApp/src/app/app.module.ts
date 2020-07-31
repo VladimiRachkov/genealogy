@@ -17,6 +17,7 @@ import { SharedModule } from '@shared';
 import { NotifierModule } from 'angular-notifier';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LinkState } from './states/link.state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ComponentModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([PersonState, CemeteryState, PageState], {
+    NgxsModule.forRoot([PersonState, CemeteryState, PageState, LinkState], {
       developmentMode: !environment.production,
     }),
     NgxsLoggerPluginModule.forRoot(),

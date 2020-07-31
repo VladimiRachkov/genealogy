@@ -42,7 +42,7 @@ namespace Genealogy.Service.Concrete
                 var cemetery = _unitOfWork.CemeteryRepository.GetByID(id);
                 if (cemetery != null)
                 {
-                    cemetery.Removed = true;
+                    cemetery.isRemoved = true;
                     var updatedCemetery = UpdateCemetery(cemetery);
                     return _mapper.Map<CemeteryDto>(updatedCemetery);
                 }

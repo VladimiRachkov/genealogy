@@ -1,10 +1,28 @@
 <ng-template #content let-modal>
-  <div class="modal-body d-flex flex-row" *ngIf="freePageList$ | async as pages">
-    <div class="card m-2" style="width: 18rem;" *ngFor="let page of pages" (click)="onSelect(page.id)">
-      <div class="card-body">
-        <h5 class="card-title">{{ page.title }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ page.name }}</h6>
+  <div class="modal-body container">
+    <div class="col-8">
+      <div class="card-deck" *ngIf="pages">
+        <div
+          class="card mb-4"
+          style="width: 18rem;"
+          *ngFor="let page of pages"
+          (click)="onSelect(page.id)"
+          [ngClass]="{ 'bg-success': page.location === 'this', 'bg-danger': page.location === 'other' }"
+        >
+          <div class="card-body">
+            <h5 class="card-title">{{ page.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ page.name }}</h6>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="col-4">
+      <div class="header">
+        Ссылки на странице
+      </div>
+      <ul class="list-group">
+        <li *ngFor="let link of links" class="list-group-item">{{ link.caption }}</li>
+      </ul>
     </div>
   </div>
   <div class="modal-footer">

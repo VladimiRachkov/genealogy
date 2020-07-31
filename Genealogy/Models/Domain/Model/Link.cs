@@ -10,6 +10,5 @@ namespace Genealogy.Models
         public Guid PageId { get; set; }
         public Guid TargetPageId { get; set; }
         public int Order { get; set; }
-        public bool isRemoved { get; set; }
     }
 }

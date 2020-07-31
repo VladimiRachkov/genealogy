@@ -7,6 +7,6 @@ namespace Genealogy.Service.Astract
     partial interface IGenealogyService
     {
         List<LinkDto> GetLinks(LinkFilter filter);
-        LinkDto AddLink(LinkDto link);
+        List<LinkDto> AddLink(LinkDto link);
     }
 }

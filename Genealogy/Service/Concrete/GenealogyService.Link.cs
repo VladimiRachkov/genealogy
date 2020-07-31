@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Genealogy.Models;
 using Genealogy.Service.Astract;
-using Genealogy.Service.Helpers;
 
 namespace Genealogy.Service.Concrete
 {
@@ -12,19 +11,29 @@ namespace Genealogy.Service.Concrete
         public List<LinkDto> GetLinks(LinkFilter filter)
         {
             return _unitOfWork.LinkRepository.Get(x =>
-                (filter.isRemoved != null ? x.isRemoved == filter.isRemoved : true) &&
-                (filter.PageId != Guid.Empty ? x.PageId == filter.PageId : true))
+                ((filter.PageId != null && filter.PageId != Guid.Empty) ? x.PageId == filter.PageId : true))
+                    .OrderBy(link => link.Order)
                     .Select(i => _mapper.Map<LinkDto>(i)).ToList();
         }
-        public LinkDto AddLink(LinkDto link)
+        public List<LinkDto> AddLink(LinkDto link)
         {
             LinkFilter linkFilter = new LinkFilter()
             {
                 isRemoved = false,
                 PageId = link.PageId
             };
-
             var links = this.GetLinks(linkFilter);
+
+            if (links.Where(l => l.PageId == link.PageId && l.TargetPageId == link.TargetPageId).FirstOrDefault() != null)
+            {
+                var dublicate = GetLinkByIds(link.PageId, link.TargetPageId);
+                _unitOfWork.LinkRepository.Delete(dublicate);
+                _unitOfWork.Save();
+
+                IndexingOrder();
+                return GetLinks(new LinkFilter());
+            }
+
             int maxOrder = 0;
             if (links.Any())
             {
@@ -34,14 +43,33 @@ namespace Genealogy.Service.Concrete
             var newLink = _mapper.Map<Link>(link);
 
             newLink.Id = Guid.NewGuid();
-            newLink.isRemoved = false;
             newLink.Order = maxOrder += 1;
 
             _unitOfWork.LinkRepository.Add(newLink);
             _unitOfWork.Save();
 
-            var result = _unitOfWork.LinkRepository.GetByID(newLink.Id);
-            return _mapper.Map<LinkDto>(result);
+            return GetLinks(new LinkFilter());
+        }
+
+        private void IndexingOrder()
+        {
+            var links = _unitOfWork.LinkRepository.Get().OrderBy(link => link.Order).ToList();
+
+            int i = 0;
+            foreach (var link in links)
+            {
+                link.Order = i;
+                _unitOfWork.LinkRepository.Update(link);
+                i++;
+            }
+            _unitOfWork.Save();
+        }
+
+        private Link GetLinkByIds(Guid pageId, Guid targetPageId)
+        {
+            return _unitOfWork.LinkRepository.Get(x =>
+                pageId == x.PageId && targetPageId == x.TargetPageId)
+                .FirstOrDefault();
         }
     }
 }
