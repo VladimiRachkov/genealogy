@@ -25,6 +25,9 @@ export class ApiInterceptor implements HttpInterceptor {
         err => {
           if (err instanceof HttpErrorResponse) {
             switch (err.status) {
+              case 400:
+                this.notifierService.notify('error', err.error, 'NOT_AUTHORIZED');
+                break;
               case 401:
                 this.notifierService.notify('error', NOTIFICATIONS.NOT_AUTHORIZED, 'NOT_AUTHORIZED');
                 break;

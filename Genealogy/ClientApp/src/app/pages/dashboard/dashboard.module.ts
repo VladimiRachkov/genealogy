@@ -7,12 +7,14 @@ import { environment } from '@env/environment';
 import { GakoComponent } from './gako/gako.component';
 import { PagesComponent } from './pages/pages.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { SharedModule } from '@shared';
 import { EditorComponent } from './pages/editor/editor.component';
 import { LinkEditorComponent } from './pages/link-editor/link-editor.component';
+import { MaterialModule } from 'app/material.module';
+
 
 const routes: Routes = [
   {
@@ -21,7 +23,7 @@ const routes: Routes = [
   },
 ];
 
-@NgModule({ 
+@NgModule({
   imports: [
     SharedModule,
     RouterModule.forChild(routes),
@@ -32,6 +34,7 @@ const routes: Routes = [
     AngularEditorModule,
     FormsModule,
     CKEditorModule,
+    MaterialModule,
   ],
   declarations: [DashboardComponent, CemeteryComponent, GakoComponent, PagesComponent, EditorComponent, LinkEditorComponent],
 })

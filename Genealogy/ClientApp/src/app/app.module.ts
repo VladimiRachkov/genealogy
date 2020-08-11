@@ -36,7 +36,7 @@ import { LinkState } from './states/link.state';
     NgbModule,
     AngularEditorModule,
     NgxSpinnerModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   exports: [],
   providers: [

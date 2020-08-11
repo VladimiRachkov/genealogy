@@ -8,5 +8,6 @@ namespace Genealogy.Service.Astract
     {
         List<LinkDto> GetLinks(LinkFilter filter);
         List<LinkDto> AddLink(LinkDto link);
+        List<LinkDto> UpdateLinks(IEnumerable<LinkDto> links);
     }
 }

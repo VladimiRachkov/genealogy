@@ -1,13 +1,15 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, ViewChild, OnDestroy, Input } from '@angular/core';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Store, Select } from '@ngxs/store';
-import { FetchFreePageList, AddLink, FetchLinkList } from '@actions';
+import { FetchFreePageList, AddLink, FetchLinkList, UpdateLinkList } from '@actions';
 import { Page, Link, LinkDto, LinkFilter } from '@models';
 import { PageState } from '@states';
 import { Observable, combineLatest } from 'rxjs';
 import { switchMapTo, filter } from 'rxjs/operators';
 import { LinkState } from 'app/states/link.state';
 import { untilDestroyed } from 'ngx-take-until-destroy';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { link } from 'fs';
 
 @Component({
   selector: 'app-link-editor',
@@ -29,10 +31,7 @@ export class LinkEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     combineLatest(this.freePageList$, this.linkList$)
-      .pipe(
-        filter(data => data[0] != null && data[1] != null),
-        untilDestroyed(this)
-      )
+      .pipe(filter(data => data[0] != null && data[1] != null))
       .subscribe(data => {
         this.pages = [];
         this.links = [];
@@ -41,13 +40,12 @@ export class LinkEditorComponent implements OnInit, OnDestroy {
           data[1].forEach(link => {
             if (this.pageId === link.pageId && page.id === link.targetPageId) {
               location = 'this';
-              this.links.push({ caption: page.title, name: page.name, order: link.order });
+              this.links.push({ ...link, caption: page.title, route: decodeURI(page.name) });
             }
           });
           this.pages.push({ ...page, location });
         });
         this.links = this.links.sort((a, b) => a.order - b.order);
-        console.log('LINKS', this.links);
       });
   }
 
@@ -56,13 +54,19 @@ export class LinkEditorComponent implements OnInit, OnDestroy {
   public open(pageId: string) {
     this.pageId = pageId;
     this.store
-      .dispatch(new FetchFreePageList(pageId))
+      .dispatch(new FetchFreePageList(this.pageId))
       .pipe(switchMapTo(this.store.dispatch(new FetchLinkList(null))))
       .subscribe(data => {
         console.log('LIST', data);
       });
 
-    this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title', size: 'xl' }).result.then(
+    const options: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'xl',
+      windowClass: 'your-custom-dialog-class',
+    };
+
+    this.modalService.open(this.content, options).result.then(
       result => {},
       reason => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -79,6 +83,15 @@ export class LinkEditorComponent implements OnInit, OnDestroy {
     this.store.dispatch(new AddLink(link)).subscribe();
   }
 
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.reorderLinkList(event.container.data as Array<Link>);
+    } else {
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    }
+  }
+
   private getDismissReason(reason: any) {
     // if (reason === ModalDismissReasons.ESC) {
     //   return 'by pressing ESC';
@@ -87,5 +100,11 @@ export class LinkEditorComponent implements OnInit, OnDestroy {
     // } else {
     //   return `with: ${reason}`;
     // }
+  }
+
+  private reorderLinkList(linkList: Array<Link>) {
+    this.links = linkList.map((link, index) => ({ ...link, order: index }));
+    let newList = this.links.map(link => link as LinkDto);
+    this.store.dispatch(new UpdateLinkList(newList));
   }
 }

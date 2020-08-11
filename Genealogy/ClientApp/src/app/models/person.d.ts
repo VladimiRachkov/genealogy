@@ -9,5 +9,5 @@ export interface Person {
   source: string;
   startDate: string;
   finishDate: string;
-  removed: boolean;
+  isRemoved: boolean;
 }

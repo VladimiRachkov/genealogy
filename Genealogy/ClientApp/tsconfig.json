@@ -22,7 +22,8 @@
       "@actions": ["app/actions"],
       "@states": ["app/states"],
       "@enums": ["app/enums"],
-      "@pages": ["app/pages"]
+      "@pages": ["app/pages"],
+      "@consts": ["app/consts"]
     }
   },
   "angularCompilerOptions": {

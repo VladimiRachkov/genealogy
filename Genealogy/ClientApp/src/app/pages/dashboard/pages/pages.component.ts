@@ -17,9 +17,10 @@ export class PagesComponent implements OnInit {
   @ViewChild(EditorComponent, { static: false }) editor: EditorComponent;
 
   pageForm: FormGroup;
+  pageList: Array<Page>;
+  mainPageList: Array<Page>;
   selectedPage: Page;
   tableData: Table.Data;
-
   closeResult: string = null;
 
   constructor(private store: Store) {}
@@ -76,15 +77,21 @@ export class PagesComponent implements OnInit {
     this.linkEditor.open(this.selectedPage.id);
   }
 
+  onSectionPropChanged() {
+    this.updateList();
+  }
+
   private updateList() {
     this.store.dispatch(new FetchPageList({})).subscribe(() => {
-      const pageList: Array<Page> = this.store.selectSnapshot<Array<Page>>(PageState.pageList);
-      const items = pageList && pageList.map<Table.Item>(item => ({ id: item.id, values: [item.name, item.title] }));
+      this.pageList = this.store.selectSnapshot<Array<Page>>(PageState.pageList);
+      this.mainPageList = this.pageList.filter(page => page.isSection);
+      const items = this.pageList && this.pageList.map<Table.Item>(item => ({ id: item.id, values: [item.name, item.title] }));
       this.tableData = {
         fields: ['Имя', 'Название'],
         items,
       };
       this.resetForm();
+      console.log('PAGES', this.pageList);
     });
   }
 }

@@ -40,9 +40,9 @@ export class EditorComponent implements OnInit {
   };
 
   closeResult: string = null;
-  //editorConfig = EditorConfig;
   htmlContent: string = '';
   page: Page;
+  
   constructor(private modalService: NgbModal, private store: Store) {}
 
   ngOnInit() {}

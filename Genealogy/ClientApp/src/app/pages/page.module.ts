@@ -7,12 +7,14 @@ import { LoginComponent } from './login/login.component';
 import { GakoComponent } from './gako/gako.component';
 import { NotifierService } from 'angular-notifier';
 import { SharedModule } from '@shared';
-import { ShowComponent } from './show/show.component';
+import { MaterialModule } from 'app/material.module';
+import { RouterModule } from '@angular/router';
+import { PageViewerComponent } from './page-viewer/page-viewer.component';
 
 @NgModule({
-  imports: [CommonModule, SharedModule],
-  exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent, ShowComponent],
-  declarations: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent, ShowComponent],
+  imports: [CommonModule, SharedModule, RouterModule, MaterialModule],
+  exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent, PageViewerComponent],
+  declarations: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, LoginComponent, PageViewerComponent],
   providers: [NotifierService],
 })
 export class PageModule {}

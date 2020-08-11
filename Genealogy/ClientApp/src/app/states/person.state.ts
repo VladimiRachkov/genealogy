@@ -27,7 +27,7 @@ export class PersonState {
 
   @Selector()
   static personList({ personList }: PersonStateModel): Array<Person> {
-    return personList.filter(item => !item.removed) as Array<Person>;
+    return personList.filter(item => !item.isRemoved) as Array<Person>;
   }
 
   @Action(FetchPersonList)

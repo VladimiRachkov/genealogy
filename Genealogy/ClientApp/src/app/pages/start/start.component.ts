@@ -14,7 +14,7 @@ export class StartComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit() {
-    const pageFilter: PageFilter = { name: 'start' };
+    const pageFilter: PageFilter = { name: 'index' };
     this.store.dispatch(new GetPage(pageFilter)).subscribe(data => (this.page = data.page.page));
   }
 }

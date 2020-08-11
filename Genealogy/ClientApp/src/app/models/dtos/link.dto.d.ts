@@ -3,5 +3,5 @@ export interface LinkDto {
     caption?: string;
     pageId?: string;
     targetPageId?: string;
-    order?: string;
+    order?: number;
 }

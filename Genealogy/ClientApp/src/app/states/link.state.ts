@@ -1,7 +1,7 @@
 import { Link, LinkDto } from '@models';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { AddLink, FetchLinkList } from '@actions';
+import { AddLink, FetchLinkList, UpdateLinkList } from '@actions';
 import { Observable } from 'rxjs';
 import { ApiService } from '@services';
 import { tap, map } from 'rxjs/operators';
@@ -37,8 +37,19 @@ export class LinkState {
   fetchLinkList(ctx: StateContext<LinkStateModel>, { payload: filter }): Observable<any> {
     const params: HttpParams = filter;
     return this.apiService.get<LinkDto>('link', params).pipe(
-      map<LinkDto, Link>(item => item),
+      map(item => item as Link),
       tap(linkList => ctx.patchState({ linkList }))
     );
+  }
+
+  @Action(UpdateLinkList)
+  updateLinkList(ctx: StateContext<LinkStateModel>, { payload: links }): Observable<any> {
+    console.log('LIST', links)
+    return this.apiService
+      .post<{ links: Array<LinkDto> }>('link/list', { links })
+      .pipe(
+        map(item => item as Link),
+        tap(linkList => ctx.patchState({ linkList }))
+      );
   }
 }

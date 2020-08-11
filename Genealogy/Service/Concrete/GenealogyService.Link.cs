@@ -51,6 +51,26 @@ namespace Genealogy.Service.Concrete
             return GetLinks(new LinkFilter());
         }
 
+        public List<LinkDto> UpdateLinks(IEnumerable<LinkDto> links)
+        {
+            LinkFilter linkFilter = new LinkFilter()
+            {
+                isRemoved = false,
+                PageId = links.FirstOrDefault().PageId
+            };
+
+            links.ToList().ForEach(link =>
+            {
+                var updatedLink = _mapper.Map<LinkDto, Link>(link);
+                _unitOfWork.LinkRepository.Update(updatedLink);
+            });
+
+            _unitOfWork.Save();
+
+            var result = GetLinks(linkFilter);
+            return result;
+        }
+
         private void IndexingOrder()
         {
             var links = _unitOfWork.LinkRepository.Get().OrderBy(link => link.Order).ToList();

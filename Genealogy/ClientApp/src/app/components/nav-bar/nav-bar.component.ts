@@ -20,7 +20,7 @@ export class NavBarComponent implements OnInit {
       () =>
         (this.sections = this.store
           .selectSnapshot<Array<Page>>(PageState.pageList)
-          .filter(item => item.name !== 'start')
+          .filter(item => item.name !== 'index')
           .map<Section>(item => item))
     );
   }

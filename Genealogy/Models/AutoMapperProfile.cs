@@ -15,11 +15,13 @@ namespace Genealogy.Models
 
             CreateMap<PageDto, Page>();
             CreateMap<Page, PageDto>();
+            CreateMap<Page, PageWithLinksDto>();
 
             CreateMap<Page, PageListItemDto>();
 
             CreateMap<Link, LinkDto>();
             CreateMap<LinkDto, Link>();
+
 
         }
     }

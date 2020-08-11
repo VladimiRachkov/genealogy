@@ -44,16 +44,36 @@ namespace Genealogy.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] LinkDto newLink)
         {
-            List<LinkDto> resultPage = null;
+            List<LinkDto> result = null;
             try
             {
-                resultPage = _genealogyService.AddLink(newLink);
+                result = _genealogyService.AddLink(newLink);
             }
             catch (AppException ex)
             {
                 return BadRequest(ex.Message);
             }
-            return Ok(resultPage);
+            return Ok(result);
+        }
+
+        [HttpPost("list")]
+        public IActionResult UpdateLinks([FromBody] LinkListDto linkList)
+        {
+            if (linkList.links == null)
+            {
+                return BadRequest("Пустой список");
+            }
+            List<LinkDto> result = null;
+            try
+            {
+                result = _genealogyService.UpdateLinks(linkList.links);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+
         }
 
     }

@@ -29,3 +29,8 @@ export class FetchFreePageList {
   static readonly type = '[Page] Free Page List';
   constructor(readonly payload: string) {}
 }
+
+export class GetPageWithLinks {
+  static readonly type = '[Page] Get Page With Links';
+  constructor(readonly payload: PageFilter) {}
+}

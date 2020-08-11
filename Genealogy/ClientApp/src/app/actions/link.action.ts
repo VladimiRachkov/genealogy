@@ -9,3 +9,8 @@ export class FetchLinkList {
   static readonly type = '[Link] Fetch Link List';
   constructor(readonly payload: LinkFilter) {}
 }
+
+export class UpdateLinkList {
+  static readonly type = '[Link] Update Link List';
+  constructor(readonly payload: Array<LinkDto>) {}
+}

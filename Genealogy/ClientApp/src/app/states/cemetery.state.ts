@@ -27,7 +27,7 @@ export class CemeteryState {
 
   @Selector()
   static cemeteryList({ cemeteryList }: CemeteryStateModel): Array<Cemetery> {
-    return cemeteryList.filter(item => !item.removed) as Array<Cemetery>;
+    return cemeteryList.filter(item => !item.isRemoved) as Array<Cemetery>;
   }
 
   @Action(FetchCemeteryList)

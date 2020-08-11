@@ -33,7 +33,7 @@ namespace Genealogy.Service.Concrete
             return null;
         }
 
-        public PageDto MarkAsRemovedPage(Guid id)
+        public PageDto RemovePage(Guid id)
         {
             if (id != Guid.Empty)
             {
@@ -53,7 +53,12 @@ namespace Genealogy.Service.Concrete
         {
             if (pageDto != null && pageDto.Id != null)
             {
-                var page = _mapper.Map<Page>(pageDto);
+                var page = _unitOfWork.PageRepository.GetByID(pageDto.Id);
+                page.isSection = pageDto.IsSection != null ? pageDto.IsSection.Value : page.isSection;
+                page.Name = pageDto.Name != null ? pageDto.Name : page.Name;
+                page.Title = pageDto.Title != null ? pageDto.Title : page.Title;
+                page.Content = pageDto.Content != null ? pageDto.Content : page.Content;
+
                 var result = UpdatePage(page);
                 return _mapper.Map<PageDto>(result);
             }
@@ -81,6 +86,27 @@ namespace Genealogy.Service.Concrete
             var result = _unitOfWork.PageRepository.Get()
                 .Where(item => !item.isRemoved && linkedPageId.Any(linkedId => !(linkedId == item.Id)))
                 .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
+            return result;
+        }
+
+        public PageWithLinksDto GetPageWithLinks(PageFilter filter)
+        {
+            var pages = _unitOfWork.PageRepository.Get();
+            var page = pages.Where(x => (filter.Id != Guid.Empty ? x.Id == filter.Id : true) && (filter.Name != null ? x.Name == filter.Name : true) && !x.isRemoved).FirstOrDefault();
+
+            LinkFilter linkFilter = new LinkFilter()
+            {
+                isRemoved = false,
+                PageId = page.Id
+            };
+
+            var links = GetLinks(linkFilter).FindAll(link => link.TargetPageId != page.Id).Select(l =>
+            {
+                var linkedPage = pages.Where(p => p.Id == l.TargetPageId).FirstOrDefault();
+                return new ShortLinkDto() { Caption = linkedPage.Title, Route = linkedPage.Name, Order = l.Order };
+            });
+            var result = _mapper.Map<PageWithLinksDto>(page);
+            result.Links = links;
             return result;
         }
     }

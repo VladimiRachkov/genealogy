@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Genealogy.Models
 {
@@ -10,5 +11,16 @@ namespace Genealogy.Models
         public string Content { get; set; }
         public bool? isRemoved { get; set; }
         public bool? IsSection { get; set; }
+        public Guid? mainPageId { get; set; }
+    }
+
+    public class PageWithLinksDto
+    {
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public IEnumerable<ShortLinkDto> Links { get; set; }
+        public Guid mainPageId { get; set; }
+        public bool isSection { get; set; }
     }
 }

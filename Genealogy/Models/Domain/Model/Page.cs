@@ -11,5 +11,6 @@ namespace Genealogy.Models
         public string Content { get; set; }
         public bool isRemoved { get; set; }
         public bool isSection { get; set; }
+        public Guid mainPageId { get; set; }
     }
 }

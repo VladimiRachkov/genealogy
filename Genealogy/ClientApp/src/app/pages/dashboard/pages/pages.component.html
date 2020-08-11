@@ -18,7 +18,7 @@
         <input type="text" class="form-control" id="title" placeholder="Введите заголовок" formControlName="title" />
       </div>
       <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="isSection" formControlName="isSection" />
+        <input type="checkbox" class="form-check-input" id="isSection" formControlName="isSection" (click)="onSectionPropChanged()"/>
         <label class="form-check-label" for="isSection">Раздел главного меню</label>
       </div>
       <input type="hidden" formControlName="id" />

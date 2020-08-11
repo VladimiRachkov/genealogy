@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="start">Генеалогия</a>
+  <a class="navbar-brand" routerLink="/">Генеалогия</a>
   <button
     class="navbar-toggler"
     type="button"
@@ -14,7 +14,7 @@
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link" routerLink="necropolis">Некрополь</a>
-      <a class="nav-item nav-link" *ngFor="let section of sections" routerLink="page/{{ section.name }}">{{ section.title }}</a>
+      <a class="nav-item nav-link" *ngFor="let section of sections" [routerLink]="['/', section.name, '']">{{ section.title }}</a>
       <a class="nav-item nav-link" routerLink="dashboard">Администрирование</a>
     </div>
   </div>

@@ -3,20 +3,20 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { ShowComponent } from './show.component';
+import { PageViewerComponent } from './page-viewer.component';
 
-describe('PageComponent', () => {
-  let component: ShowComponent;
-  let fixture: ComponentFixture<ShowComponent>;
+describe('PageViewerComponent', () => {
+  let component: PageViewerComponent;
+  let fixture: ComponentFixture<PageViewerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ShowComponent],
+      declarations: [PageViewerComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShowComponent);
+    fixture = TestBed.createComponent(PageViewerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,6 +9,6 @@ export interface PersonDto {
   source?: string;
   startDate?: string;
   finishDate?: string;
-  removed?: boolean;
+  isRemoved?: boolean;
   cemeteryId?: string;
 }

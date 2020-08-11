@@ -6,7 +6,7 @@ import { CatalogComponent } from './pages/catalog/catalog.component';
 import { NecropolisComponent } from './pages/necropolis/necropolis.component';
 import { LoginComponent } from './pages/login/login.component';
 import { GakoComponent } from './pages/gako/gako.component';
-import { ShowComponent } from './pages/show/show.component';
+import { PageViewerComponent } from './pages/page-viewer/page-viewer.component';
 
 const routes: Routes = [
   {
@@ -34,8 +34,8 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'page/:name',
-    component: ShowComponent,
+    path: ':parent/:child',
+    component: PageViewerComponent,
   },
   {
     path: '**',

@@ -69,7 +69,7 @@ namespace Genealogy.Controllers
             {
                 try
                 {
-                    resultPage = _genealogyService.MarkAsRemovedPage(changedPage.Id.Value);
+                    resultPage = _genealogyService.RemovePage(changedPage.Id.Value);
                 }
                 catch (AppException ex)
                 {
@@ -144,5 +144,22 @@ namespace Genealogy.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("withlinks")]
+        public IActionResult GetWithLinks([FromQuery] PageFilter filter)
+        {
+            PageWithLinksDto result = null;
+            try
+            {
+                result = _genealogyService.GetPageWithLinks(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+
     }
 }

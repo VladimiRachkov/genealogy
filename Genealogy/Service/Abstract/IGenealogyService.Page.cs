@@ -8,9 +8,10 @@ namespace Genealogy.Service.Astract
     {
         List<PageDto> GetPage(PageFilter filter);
         PageDto AddPage(PageDto newPage);
-        PageDto MarkAsRemovedPage(Guid id);
+        PageDto RemovePage(Guid id);
         PageDto ChangePage(PageDto pageDto);
         List<PageListItemDto> GetPages(PageFilter filter);
         List<PageListItemDto> GetFreePages();
+        PageWithLinksDto GetPageWithLinks(PageFilter filter);
     }
 }
