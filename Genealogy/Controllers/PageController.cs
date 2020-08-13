@@ -4,6 +4,7 @@ using Genealogy.Service.Astract;
 using Genealogy.Models;
 using System.Collections.Generic;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {

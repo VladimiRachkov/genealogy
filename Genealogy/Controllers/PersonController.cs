@@ -4,10 +4,11 @@ using Genealogy.Service.Astract;
 using Genealogy.Models;
 using System.Collections.Generic;
 using System;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/person")]
     public class PersonController : Controller

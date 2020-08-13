@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http';
 import { PersonDto, Person } from '@models';
-import { ApiService } from '@services';
+import { ApiService } from '@core';
 
 export interface PersonStateModel {
   personList: Array<PersonDto>;

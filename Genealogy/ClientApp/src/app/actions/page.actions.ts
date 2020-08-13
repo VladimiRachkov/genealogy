@@ -1,4 +1,4 @@
-import { PageFilter, PageDto, LinkDto } from '@models';
+import { PageFilter, PageDto } from '@models';
 
 export class FetchPageList {
   static readonly type = '[Page] Fetch Page List';

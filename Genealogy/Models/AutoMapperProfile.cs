@@ -1,5 +1,4 @@
 using AutoMapper;
-using Genealogy.Models;
 
 namespace Genealogy.Models
 {
@@ -21,6 +20,9 @@ namespace Genealogy.Models
 
             CreateMap<Link, LinkDto>();
             CreateMap<LinkDto, Link>();
+
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
 
 
         }

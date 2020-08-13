@@ -50,7 +50,7 @@ namespace Genealogy.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Link");
+                    b.ToTable("Links");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Page", b =>
@@ -68,11 +68,9 @@ namespace Genealogy.Migrations
 
                     b.Property<bool>("isSection");
 
-                    b.Property<Guid>("mainPageId");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Page");
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Person", b =>
@@ -103,11 +101,60 @@ namespace Genealogy.Migrations
                     b.ToTable("Persons");
                 });
 
+            modelBuilder.Entity("Genealogy.Models.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("FinishDate");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<bool>("IsConfirmed");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<byte[]>("PasswordHash");
+
+                    b.Property<byte[]>("PasswordSalt");
+
+                    b.Property<Guid?>("RoleId");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("Username");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Genealogy.Models.Person", b =>
                 {
                     b.HasOne("Genealogy.Models.Cemetery", "Cemetery")
                         .WithMany()
                         .HasForeignKey("CemeteryId");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.User", b =>
+                {
+                    b.HasOne("Genealogy.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { CemeteryDto, Cemetery } from '@models';
-import { ApiService } from '@services';
+import { ApiService } from '@core';
 
 export interface CemeteryStateModel {
   cemeteryList: Array<CemeteryDto>;

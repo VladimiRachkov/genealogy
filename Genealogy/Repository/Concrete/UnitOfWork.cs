@@ -15,6 +15,10 @@ namespace Genealogy.Repository.Concrete
         private PageRepository pageRepository;
         public LinkRepository LinkRepository => linkRepository ?? new LinkRepository(_genealogyContext);
         private LinkRepository linkRepository;
+        public UserRepository UserRepository => userRepository ?? new UserRepository(_genealogyContext);
+        private UserRepository userRepository;
+        public RoleRepository RoleRepository => roleRepository ?? new RoleRepository(_genealogyContext);
+        private RoleRepository roleRepository;
 
         public UnitOfWork(GenealogyContext genealogyContext)
         {

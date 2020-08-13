@@ -1,1 +1,2 @@
-export { NOTIFICATIONS } from './notifications';
+export * from './notifications';
+export * from './role';

@@ -3,6 +3,7 @@ using Genealogy.Service.Helpers;
 using Genealogy.Service.Astract;
 using Genealogy.Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {

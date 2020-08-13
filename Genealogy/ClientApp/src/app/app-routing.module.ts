@@ -4,9 +4,13 @@ import { PageModule } from './pages/page.module';
 import { StartComponent } from './pages/start/start.component';
 import { CatalogComponent } from './pages/catalog/catalog.component';
 import { NecropolisComponent } from './pages/necropolis/necropolis.component';
-import { LoginComponent } from './pages/login/login.component';
 import { GakoComponent } from './pages/gako/gako.component';
 import { PageViewerComponent } from './pages/page-viewer/page-viewer.component';
+import { RegisterComponent } from './shared/components/register/register.component';
+import { AuthGuard } from '@core';
+import { LoginComponent } from './pages/login';
+import { ROLES } from '@enums';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -16,6 +20,7 @@ const routes: Routes = [
   {
     path: 'necropolis',
     component: NecropolisComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'catalog',
@@ -28,14 +33,25 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule),
+    canActivate: [AuthGuard],
+    data: { roles: [ROLES.ADMIN] },
   },
   {
     path: 'login',
     component: LoginComponent,
   },
   {
+    path: 'register',
+    component: RegisterComponent,
+  },
+  {
     path: ':parent/:child',
     component: PageViewerComponent,
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: '**',

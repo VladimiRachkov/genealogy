@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { tap, map } from 'rxjs/operators';
 import { PageDto, Page, Section, PageWithLinksDto, PageWithLinks } from '@models';
-import { ApiService } from '@services';
 import { FetchPageList, GetPage, AddPage, MarkAsRemovedPage, UpdatePage, AddLink, FetchFreePageList, GetPageWithLinks } from '@actions';
+import { ApiService } from '@core';
 
 export interface PageStateModel {
   pageList: Array<PageDto>;

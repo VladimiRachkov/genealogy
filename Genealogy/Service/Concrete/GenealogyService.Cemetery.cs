@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Genealogy.Models;
+using Genealogy.Repository.Concrete;
 using Genealogy.Service.Astract;
 
 
@@ -9,6 +10,13 @@ namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
+        private UnitOfWork unitOfWork;
+
+        public GenealogyService(UnitOfWork unitOfWork)
+        {
+            this.unitOfWork = unitOfWork;
+        }
+
         public List<CemeteryDto> GetCemetery(CemeteryFilter filter)
         {
             return _unitOfWork.CemeteryRepository.Get(x =>
