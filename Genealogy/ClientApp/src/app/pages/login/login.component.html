@@ -5,15 +5,15 @@
         <div class="card-body">
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
-              <label for="username">Логин или e-mail</label>
+              <label for="email">Ваш e-mail</label>
               <input
                 type="text"
-                formControlName="username"
+                formControlName="email"
                 class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+                [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
               />
-              <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                <div *ngIf="f.username.errors.required">Требуется ввести логин (адрес почты)</div>
+              <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Требуется ввести адрес почты</div>
               </div>
             </div>
             <div class="form-group">

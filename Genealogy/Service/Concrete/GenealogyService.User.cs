@@ -18,22 +18,19 @@ namespace Genealogy.Service.Concrete
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public User Authenticate(string username, string password)
+        public User Authenticate(AuthenticateUserDto userDto)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
                 return null;
 
-            var currentUser = _unitOfWork.UserRepository.GetByUsername(username);
+            var currentUser = _unitOfWork.UserRepository.GetByEmail(userDto.Email);
 
-            // check if username exists
             if (currentUser == null)
                 return null;
 
-            // check if password is correct
-            if (!VerifyPasswordHash(password, currentUser.PasswordHash, currentUser.PasswordSalt))
+            if (!VerifyPasswordHash(userDto.Password, currentUser.PasswordHash, currentUser.PasswordSalt))
                 return null;
 
-            // authentication successful
             return currentUser;
         }
 
@@ -55,13 +52,12 @@ namespace Genealogy.Service.Concrete
         /// <returns></returns>
         public User CreateUser(User user, string password)
         {
-            // validation
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Требуется ввести пароль.");
 
-            if (_unitOfWork.UserRepository.CheckUsername(user.Username))
+            if (_unitOfWork.UserRepository.CheckByEmail(user.Email))
             {
-                throw new AppException("Пользователь " + user.Username + " существует.");
+                throw new AppException("Пользователь с почтой " + user.Email + " уже зарегистрирован.");
             }
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -69,15 +65,17 @@ namespace Genealogy.Service.Concrete
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            user.Role = _unitOfWork.RoleRepository.GetRoleById(DefaultValues.Roles.User.Id);
-
             user.StartDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime());
-
 
             // Учетная запись первого зарегистрированного пользователя должна быть подтверждена
             if (GetUserAmount() == 0)
             {
                 user.IsConfirmed = true;
+                user.Role = _unitOfWork.RoleRepository.GetRoleById(DefaultValues.Roles.Admin.Id);
+            }
+            else
+            {
+                user.Role = _unitOfWork.RoleRepository.GetRoleById(DefaultValues.Roles.User.Id);
             }
 
             _unitOfWork.UserRepository.Add(user);
@@ -87,12 +85,25 @@ namespace Genealogy.Service.Concrete
         }
 
         /// <summary>
+        /// Получить пользователя
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public List<UserDto> GetUser(UserFilter filter)
+        {
+            return _unitOfWork.UserRepository.Get(x =>
+                (filter.Id != Guid.Empty ? x.Id == filter.Id : true &&
+                filter.Username != null ? x.Username == filter.Username : true))
+                .Select(i => _mapper.Map<UserDto>(i)).ToList();
+        }
+
+        /// <summary>
         /// Обновление данных пользователя
         /// </summary>
         /// <param name="userParam"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public User Update(User userParam, string password = null)
+        public User UpdateUser(User userParam, string password = null)
         {
             var user = _unitOfWork.UserRepository.GetByID(userParam.Id);
 
@@ -133,7 +144,7 @@ namespace Genealogy.Service.Concrete
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool Delete(Guid id)
+        public bool RemoveUser(Guid id)
         {
             var user = _unitOfWork.UserRepository.GetByID(id);
             if (user != null)
@@ -187,16 +198,6 @@ namespace Genealogy.Service.Concrete
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Получение пользователя по идентификатору
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public User GetById(Guid id)
-        {
-            return _unitOfWork.UserRepository.GetByID(id);
         }
 
         /// <summary>

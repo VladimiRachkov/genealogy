@@ -24,6 +24,20 @@ namespace Genealogy.Repository.Abstract
         /// </summary>
         /// <returns></returns>
         int GetUserAmount();
+
+        /// <summary>
+        /// Получить учетную запись по почте
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        User GetByEmail(string email);
+
+                /// <summary>
+        /// Проверить существование учетной записи по почте
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        bool CheckByEmail(string email);
     }
 
 }

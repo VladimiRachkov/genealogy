@@ -11,11 +11,21 @@ import { RouterModule } from '@angular/router';
 import { PageViewerComponent } from './page-viewer/page-viewer.component';
 import { LoginComponent } from './login';
 import { ProfileComponent } from './profile/profile.component';
+import { RegisterComponent } from './register';
 
 @NgModule({
   imports: [CommonModule, SharedModule, RouterModule, MaterialModule],
-  exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent],
-  declarations: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, ProfileComponent],
+  exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, RegisterComponent],
+  declarations: [
+    StartComponent,
+    CatalogComponent,
+    NecropolisComponent,
+    GakoComponent,
+    PageViewerComponent,
+    LoginComponent,
+    ProfileComponent,
+    RegisterComponent,
+  ],
   providers: [NotifierService],
 })
 export class PageModule {}

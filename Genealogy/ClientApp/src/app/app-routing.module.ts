@@ -6,11 +6,11 @@ import { CatalogComponent } from './pages/catalog/catalog.component';
 import { NecropolisComponent } from './pages/necropolis/necropolis.component';
 import { GakoComponent } from './pages/gako/gako.component';
 import { PageViewerComponent } from './pages/page-viewer/page-viewer.component';
-import { RegisterComponent } from './shared/components/register/register.component';
 import { AuthGuard } from '@core';
 import { LoginComponent } from './pages/login';
 import { ROLES } from '@enums';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { RegisterComponent } from './pages/register';
 
 const routes: Routes = [
   {

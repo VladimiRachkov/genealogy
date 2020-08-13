@@ -8,9 +8,9 @@ namespace Genealogy.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
-        public string Password { get; set; }
         public string StartDate { get; set; }
         public string FinishDate { get; set; }
         public bool IsConfirmed { get; set; }
+        public string Email { get; set; }
     }
 }

@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '@core';
+import { Store, Select } from '@ngxs/store';
+import { GetUser } from '@actions';
+import { UserState } from 'app/states/user.state';
+import { Observable } from 'rxjs';
+import { User } from '@models';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +12,18 @@ import { AuthenticationService } from '@core';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  constructor(private authenticationService: AuthenticationService) {}
 
-  ngOnInit() {}
+  user: User;
+
+  constructor(private authenticationService: AuthenticationService, private store: Store) {}
+
+  ngOnInit() {
+    const currentUser = this.authenticationService.currentUserValue;
+    this.store.dispatch(new GetUser({ id: currentUser.id })).subscribe(() => {
+      this.user = this.store.selectSnapshot<User>(UserState.user);
+      console.log(this.user)
+    })
+  }
 
   onLogout() {
     this.authenticationService.logout();

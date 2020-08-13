@@ -10,7 +10,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { PersonState, CemeteryState, PageState, MainState } from '@states';
+import { PersonState, CemeteryState, PageState, MainState, UserState } from '@states';
 import { SharedModule } from '@shared';
 import { NotifierModule } from 'angular-notifier';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -26,7 +26,7 @@ import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
     ComponentModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([MainState, PersonState, CemeteryState, PageState, LinkState], {
+    NgxsModule.forRoot([MainState, PersonState, CemeteryState, PageState, LinkState, UserState], {
       developmentMode: !environment.production,
     }),
     NgxsResetPluginModule.forRoot(),

@@ -15,14 +15,14 @@ namespace Genealogy.Service.Astract
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        User Authenticate(string username, string password);
+        User Authenticate(AuthenticateUserDto userDto);
 
         /// <summary>
         /// Получение пользователя по идентификатору
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        User GetById(Guid id);
+        User GetUserById(Guid id);
 
         /// <summary>
         /// Создание пользователя
@@ -32,27 +32,22 @@ namespace Genealogy.Service.Astract
         /// <returns></returns>
         User CreateUser(User user, string password);
 
+        List<UserDto> GetUser(UserFilter filter);
+
         /// <summary>
         /// Обновление данных пользователя
         /// </summary>
         /// <param name="userParam"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        User Update(User userParam, string password = null);
+        User UpdateUser(User userParam, string password = null);
 
         /// <summary>
         /// Удаление пользователя
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        bool Delete(Guid id);
-
-        /// <summary>
-        /// Получение пользователя по идентификатору
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        User GetUserById(Guid id);
+        bool RemoveUser(Guid id);
 
         /// <summary>
         /// Получение списка пользователей

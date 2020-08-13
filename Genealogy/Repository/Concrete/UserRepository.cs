@@ -37,5 +37,26 @@ namespace Genealogy.Repository.Concrete
         {
             return _dbContext.Users.Count();
         }
+
+
+        /// <summary>
+        /// Получить учетную запись по почте
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public User GetByEmail(string email)
+        {
+            return _dbContext.Users.Where(u => u.Email == email).FirstOrDefault();
+        }
+
+                /// <summary>
+        /// Проверить существование учетной записи по почте
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool CheckByEmail(string email)
+        {
+            return _dbContext.Users.Any(u => u.Email == email);
+        }
     }
 }

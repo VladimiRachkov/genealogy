@@ -7,6 +7,7 @@ import { User } from '@models';
 import { Store } from '@ngxs/store';
 import { SetAdminMode, SetAuthorization } from '@actions';
 import { Router } from '@angular/router';
+import { StateResetAll } from 'ngxs-reset-plugin';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -22,9 +23,9 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-  login(username: string, password: string) {
+  login(email: string, password: string) {
     return this.http
-      .post<any>(`${environment.apiUrl}/api/user/auth`, { username, password })
+      .post<any>(`${environment.apiUrl}/api/user/auth`, { email, password })
       .pipe(
         map(user => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes

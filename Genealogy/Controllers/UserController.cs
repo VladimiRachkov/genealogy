@@ -33,18 +33,18 @@ namespace Sirius.Controllers
         }
         [AllowAnonymous]
         [HttpPost("auth")]
-        public IActionResult Authenticate([FromBody] UserDto userDto)
+        public IActionResult Authenticate([FromBody] AuthenticateUserDto userDto)
         {
-            var user = _genealogyService.Authenticate(userDto.Username, userDto.Password);
+            var user = _genealogyService.Authenticate(userDto);
 
             if (user == null)
                 //return Unauthorized();
-                return StatusCode(401, "Неверный логин или пароль.");
+                return StatusCode(403, "Неверный логин или пароль.");
 
             var role = _genealogyService.GetRoleById(user.RoleId.Value);
 
             if (user.IsConfirmed == false)
-                return StatusCode(401, "Пользователь не подтверждён.");
+                return StatusCode(403, "Пользователь не подтверждён.");
 
             var secretKey = _configuration.GetSection("AppSettings").GetChildren().AsEnumerable().Where(i => i.Key == "Secret").FirstOrDefault().Value;
 
@@ -77,7 +77,7 @@ namespace Sirius.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Register([FromBody] UserDto userDto)
+        public IActionResult Register([FromBody] RegistrationUserDto userDto)
         {
             // map dto to entity
             var user = _mapper.Map<User>(userDto);
@@ -102,24 +102,35 @@ namespace Sirius.Controllers
             return Ok(_genealogyService.GetUserAmount());
         }
 
+        /// <summary>
+        /// Получить список кладбищ
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult Get([FromQuery] UserFilter filter)
         {
-            var users = _genealogyService.GetAllUsers();
-            var userDtos = _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
-            return Ok(userDtos);
+            List<UserDto> result = null;
+            try
+            {
+                result = _genealogyService.GetUser(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(Guid id)
         {
-            var user = _genealogyService.GetById(id);
+            var user = _genealogyService.GetUserById(id);
             var userDto = _mapper.Map<UserDto>(user);
             return Ok(userDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody] UserDto userDto)
+        public IActionResult Update(Guid id, [FromBody] AuthenticateUserDto userDto)
         {
             // map dto to entity and set id
             var user = _mapper.Map<User>(userDto);
@@ -128,7 +139,7 @@ namespace Sirius.Controllers
             try
             {
                 // save 
-                _genealogyService.Update(user, userDto.Password);
+                _genealogyService.UpdateUser(user, userDto.Password);
                 return Ok();
             }
             catch (AppException ex)
@@ -142,7 +153,7 @@ namespace Sirius.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
-            _genealogyService.Delete(id);
+            _genealogyService.RemoveUser(id);
             return Ok();
         }
 

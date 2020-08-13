@@ -2,17 +2,14 @@
   <div class="row">
     <div class="col-2 text-center">
       <div class="btn-group-vertical" role="group" aria-label="Profile menu">
-        <button class="btn btn-link">Оплатить</button>
+        <button class="btn btn-link">Пополнить баланс</button>
         <button class="btn btn-link" (click)="onLogout()">Выйти</button>
       </div>
     </div>
     <div class="col-10">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Morbi leo risus</li>
-        <li class="list-group-item">Porta ac consectetur ac</li>
-        <li class="list-group-item">Vestibulum at eros</li>
+      <ul class="list-group list-group-flush" *ngIf="user">
+        <li class="list-group-item">{{ user.lastName }} {{ user.firstName }}</li>
+        <li class="list-group-item">Дата регистрации {{ user.startDate | date: 'dd.MM.yyyy' }}</li>
       </ul>
     </div>
   </div>

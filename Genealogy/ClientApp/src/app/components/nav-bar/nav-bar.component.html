@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="nav navbar-nav flex-row justify-content-between ml-auto">
-    <a class="nav-item nav-link" routerLink="profile" *ngIf="hasAuth$ | async; else login">Кабинет</a>
+    <a class="nav-item nav-link" routerLink="profile" *ngIf="hasAuth$ | async; else login">Личный кабинет</a>
     <ng-template #login>
       <a class="nav-item nav-link" routerLink="login">Вход</a>
     </ng-template>
