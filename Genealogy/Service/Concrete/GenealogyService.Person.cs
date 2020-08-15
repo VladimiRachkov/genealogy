@@ -90,7 +90,7 @@ namespace Genealogy.Service.Concrete
                 var person = _unitOfWork.PersonRepository.GetByID(id);
                 if (person != null)
                 {
-                    person.Removed = true;
+                    person.isRemoved = true;
                     var updatedPerson = UpdatePerson(person);
                     return _mapper.Map<PersonDto>(updatedPerson);
                 }

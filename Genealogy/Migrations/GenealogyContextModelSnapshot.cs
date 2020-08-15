@@ -28,11 +28,29 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<bool>("Removed");
+                    b.Property<bool>("isRemoved");
 
                     b.HasKey("Id");
 
                     b.ToTable("Cemeteries");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.Link", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Caption");
+
+                    b.Property<int>("Order");
+
+                    b.Property<Guid>("PageId");
+
+                    b.Property<Guid>("TargetPageId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Links");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Page", b =>
@@ -44,13 +62,15 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<bool>("Removed");
-
                     b.Property<string>("Title");
+
+                    b.Property<bool>("isRemoved");
+
+                    b.Property<bool>("isSection");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Page");
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Person", b =>
@@ -68,11 +88,11 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("Patronymic");
 
-                    b.Property<bool>("Removed");
-
                     b.Property<string>("Source");
 
                     b.Property<string>("StartDate");
+
+                    b.Property<bool>("isRemoved");
 
                     b.HasKey("Id");
 
@@ -81,11 +101,62 @@ namespace Genealogy.Migrations
                     b.ToTable("Persons");
                 });
 
+            modelBuilder.Entity("Genealogy.Models.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Email");
+
+                    b.Property<DateTime>("FinishDate");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<bool>("IsConfirmed");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<byte[]>("PasswordHash");
+
+                    b.Property<byte[]>("PasswordSalt");
+
+                    b.Property<Guid?>("RoleId");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("Username");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Genealogy.Models.Person", b =>
                 {
                     b.HasOne("Genealogy.Models.Cemetery", "Cemetery")
                         .WithMany()
                         .HasForeignKey("CemeteryId");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.User", b =>
+                {
+                    b.HasOne("Genealogy.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
                 });
 #pragma warning restore 612, 618
         }

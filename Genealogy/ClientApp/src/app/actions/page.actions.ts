@@ -1,5 +1,4 @@
-import { PageFilter } from '@mdl/filters/page.filter';
-import { PageDto } from '@mdl/dtos/page.dto';
+import { PageFilter, PageDto } from '@models';
 
 export class FetchPageList {
   static readonly type = '[Page] Fetch Page List';
@@ -24,4 +23,14 @@ export class MarkAsRemovedPage {
 export class UpdatePage {
   static readonly type = '[Page] Update Page';
   constructor(readonly payload: PageDto) {}
+}
+
+export class FetchFreePageList {
+  static readonly type = '[Page] Free Page List';
+  constructor(readonly payload: string) {}
+}
+
+export class GetPageWithLinks {
+  static readonly type = '[Page] Get Page With Links';
+  constructor(readonly payload: PageFilter) {}
 }

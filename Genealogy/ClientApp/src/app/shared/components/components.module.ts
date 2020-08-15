@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TableComponent } from './dashboard/table/table.component';
-import { AssetsModule } from '@shared/assets/assets.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { AuthFormComponent } from './auth-form/auth-form.component';
+import { AssetsModule } from '../assets';
+import { TableComponent } from './dashboard';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  imports: [CommonModule, AssetsModule, ReactiveFormsModule, FormsModule],
-  exports: [TableComponent, AuthFormComponent],
-  declarations: [TableComponent, AuthFormComponent],
+  imports: [CommonModule, AssetsModule, ReactiveFormsModule, FormsModule, RouterModule],
+  exports: [TableComponent,],
+  declarations: [TableComponent],
 })
 export class ComponentsModule {}

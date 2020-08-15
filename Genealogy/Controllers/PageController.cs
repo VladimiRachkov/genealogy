@@ -4,7 +4,7 @@ using Genealogy.Service.Astract;
 using Genealogy.Models;
 using System.Collections.Generic;
 using System;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {
@@ -62,15 +62,15 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="changedPage"></param>
         /// <returns></returns>
-        [HttpPost("markasremoved")]
-        public IActionResult MarkAsRemoved([FromBody] PageDto changedPage)
+        [HttpPost("remove")]
+        public IActionResult Remove([FromBody] PageDto changedPage)
         {
             PageDto resultPage = null;
             if (changedPage != null && changedPage.Id != null && changedPage.Id != Guid.Empty)
             {
                 try
                 {
-                    resultPage = _genealogyService.MarkAsRemovedPage(changedPage.Id.Value);
+                    resultPage = _genealogyService.RemovePage(changedPage.Id.Value);
                 }
                 catch (AppException ex)
                 {
@@ -104,5 +104,63 @@ namespace Genealogy.Controllers
             }
             return new NoContentResult();
         }
+
+
+        /// <summary>
+        /// Получить страницу
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet("list")]
+        public IActionResult GetPages([FromQuery] PageFilter filter)
+        {
+            List<PageListItemDto> result = null;
+            try
+            {
+                result = _genealogyService.GetPages(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Получить список страниц для ссылок
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet("freelist")]
+        public IActionResult GetFreePages()
+        {
+            List<PageListItemDto> result = null;
+            try
+            {
+                result = _genealogyService.GetFreePages();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("withlinks")]
+        public IActionResult GetWithLinks([FromQuery] PageFilter filter)
+        {
+            PageWithLinksDto result = null;
+            try
+            {
+                result = _genealogyService.GetPageWithLinks(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+
     }
 }

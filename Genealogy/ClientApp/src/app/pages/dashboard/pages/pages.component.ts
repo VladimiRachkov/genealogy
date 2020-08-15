@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Page } from '@mdl/page';
-import { FetchPageList, AddPage, MarkAsRemovedPage, GetPage, UpdatePage } from '@act/page.actions';
-import { PageState } from '@state/page.state';
-import { Table } from '@shared/components/dashboard/table/table';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PageDto } from '@mdl/dtos/page.dto';
-import { PageFilter } from '@mdl/filters/page.filter';
+import { Page, PageFilter, PageDto, Table } from '@models';
+import { AddPage, MarkAsRemovedPage, GetPage, UpdatePage, FetchPageList } from '@actions';
+import { PageState } from '@states';
 import { EditorComponent } from './editor/editor.component';
+import { LinkEditorComponent } from './link-editor/link-editor.component';
 
 @Component({
   selector: 'dashboard-pages',
@@ -15,12 +13,14 @@ import { EditorComponent } from './editor/editor.component';
   styleUrls: ['./pages.component.scss'],
 })
 export class PagesComponent implements OnInit {
-  @ViewChild(EditorComponent, { static: true }) editor: EditorComponent;
+  @ViewChild(LinkEditorComponent, { static: false }) linkEditor: LinkEditorComponent;
+  @ViewChild(EditorComponent, { static: false }) editor: EditorComponent;
 
   pageForm: FormGroup;
+  pageList: Array<Page>;
+  mainPageList: Array<Page>;
   selectedPage: Page;
   tableData: Table.Data;
-
   closeResult: string = null;
 
   constructor(private store: Store) {}
@@ -31,6 +31,7 @@ export class PagesComponent implements OnInit {
       id: new FormControl(null),
       name: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [Validators.required]),
+      isSection: new FormControl(null),
     });
     this.selectedPage = null;
   }
@@ -44,16 +45,6 @@ export class PagesComponent implements OnInit {
     this.store.dispatch(new MarkAsRemovedPage(id)).subscribe(() => this.updateList());
   }
 
-  changeCemetery(id: string) {
-    const filter: PageFilter = { id };
-    this.store.dispatch(new GetPage(filter)).subscribe(() => {
-      const page = this.store.selectSnapshot<Page>(PageState.page);
-      const { id, name, title } = page;
-      this.selectedPage = page;
-      this.pageForm.setValue({ id, name, title });
-    });
-  }
-
   updatePage() {
     const page = this.pageForm.value;
     this.store.dispatch(new UpdatePage(page)).subscribe(() => this.updateList());
@@ -64,23 +55,43 @@ export class PagesComponent implements OnInit {
     this.selectedPage = null;
   }
 
-  onChange(pageId: string) {
-    this.editor.open(pageId);
+  onSelect(id: string) {
+    const filter: PageFilter = { id };
+    this.store.dispatch(new GetPage(filter)).subscribe(() => {
+      const page = this.store.selectSnapshot<PageDto>(PageState.page);
+      const { id, title, name, isSection } = page;
+      this.selectedPage = page as Page;
+      this.pageForm.setValue({ id, name, title, isSection });
+    });
+  }
+
+  onEditorOpen() {
+    this.editor.open(this.selectedPage.id);
   }
 
   onEditorClose(result: string) {
     console.log(result);
   }
 
+  onLinkEditorOpen() {
+    this.linkEditor.open(this.selectedPage.id);
+  }
+
+  onSectionPropChanged() {
+    this.updateList();
+  }
+
   private updateList() {
     this.store.dispatch(new FetchPageList({})).subscribe(() => {
-      const pageList: Array<Page> = this.store.selectSnapshot<Array<Page>>(PageState.pageList);
-      const items = pageList && pageList.map<Table.Item>(item => ({ id: item.id, values: [item.name, item.title] }));
+      this.pageList = this.store.selectSnapshot<Array<Page>>(PageState.pageList);
+      this.mainPageList = this.pageList.filter(page => page.isSection);
+      const items = this.pageList && this.pageList.map<Table.Item>(item => ({ id: item.id, values: [item.name, item.title] }));
       this.tableData = {
         fields: ['Имя', 'Название'],
         items,
       };
       this.resetForm();
+      console.log('PAGES', this.pageList);
     });
   }
 }

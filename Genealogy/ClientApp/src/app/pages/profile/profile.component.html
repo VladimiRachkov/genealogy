@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <div class="col-2 text-center">
+      <div class="btn-group-vertical" role="group" aria-label="Profile menu">
+        <button class="btn btn-link">Пополнить баланс</button>
+        <button class="btn btn-link" (click)="onLogout()">Выйти</button>
+      </div>
+    </div>
+    <div class="col-10">
+      <ul class="list-group list-group-flush" *ngIf="user">
+        <li class="list-group-item">{{ user.lastName }} {{ user.firstName }}</li>
+        <li class="list-group-item">Дата регистрации {{ user.startDate | date: 'dd.MM.yyyy' }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

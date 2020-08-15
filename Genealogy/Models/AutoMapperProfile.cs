@@ -1,5 +1,4 @@
 using AutoMapper;
-using Genealogy.Models;
 
 namespace Genealogy.Models
 {
@@ -12,9 +11,24 @@ namespace Genealogy.Models
 
             CreateMap<PersonDto, Person>();
             CreateMap<Person, PersonDto>();
-            
+
             CreateMap<PageDto, Page>();
             CreateMap<Page, PageDto>();
+            CreateMap<Page, PageWithLinksDto>();
+
+            CreateMap<Page, PageListItemDto>();
+
+            CreateMap<Link, LinkDto>();
+            CreateMap<LinkDto, Link>();
+
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+
+            CreateMap<User, RegistrationUserDto>();
+            CreateMap<RegistrationUserDto, User>();
+
+
+
         }
     }
 }

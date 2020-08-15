@@ -1,5 +1,4 @@
-import { CemeteryDto } from '@mdl/dtos/cemetery.dto';
-import { CemeteryFilter } from '@mdl/filters/cemetery.filter';
+import { CemeteryFilter, CemeteryDto } from '@models';
 
 export class FetchCemeteryList {
   static readonly type = '[Cemetery] Fetch Cemetery List';

@@ -1,0 +1,41 @@
+<ng-template #content let-modal>
+  <div class="modal-body container" class="you-custom-dialog-class" cdkDrag cdkDragRootElement=".your-custom-dialog-class">
+    <div class="row mt-4 ml-2 mb-4 mr-2">
+      <div class="col-8">
+        <div class="card-deck" *ngIf="pages">
+          <div
+            class="card mb-4"
+            style="width: 18rem;"
+            *ngFor="let page of pages"
+            (click)="onSelect(page.id)"
+            [ngClass]="{ 'bg-success': page.location === 'this', 'bg-danger': page.location === 'other' }"
+          >
+            <div class="card-body">
+              <h5 class="card-title">{{ page.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ page.name }}</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div cdkDropListGroup *ngIf="links.length > 0">
+          <div class="drop-list-container">
+            <div cdkDropList [cdkDropListData]="links" class="drop-list" (cdkDropListDropped)="drop($event)">
+              <div class="drop-box" *ngFor="let link of links" cdkDrag>
+                {{ link.caption }}
+                <button mat-icon-button aria-label="Open page" [routerLink]="['/page', link.route]"
+                routerLinkActive="router-link-active">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <mat-paginator></mat-paginator>
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('cancel')">Закрыть</button>
+    </div>
+  </div>
+</ng-template>

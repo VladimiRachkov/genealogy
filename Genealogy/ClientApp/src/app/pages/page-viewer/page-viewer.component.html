@@ -1,0 +1,29 @@
+<div class="container" *ngIf="page">
+  <div class="row">
+    <div class="col-12">
+      <h3>{{ page.title }}</h3>
+    </div>
+  </div>
+  <div class="row pt-2" *ngIf="child; else tableOfContent">
+    <div class="col-3">
+      <ul class="nav flex-column">
+        <li class="nav-item" *ngFor="let link of page.links">
+          <a class="nav-link" [routerLink]="['/', page.name, link.route]" routerLinkActive="active">{{ link.caption }}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-9">
+      <div [innerHtml]="page.content"></div>
+    </div>
+  </div>
+  <ng-template #tableOfContent>
+    <div class="row pt-2">
+      <div class="col-12">
+        <div class="alert alert-secondary text-center" role="menu-item" *ngFor="let link of page.links">
+          <a [routerLink]="['/', page.name, link.route]">{{ link.caption }}</a>
+        </div>
+        <div class="pt-4" [innerHtml]="page.content"></div>
+      </div>
+    </div>
+  </ng-template>
+</div>

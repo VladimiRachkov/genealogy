@@ -2,13 +2,13 @@
   <div class="col-md-6 col-lg-8">
     <app-table
       [data]="tableData"
-      [selectedId]="selectedCemetery?.id"
-      (change)="changeCemetery($event)"
-      (remove)="markAsRemovedCemetery($event)"
+      [selectedId]="cemetery?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
     ></app-table>
   </div>
   <div class="col-md-6 col-lg-4">
-    <form [formGroup]="cemeteryForm" (ngSubmit)="addCemetery()">
+    <form [formGroup]="cemeteryForm" (ngSubmit)="onAdd()">
       <div class="form-group">
         <label for="name">Название</label>
         <input
@@ -26,9 +26,9 @@
       </div>
       <input type="hidden" formControlName="id" />
       <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="submit" class="btn btn-primary" [disabled]="cemeteryForm.invalid || selectedCemetery">Добавить</button>
-        <button type="button" class="btn btn-primary" [disabled]="selectedCemetery === null" (click)="updateCemetery()">Изменить</button>
-        <button type="reset" class="btn btn-primary" (click)="resetForm()">Очистить</button>
+        <button type="submit" class="btn btn-primary" [disabled]="cemeteryForm.invalid || cemetery">Добавить</button>
+        <button type="button" class="btn btn-primary" [disabled]="cemetery === null" (click)="onUpdate()">Изменить</button>
+        <button type="reset" class="btn btn-primary" (click)="onReset()">Очистить</button>
       </div>
     </form>
   </div>

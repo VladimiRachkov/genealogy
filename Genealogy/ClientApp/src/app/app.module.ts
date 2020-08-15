@@ -1,22 +1,23 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComponentModule } from './components/component.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ApiService } from './services/api.service';
-import { ApiInterceptor } from './services/api.interceptor';
 import { environment } from '@env/environment';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { SharedModule } from '@shared/shared.module';
-import { PersonState } from './states/person.state';
-import { CemeteryState } from '@state/cemetery.state';
-import { NotifierModule } from 'angular-notifier';
-import { PageState } from '@state/page.state';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { PersonState, CemeteryState, PageState, MainState, UserState } from '@states';
+import { SharedModule } from '@shared';
+import { NotifierModule } from 'angular-notifier';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LinkState } from './states/link.state';
+import { JwtInterceptor, ErrorInterceptor, ApiInterceptor, ApiService } from '@core';
+import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,26 +26,28 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     ComponentModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([PersonState, CemeteryState, PageState], {
+    NgxsModule.forRoot([MainState, PersonState, CemeteryState, PageState, LinkState, UserState], {
       developmentMode: !environment.production,
     }),
+    NgxsResetPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     SharedModule,
     NotifierModule,
     NgbModule,
-    AngularEditorModule
+    AngularEditorModule,
+    NgxSpinnerModule,
+    BrowserAnimationsModule,
   ],
   exports: [],
   providers: [
     ApiService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ApiInterceptor,
-      multi: true,
-    },
+    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     NgbModal,
   ],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

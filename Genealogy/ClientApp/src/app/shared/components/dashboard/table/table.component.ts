@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Table } from './table';
+import { Table } from '@models';
 
 @Component({
   selector: 'app-table',
@@ -12,6 +12,7 @@ export class TableComponent implements OnInit {
 
   @Output() change: EventEmitter<string> = new EventEmitter();
   @Output() remove: EventEmitter<string> = new EventEmitter();
+
   constructor() {}
 
   ngOnInit() {}
@@ -21,7 +22,7 @@ export class TableComponent implements OnInit {
     this.remove.emit(value);
   }
 
-  onChange(value: string) {
+  onSelect(value: string) {
     event.stopPropagation();
     this.change.emit(value);
   }

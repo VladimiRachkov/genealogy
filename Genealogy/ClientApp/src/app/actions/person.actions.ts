@@ -1,5 +1,4 @@
-import { PersonFilter } from '@mdl/filters/person.filter';
-import { PersonDto } from '@mdl/dtos/person.dto';
+import { PersonFilter, PersonDto } from '@models';
 
 export class FetchPersonList {
   static readonly type = '[Person] Fetch Person List';

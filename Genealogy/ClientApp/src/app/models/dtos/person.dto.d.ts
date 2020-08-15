@@ -1,4 +1,4 @@
-import { Cemetery } from '@mdl/cemetery';
+import { Cemetery } from '@models';
 
 export interface PersonDto {
   id?: string;
@@ -9,6 +9,6 @@ export interface PersonDto {
   source?: string;
   startDate?: string;
   finishDate?: string;
-  removed?: boolean;
+  isRemoved?: boolean;
   cemeteryId?: string;
 }

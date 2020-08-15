@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { FetchPersonList, ClearPersonList } from '@act/person.actions';
-import { Person } from '@mdl/person';
-import { PersonState } from '@state/person.state';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { PersonFilter } from '@mdl/filters/person.filter';
-import { NotifierService } from 'angular-notifier';
+import { Person, PersonFilter } from '@models';
+import { ClearPersonList, FetchPersonList } from '@actions';
+import { PersonState } from '@states';
 
 @Component({
   selector: 'app-necropolis',

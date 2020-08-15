@@ -12,7 +12,7 @@ namespace Genealogy.Service.Concrete
         public List<PageDto> GetPage(PageFilter filter)
         {
             return _unitOfWork.PageRepository.Get(x =>
-            (filter.Id != Guid.Empty ? x.Id == filter.Id : true)).Select(i => _mapper.Map<PageDto>(i)).ToList();
+            (filter.Id != Guid.Empty ? x.Id == filter.Id : true) && (filter.Name != null ? x.Name == filter.Name : true) && !x.isRemoved).Select(i => _mapper.Map<PageDto>(i)).ToList();
         }
 
         public PageDto AddPage(PageDto newPage)
@@ -33,14 +33,14 @@ namespace Genealogy.Service.Concrete
             return null;
         }
 
-        public PageDto MarkAsRemovedPage(Guid id)
+        public PageDto RemovePage(Guid id)
         {
             if (id != Guid.Empty)
             {
                 var page = _unitOfWork.PageRepository.GetByID(id);
                 if (page != null)
                 {
-                    page.Removed = true;
+                    page.isRemoved = true;
                     var updatedPage = UpdatePage(page);
                     return _mapper.Map<PageDto>(updatedPage);
                 }
@@ -53,7 +53,12 @@ namespace Genealogy.Service.Concrete
         {
             if (pageDto != null && pageDto.Id != null)
             {
-                var page = _mapper.Map<Page>(pageDto);
+                var page = _unitOfWork.PageRepository.GetByID(pageDto.Id);
+                page.isSection = pageDto.IsSection != null ? pageDto.IsSection.Value : page.isSection;
+                page.Name = pageDto.Name != null ? pageDto.Name : page.Name;
+                page.Title = pageDto.Title != null ? pageDto.Title : page.Title;
+                page.Content = pageDto.Content != null ? pageDto.Content : page.Content;
+
                 var result = UpdatePage(page);
                 return _mapper.Map<PageDto>(result);
             }
@@ -65,6 +70,44 @@ namespace Genealogy.Service.Concrete
             _unitOfWork.PageRepository.Update(page);
             _unitOfWork.Save();
             return _unitOfWork.PageRepository.GetByID(page.Id);
+        }
+
+        public List<PageListItemDto> GetPages(PageFilter filter)
+        {
+            return _unitOfWork.PageRepository.Get(x =>
+                (filter.isSection != null ? x.isSection == filter.isSection : true) &&
+                (filter.isRemoved != null ? x.isRemoved == filter.isRemoved : true))
+                    .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
+        }
+
+        public List<PageListItemDto> GetFreePages()
+        {
+            var linkedPageId = _unitOfWork.LinkRepository.Get().Select(item => item.TargetPageId);
+            var result = _unitOfWork.PageRepository.Get()
+                .Where(item => !item.isRemoved && linkedPageId.Any(linkedId => !(linkedId == item.Id)))
+                .Select(i => _mapper.Map<PageListItemDto>(i)).ToList();
+            return result;
+        }
+
+        public PageWithLinksDto GetPageWithLinks(PageFilter filter)
+        {
+            var pages = _unitOfWork.PageRepository.Get();
+            var page = pages.Where(x => (filter.Id != Guid.Empty ? x.Id == filter.Id : true) && (filter.Name != null ? x.Name == filter.Name : true) && !x.isRemoved).FirstOrDefault();
+
+            LinkFilter linkFilter = new LinkFilter()
+            {
+                isRemoved = false,
+                PageId = page.Id
+            };
+
+            var links = GetLinks(linkFilter).FindAll(link => link.TargetPageId != page.Id).Select(l =>
+            {
+                var linkedPage = pages.Where(p => p.Id == l.TargetPageId).FirstOrDefault();
+                return new ShortLinkDto() { Caption = linkedPage.Title, Route = linkedPage.Name, Order = l.Order };
+            });
+            var result = _mapper.Map<PageWithLinksDto>(page);
+            result.Links = links;
+            return result;
         }
     }
 }

@@ -16,12 +16,14 @@
     "rootDir": ".",
     "paths": {
       "@env/*": ["environments/*"],
-      "@srv/*": ["app/services/*"],
-      "@mdl/*": ["app/models/*"],
-      "@shared/*": ["app/shared/*"],
-      "@act/*": ["app/actions/*"],
-      "@state/*": ["app/states/*"],
-      "@enums/*": ["app/enums/*"]
+      "@core": ["app/core"],
+      "@models": ["app/models"],
+      "@shared": ["app/shared"],
+      "@actions": ["app/actions"],
+      "@states": ["app/states"],
+      "@enums": ["app/enums"],
+      "@pages": ["app/pages"],
+      "@consts": ["app/consts"]
     }
   },
   "angularCompilerOptions": {
