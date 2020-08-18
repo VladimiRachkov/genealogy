@@ -9,7 +9,7 @@
     <div class="col-10">
       <ul class="list-group list-group-flush" *ngIf="user">
         <li class="list-group-item">{{ user.lastName }} {{ user.firstName }}</li>
-        <li class="list-group-item">Дата регистрации {{ user.startDate | date: 'dd.MM.yyyy' }}</li>
+        <li class="list-group-item">Регистрация {{ user.startDate }}</li>
       </ul>
     </div>
   </div>
