@@ -16,8 +16,9 @@ import { NotifierModule } from 'angular-notifier';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LinkState } from './states/link.state';
-import { JwtInterceptor, ErrorInterceptor, ApiInterceptor, ApiService } from '@core';
+import { JwtInterceptor, ErrorInterceptor, ApiInterceptor, ApiService, StorageModule, AuthenticationService } from '@core';
 import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,13 +39,10 @@ import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
     AngularEditorModule,
     NgxSpinnerModule,
     BrowserAnimationsModule,
+    CoreModule
   ],
   exports: [],
   providers: [
-    ApiService,
-    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     NgbModal,
   ],
   bootstrap: [AppComponent],
