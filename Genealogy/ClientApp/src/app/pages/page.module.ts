@@ -12,6 +12,7 @@ import { PageViewerComponent } from './page-viewer/page-viewer.component';
 import { LoginComponent } from './login';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register';
+import { PaymentComponent } from './payment/payment.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule, RouterModule, MaterialModule],
@@ -25,6 +26,7 @@ import { RegisterComponent } from './register';
     LoginComponent,
     ProfileComponent,
     RegisterComponent,
+    PaymentComponent,
   ],
   providers: [NotifierService],
 })

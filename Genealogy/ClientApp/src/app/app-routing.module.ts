@@ -11,6 +11,7 @@ import { LoginComponent } from './pages/login';
 import { ROLES } from '@enums';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register';
+import { PaymentComponent } from './pages/payment/payment.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,11 @@ const routes: Routes = [
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'payment',
+    component: PaymentComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '**',
