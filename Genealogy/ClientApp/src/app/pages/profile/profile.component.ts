@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
   }
 
   onPayment() {
-    const params: any = { returnUrl: 'http://localhost:5000/payment' };
+    const params: any = { returnUrl: 'http://37.230.116.107/payment' };
     this.apiService.get<string>('payment', params).subscribe(res => window.open(res as string));
   }
 }

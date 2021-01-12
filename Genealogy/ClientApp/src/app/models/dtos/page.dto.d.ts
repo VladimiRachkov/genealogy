@@ -15,4 +15,5 @@ export interface PageWithLinksDto {
   content: string;
   links: Array<ShortLink>;
   isSection: boolean;
+  links: Array<ShortLink>;
 }
