@@ -65,4 +65,11 @@ export class UsersComponent implements OnInit {
       };
     });
   }
+
+  /** Временные заглушки */
+  onRemove() {}
+
+  onAdd() {}
+
+  onBlock() {}
 }

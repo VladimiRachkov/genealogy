@@ -13,7 +13,7 @@ export interface PageWithLinksDto {
   name: string;
   title: string;
   content: string;
-  linkList: Array<ShortLink>;
+  links: Array<ShortLink>;
   isSection: boolean;
   links: Array<ShortLink>;
 }
