@@ -67,7 +67,7 @@ export class UsersComponent implements OnInit {
   }
 
   /** Временные заглушки */
-  onRemove() {}
+  onRemove(event: any) {}
 
   onAdd() {}
 
