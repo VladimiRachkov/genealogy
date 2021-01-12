@@ -1,0 +1,22 @@
+@import "~sass-rem";
+@import "../../../assets/scss/variables.scss";
+
+nav {
+    background: url("../../../assets/background.png");
+}
+
+.logo {
+    width: rem(48px);
+    height: rem(48px);
+}
+
+.navbar-brand {
+    padding: 0;
+}
+.navbar-nav .nav-link {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 50px;
+    line-height: 50px;
+    color: $brown-900;
+}

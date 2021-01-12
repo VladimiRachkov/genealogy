@@ -85,9 +85,9 @@ export class PagesComponent implements OnInit {
     this.store.dispatch(new FetchPageList({})).subscribe(() => {
       this.pageList = this.store.selectSnapshot<Array<Page>>(PageState.pageList);
       this.mainPageList = this.pageList.filter(page => page.isSection);
-      const items = this.pageList && this.pageList.map<Table.Item>(item => ({ id: item.id, values: [item.name, item.title] }));
+      const items = this.pageList && this.pageList.map<Table.Item>(item => ({ id: item.id, values: [item.title, item.name] }));
       this.tableData = {
-        fields: ['Имя', 'Название'],
+        fields: ['Заголовок', 'Имя'],
         items,
       };
       this.resetForm();

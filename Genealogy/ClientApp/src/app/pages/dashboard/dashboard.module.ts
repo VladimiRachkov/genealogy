@@ -4,7 +4,6 @@ import { CemeteryComponent } from './cemetery/cemetery.component';
 import { Routes, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { environment } from '@env/environment';
-import { GakoComponent } from './gako/gako.component';
 import { PagesComponent } from './pages/pages.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +13,8 @@ import { SharedModule } from '@shared';
 import { EditorComponent } from './pages/editor/editor.component';
 import { LinkEditorComponent } from './pages/link-editor/link-editor.component';
 import { MaterialModule } from 'app/material.module';
-
+import { UsersComponent } from './users/users.component';
+import { PersonComponent } from './person/person.component';
 
 const routes: Routes = [
   {
@@ -36,6 +36,14 @@ const routes: Routes = [
     CKEditorModule,
     MaterialModule,
   ],
-  declarations: [DashboardComponent, CemeteryComponent, GakoComponent, PagesComponent, EditorComponent, LinkEditorComponent],
+  declarations: [
+    DashboardComponent,
+    CemeteryComponent,
+    PersonComponent,
+    PagesComponent,
+    EditorComponent,
+    LinkEditorComponent,
+    UsersComponent,
+  ],
 })
 export class DashboardModule {}

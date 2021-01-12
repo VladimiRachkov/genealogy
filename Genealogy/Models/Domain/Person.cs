@@ -14,5 +14,6 @@ namespace Genealogy.Models
         public string StartDate { get; set; }
         public string FinishDate { get; set; }
         public bool isRemoved { get; set; }
+        public PersonGroup PersonGroup { get; set; }
     }
 }

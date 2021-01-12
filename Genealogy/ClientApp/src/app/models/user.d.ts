@@ -1,3 +1,5 @@
+import { USER_STATUSES } from "@enums";
+
 export interface User {
   id: string;
   email: string;
@@ -7,7 +9,7 @@ export interface User {
   lastName: string;
   finishDate: Date;
   startDate: Date;
-  isConfirmed: boolean;
+  status: USER_STATUSES;
   roleId: string;
   token: string;
 }

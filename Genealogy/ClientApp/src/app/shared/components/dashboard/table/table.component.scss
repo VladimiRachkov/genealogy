@@ -1,15 +1,15 @@
-.table {
+.remove-icon {
+    color: rgba(0, 0, 0, 0.1);
+    &:hover {
+        color: red;
+    }
+}
+
+table {
     * {
         border: none;
     }
     tr {
         cursor: pointer;
-    }
-}
-
-.remove-icon {
-    color: rgba(0, 0, 0, 0.1);
-    &:hover {
-        color: red;
     }
 }

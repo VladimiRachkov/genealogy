@@ -49,9 +49,11 @@ namespace Genealogy.Models
         /// <summary>
         /// Флаг подтверждения регистрации
         /// </summary>
-        public bool IsConfirmed { get; set; }
         public Guid? RoleId { get; set; }
         public Role Role { get; set; }
         public string Email { get; set; }
+        public string Status { get; set; }
+
     }
 }
+

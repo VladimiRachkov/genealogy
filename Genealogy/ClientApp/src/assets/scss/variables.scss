@@ -1,0 +1,123 @@
+@import "~sass-rem";
+
+$background-gray: #f7f9ff;
+
+$screen-border-size: rem(24px);
+
+$font-size-xxs: rem(10px);
+$font-size-xs: rem(12px);
+$font-size-sm: rem(14px);
+$font-size-md: rem(16px);
+$font-size-big: rem(20px);
+$font-size-lg: rem(24px);
+$font-size-xl: rem(32px);
+$font-size-base: $font-size-md;
+
+$font-size-toolbar: rem(20px);
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-semibold: 500;
+$font-weight-bold: 600;
+
+$font-weights: (100, 200, 300, 400, 500, 600, 700, 800, 900);
+$font-sizes: (
+    xxs: $font-size-xxs,
+    xs: $font-size-xs,
+    sm: $font-size-sm,
+    md: $font-size-md,
+    big: $font-size-big,
+    lg: $font-size-lg,
+    xl: $font-size-xl,
+    base: $font-size-base,
+);
+
+$white: #fff;
+$gray-100: #f0f1f4;
+$gray-200: #ced3db;
+$gray-300: #b9bcc1;
+$gray-400: #a2a5ad;
+$gray-500: #8b8f99;
+$gray-600: #747984;
+$gray-700: #5d6270;
+$gray-800: #464c5b;
+$gray-900: #2f3647;
+$black: #02142a;
+
+$grays: ();
+$grays: map-merge(
+    (
+        "100": $gray-100,
+        "200": $gray-200,
+        "300": $gray-300,
+        "400": $gray-400,
+        "500": $gray-500,
+        "600": $gray-600,
+        "700": $gray-700,
+        "800": $gray-800,
+        "900": $gray-900,
+    ),
+    $grays
+);
+
+$blue-100: #f0f8ff;
+$blue-200: #e0f1ff;
+$blue-300: #c8e3fa;
+$blue-400: #b0d2f1;
+$blue-500: #8ebeea;
+$blue-600: #61a4e2;
+$blue-700: #1c7dd5;
+$blue-800: #146ab8;
+$blue-900: #0a5499;
+$blue: #084077;
+
+$red-100: #ffefe6;
+$red-200: #fae0d1;
+$red-300: #f5c6ab;
+$red-400: #efa680;
+$red-500: #e8895a;
+$red-600: #df6e3a;
+$red-700: #cf5622;
+$red-800: #b44412;
+$red-900: #993800;
+$red: #d63333;
+
+$yellow-100: #fef2cb;
+$yellow-200: #fdf4cc;
+$yellow-300: #fcefb3;
+$yellow-400: #fbe999;
+$yellow-500: #fae173;
+$yellow-600: #f8d94d;
+$yellow-700: #f5c900;
+$yellow-800: #a77c25;
+$yellow-900: #d68f00;
+$yellow: #b87a17;
+
+$green-100: #f1f8e7;
+$green-200: #e9f5d6;
+$green-300: #ddecc3;
+$green-400: #d1e5af;
+$green-500: #bad986;
+$green-600: #a3cc5e;
+$green-700: #8cbf36;
+$green-800: #5b8f09;
+$green-900: #417406;
+$green: #146417;
+
+$brown-100: #faf8f6;
+$brown-200: #e9ded6;
+$brown-300: #d9c4b6;
+$brown-400: #c8a996;
+$brown-500: #b78f76;
+$brown-600: #a67556;
+$brown-700: #855e46;
+$brown-800: #654835;
+$brown-900: #453124;
+$brown: #453124;
+
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #e83e8c;
+$orange: #fd7e14;
+$teal: #20c997;
+$cyan: #22bbff;

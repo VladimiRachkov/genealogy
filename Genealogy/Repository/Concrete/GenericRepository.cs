@@ -42,7 +42,7 @@ namespace Genealogy.Repository.Concrete
             }
             else
             {
-                return query.ToList();
+                 return query.ToList();
             }
         }
 

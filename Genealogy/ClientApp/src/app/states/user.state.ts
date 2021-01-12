@@ -1,7 +1,7 @@
 import { State, Selector, Action, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { User, UserDto } from '@models';
-import { GetUser } from '@actions';
+import { GetUser, FetchUserList } from '@actions';
 import { HttpParams } from '@angular/common/http';
 import { ApiService } from '@core';
 import { tap } from 'rxjs/operators';
@@ -19,15 +19,26 @@ export interface UserStateModel {
 @Injectable()
 export class UserState {
   constructor(private apiService: ApiService) {}
-  
+
   @Selector()
   static user({ user }: UserStateModel): User {
     return user;
+  }
+
+  @Selector()
+  static userList({ userList }: UserStateModel): Array<User> {
+    return userList;
   }
 
   @Action(GetUser)
   getUser(ctx: StateContext<UserStateModel>, { payload: filter }): Observable<any> {
     const params: HttpParams = filter;
     return this.apiService.get<Array<UserDto>>('user', params).pipe(tap(userList => ctx.patchState({ user: userList[0] as User })));
+  }
+
+  @Action(FetchUserList)
+  fetchUserList(ctx: StateContext<UserStateModel>, { payload: filter }): Observable<any> {
+    const params: HttpParams = filter;
+    return this.apiService.get<Array<UserDto>>('user', params).pipe(tap(userList => ctx.patchState({ userList })));
   }
 }

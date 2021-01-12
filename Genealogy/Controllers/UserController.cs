@@ -12,6 +12,7 @@ using Genealogy.Service.Astract;
 using System.Linq;
 using Genealogy.Models;
 using Genealogy.Service.Helpers;
+using Genealogy.Data;
 
 namespace Sirius.Controllers
 {
@@ -35,19 +36,19 @@ namespace Sirius.Controllers
         [HttpPost("auth")]
         public IActionResult Authenticate([FromBody] AuthenticateUserDto userDto)
         {
-            var user = _genealogyService.Authenticate(userDto);
-
-            if (user == null)
-                //return Unauthorized();
-                return StatusCode(403, "Неверный логин или пароль.");
+            User user;
+            try
+            {
+                user = _genealogyService.Authenticate(userDto);
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(ex.Message);
+            }
 
             var role = _genealogyService.GetRoleById(user.RoleId.Value);
-
-            if (user.IsConfirmed == false)
-                return StatusCode(403, "Пользователь не подтверждён.");
-
             var secretKey = _configuration.GetSection("AppSettings").GetChildren().AsEnumerable().Where(i => i.Key == "Secret").FirstOrDefault().Value;
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -81,7 +82,6 @@ namespace Sirius.Controllers
         {
             // map dto to entity
             var user = _mapper.Map<User>(userDto);
-
             try
             {
                 // save 
@@ -95,7 +95,6 @@ namespace Sirius.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet("amount")]
         public IActionResult GetUserAmount()
         {
@@ -103,7 +102,7 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// Получить список кладбищ
+        /// Получить список пользователей
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -130,7 +129,8 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody] AuthenticateUserDto userDto)
+        [Authorize(Roles = "admin")]
+        public IActionResult Update(Guid id, [FromBody] UserDto userDto)
         {
             // map dto to entity and set id
             var user = _mapper.Map<User>(userDto);
@@ -139,7 +139,7 @@ namespace Sirius.Controllers
             try
             {
                 // save 
-                _genealogyService.UpdateUser(user, userDto.Password);
+                _genealogyService.UpdateUser(user);
                 return Ok();
             }
             catch (AppException ex)
@@ -159,9 +159,9 @@ namespace Sirius.Controllers
 
         [HttpPut("status/{id}")]
         [Authorize(Roles = "admin")]
-        public IActionResult ChangeStatus(Guid id, [FromQuery] bool isConfirmed)
+        public IActionResult ChangeStatus(Guid id, [FromQuery] string status)
         {
-            if (_genealogyService.ChangeUserStatus(id, isConfirmed))
+            if (_genealogyService.ChangeUserStatus(id, status))
             {
                 return StatusCode(200, "Статус пользователя изменён.");
             }

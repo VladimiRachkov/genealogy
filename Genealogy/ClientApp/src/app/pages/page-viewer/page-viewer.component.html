@@ -1,14 +1,17 @@
 <div class="container" *ngIf="page">
   <div class="row">
-    <div class="col-12">
-      <h3>{{ page.title }}</h3>
+    <div class="col-12 pl-4">
+      <h4 class="text-uppercase">{{ page.title }}</h4>
+      <hr />
     </div>
   </div>
-  <div class="row pt-2" *ngIf="child; else tableOfContent">
+
+  <div class="row pt-2 pb-2" *ngIf="child; else tableOfContent">
     <div class="col-3">
       <ul class="nav flex-column">
-        <li class="nav-item" *ngFor="let link of page.links">
+        <li class="nav-item text-uppercase font-weight-bold" *ngFor="let link of page.links; let last = last">
           <a class="nav-link" [routerLink]="['/', page.name, link.route]" routerLinkActive="active">{{ link.caption }}</a>
+          <hr *ngIf="!last" />
         </li>
       </ul>
     </div>
@@ -16,13 +19,16 @@
       <div [innerHtml]="page.content"></div>
     </div>
   </div>
+
   <ng-template #tableOfContent>
-    <div class="row pt-2">
-      <div class="col-12">
-        <div class="alert alert-secondary text-center" role="menu-item" *ngFor="let link of page.links">
-          <a [routerLink]="['/', page.name, link.route]">{{ link.caption }}</a>
+    <div class="row justify-content-center">
+      <div class="col-12 pt-2 pl-4 pr-4">
+        <p class="lead" [innerHtml]="page.content"></p>
+      </div>
+      <div class="col-sm-12 col-md-8">
+        <div class="link text-center" role="menu-item" *ngFor="let link of page.links" [routerLink]="['/', page.name, link.route]">
+          <span class="title text-uppercase">{{ link.caption }}</span>
         </div>
-        <div class="pt-4" [innerHtml]="page.content"></div>
       </div>
     </div>
   </ng-template>

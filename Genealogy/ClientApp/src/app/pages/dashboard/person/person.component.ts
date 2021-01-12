@@ -8,11 +8,11 @@ import { AddPerson, GetPerson, MarkAsRemovedPerson, UpdatePerson, FetchPersonLis
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
 @Component({
-  selector: 'dashboard-gako',
-  templateUrl: './gako.component.html',
-  styleUrls: ['./gako.component.scss'],
+  selector: 'dashboard-person',
+  templateUrl: './person.component.html',
+  styleUrls: ['./person.component.scss'],
 })
-export class GakoComponent implements OnInit, OnDestroy {
+export class PersonComponent implements OnInit, OnDestroy {
   tableData: Table.Data;
   personList: Array<Person>;
   personForm: FormGroup;
