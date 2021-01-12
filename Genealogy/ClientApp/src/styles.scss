@@ -1,7 +1,13 @@
 @import "../node_modules/modern-css-reset/dist/reset.css";
 @import "~angular-notifier/styles";
+@import "./assets/scss/theme.scss";
 
 *,
 body {
     font-size: 14px;
 }
+body {
+    overflow-x: hidden;
+    background-image: url("./assets/background.png");
+}
+

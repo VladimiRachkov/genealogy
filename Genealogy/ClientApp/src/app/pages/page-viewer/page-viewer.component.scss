@@ -1,0 +1,55 @@
+@import "variables.scss";
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.link:hover {
+    cursor: pointer;
+}
+
+/* Variables */
+$linkColor: $brown-900;
+$linkColor2: $brown-200;
+$linkColor3: $brown-100;
+
+/* Mixins */
+@mixin createBox($width, $height, $bRadius, $bgColor, $margin) {
+    width: $width;
+    height: $height;
+    border-radius: $bRadius;
+    background: $bgColor;
+    margin: $margin 0;
+    transition: 0.15s all ease-in-out;
+}
+
+.link {
+    @include createBox(100%, "auto", 8px, white, 16px);
+    position: relative;
+    box-shadow: 0px 0px 1px $linkColor;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    .title {
+        color: $linkColor;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+    &:hover {
+        background: linear-gradient(130deg, $linkColor2 0%, $linkColor3 100%);
+        box-shadow: none;
+        transition: 0.15s all ease-in-out;
+        .title {
+            color: $linkColor;
+            transition: 0.15s all ease-in-out;
+        }
+    }
+}

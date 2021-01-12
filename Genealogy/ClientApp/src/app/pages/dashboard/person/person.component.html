@@ -73,8 +73,8 @@
       <input type="hidden" formControlName="id" />
       <div class="btn-group" role="group" aria-label="Basic example">
         <button type="submit" class="btn btn-primary" [disabled]="personForm.invalid || person">Добавить</button>
-        <button type="button" class="btn btn-primary" [disabled]="person === null" (click)="onUpdate()">Изменить</button>
-        <button type="reset" class="btn btn-primary" (click)="onReset()">Очистить</button>
+        <button type="button" class="btn btn-primary" [disabled]="person === null || personForm.invalid" (click)="onUpdate()">Изменить</button>
+        <button type="reset" class="btn btn-primary">Очистить</button>
       </div>
     </form>
   </div>

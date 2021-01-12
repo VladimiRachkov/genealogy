@@ -88,6 +88,8 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("Patronymic");
 
+                    b.Property<Guid?>("PersonGroupId");
+
                     b.Property<string>("Source");
 
                     b.Property<string>("StartDate");
@@ -98,7 +100,19 @@ namespace Genealogy.Migrations
 
                     b.HasIndex("CemeteryId");
 
+                    b.HasIndex("PersonGroupId");
+
                     b.ToTable("Persons");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.PersonGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PersonGroups");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Role", b =>
@@ -124,8 +138,6 @@ namespace Genealogy.Migrations
 
                     b.Property<string>("FirstName");
 
-                    b.Property<bool>("IsConfirmed");
-
                     b.Property<string>("LastName");
 
                     b.Property<byte[]>("PasswordHash");
@@ -135,6 +147,8 @@ namespace Genealogy.Migrations
                     b.Property<Guid?>("RoleId");
 
                     b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("Status");
 
                     b.Property<string>("Username");
 
@@ -150,6 +164,10 @@ namespace Genealogy.Migrations
                     b.HasOne("Genealogy.Models.Cemetery", "Cemetery")
                         .WithMany()
                         .HasForeignKey("CemeteryId");
+
+                    b.HasOne("Genealogy.Models.PersonGroup", "PersonGroup")
+                        .WithMany("Persons")
+                        .HasForeignKey("PersonGroupId");
                 });
 
             modelBuilder.Entity("Genealogy.Models.User", b =>

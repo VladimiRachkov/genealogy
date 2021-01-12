@@ -1,0 +1,8 @@
+@import "../../../assets/scss/variables.scss";
+
+.nav-link {
+    color: $gray-900;
+    &.active {
+        color: $brown-800;
+    }
+}

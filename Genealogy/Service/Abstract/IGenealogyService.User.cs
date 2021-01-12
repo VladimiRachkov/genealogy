@@ -40,7 +40,7 @@ namespace Genealogy.Service.Astract
         /// <param name="userParam"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        User UpdateUser(User userParam, string password = null);
+        User UpdateUser(User userParam);
 
         /// <summary>
         /// Удаление пользователя
@@ -59,9 +59,9 @@ namespace Genealogy.Service.Astract
         /// Изменить статус пользователя
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="isConfirmed"></param>
+        /// <param name="status"></param>
         /// <returns></returns>
-        bool ChangeUserStatus(Guid userId, bool isConfirmed = false);
+        bool ChangeUserStatus(Guid userId, string status);
 
         /// <summary>
         /// Получение кол-ва зарегистрированных пользователей

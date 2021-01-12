@@ -11,6 +11,7 @@ namespace Genealogy.Repository.Abstract
         LinkRepository LinkRepository { get; }
         UserRepository UserRepository { get; }
         RoleRepository RoleRepository { get; }
+        PersonGroupRepository PersonGroupRepository { get; }
         void Save();
     }
 }

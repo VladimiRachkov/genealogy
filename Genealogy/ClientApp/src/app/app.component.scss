@@ -1,12 +1,51 @@
+@import "~sass-rem";
+
 .header {
     background-image: url("./../assets/header.png");
     background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: rem(8px 8px 0 0);
+    box-shadow: 0px -1px 2px 1px rgba(0, 0, 0, 0.25);
     width: 100%;
-    height: 256px;
+    height: 240px;
+}
+
+.content:before,
+.content:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 100%;
+    height: 20px;
+    display: none;
+}
+
+.content.top-shadow:before {
+    display: block;
+    top: 0px;
+    clip: rect(-40px auto 0 auto);
+}
+.content.bottom-shadow:after {
+    display: block;
+    bottom: 0px;
+    clip: rect(20px auto 40px auto);
+}
+
+@media (max-width: 768px) {
+    .header {
+        background-image: url("./../assets/header_xs.png");
+    }
 }
 
 @media (max-width: 576px) {
     .header {
         display: none;
+    }
+    .content:before,
+    .content:after {
+        box-shadow: none;
     }
 }

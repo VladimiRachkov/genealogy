@@ -1,5 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="/">Генеалогия</a>
+<nav class="navbar navbar-expand-lg navbar-light font-weight-bold text-uppercase">
   <button
     class="navbar-toggler"
     type="button"
@@ -13,8 +12,12 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
+      <a class="navbar-brand" routerLink="/">
+        <img src="../../../assets/logo.png" alt="ГЕНЕАЛОГИЯ" class="logo" />
+      </a>
       <a class="nav-item nav-link" [routerLink]="['/necropolis']">Некрополь</a>
       <a class="nav-item nav-link" *ngFor="let section of sections" [routerLink]="['/', section.name, '']">{{ section.title }}</a>
+      <a class="nav-item nav-link" [routerLink]="['/catalog']">Магазин</a>
       <a class="nav-item nav-link" [routerLink]="['/dashboard']" *ngIf="adminMode$ | async">Администрирование</a>
     </div>
   </div>

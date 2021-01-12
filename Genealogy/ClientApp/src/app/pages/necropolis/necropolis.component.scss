@@ -1,7 +1,16 @@
-.auth-container {
-    display: flex;
-    height: 40vh !important;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+// .auth-container {
+//     display: flex;
+//     height: 40vh !important;
+//     align-items: center;
+//     justify-content: center;
+//     flex-direction: column;
+// }
+
+table {
+    * {
+        border: none;
+    }
+    tr {
+        cursor: pointer;
+    }
 }

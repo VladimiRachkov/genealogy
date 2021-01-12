@@ -23,5 +23,18 @@ namespace Genealogy.Data
                 public static Guid Id { get { return _id; } }
             }
         }
+
+        public static class UserStatuses
+        {
+            private static string _notConfirmed = new String("NOT_CONFIRMED");
+            private static string _actived = new String("ACTIVED");
+            private static string _blocked = new String("BLOCKED");
+            private static string _paid = new String("PAID");
+            public static string NotConfirmed { get { return _notConfirmed; } }
+            public static string Actived { get { return _actived; } }
+            public static string Blocked { get { return _blocked; } }
+            public static string Paid { get { return _paid; } }
+
+        }
     }
 }

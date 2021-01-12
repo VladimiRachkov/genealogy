@@ -21,15 +21,21 @@ namespace Genealogy.Service.Concrete
         public User Authenticate(AuthenticateUserDto userDto)
         {
             if (string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
-                return null;
+                throw new AppException("Не заполнено поле логина или пароля.");
 
             var currentUser = _unitOfWork.UserRepository.GetByEmail(userDto.Email);
 
             if (currentUser == null)
-                return null;
+                throw new AppException("Неверный логин или пароль.");
 
             if (!VerifyPasswordHash(userDto.Password, currentUser.PasswordHash, currentUser.PasswordSalt))
-                return null;
+                throw new AppException("Неверный логин или пароль.");
+
+            if (currentUser.Status == DefaultValues.UserStatuses.NotConfirmed)
+                throw new AppException("Пользователь заблокирован.");
+
+            if (currentUser.Status == DefaultValues.UserStatuses.Blocked)
+                throw new AppException("Пользователь заблокирован.");
 
             return currentUser;
         }
@@ -55,10 +61,10 @@ namespace Genealogy.Service.Concrete
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Требуется ввести пароль.");
 
+
             if (_unitOfWork.UserRepository.CheckByEmail(user.Email))
-            {
                 throw new AppException("Пользователь с почтой " + user.Email + " уже зарегистрирован.");
-            }
+
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
@@ -67,16 +73,14 @@ namespace Genealogy.Service.Concrete
 
             user.StartDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime());
 
-            // Учетная запись первого зарегистрированного пользователя должна быть подтверждена
+            Guid roleId;
             if (GetUserAmount() == 0)
-            {
-                user.IsConfirmed = true;
-                user.Role = _unitOfWork.RoleRepository.GetRoleById(DefaultValues.Roles.Admin.Id);
-            }
+                roleId = DefaultValues.Roles.Admin.Id;
             else
-            {
-                user.Role = _unitOfWork.RoleRepository.GetRoleById(DefaultValues.Roles.User.Id);
-            }
+                roleId = DefaultValues.Roles.User.Id;
+
+            user.Role = _unitOfWork.RoleRepository.GetRoleById(roleId);
+            user.Status = DefaultValues.UserStatuses.Actived;
 
             _unitOfWork.UserRepository.Add(user);
             _unitOfWork.Save();
@@ -103,34 +107,33 @@ namespace Genealogy.Service.Concrete
         /// <param name="userParam"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public User UpdateUser(User userParam, string password = null)
+        public User UpdateUser(User userParam)
         {
             var user = _unitOfWork.UserRepository.GetByID(userParam.Id);
 
             if (user == null)
-                throw new AppException("Пользователь не найден.");
-
-            if (userParam.Username != user.Username)
             {
-                // username has changed so check if the new username is already taken
-                if (_unitOfWork.UserRepository.CheckUsername(user.Username))
-                    throw new AppException("Пользователь " + userParam.Username + " существует.");
+                throw new AppException("Пользователь не найден.");
             }
 
-            // update user properties
+            if (userParam.Username != user.Username && _unitOfWork.UserRepository.CheckUsername(user.Username))
+            {
+                throw new AppException("Пользователь " + userParam.Username + " существует.");
+            }
+
             user.FirstName = userParam.FirstName;
             user.LastName = userParam.LastName;
             user.Username = userParam.Username;
+            user.Status = userParam.Status;
 
-            // update password if it was entered
-            if (!string.IsNullOrWhiteSpace(password))
-            {
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            // if (!string.IsNullOrWhiteSpace(password))
+            // {
+            //     byte[] passwordHash, passwordSalt;
+            //     CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-            }
+            //     user.PasswordHash = passwordHash;
+            //     user.PasswordSalt = passwordSalt;
+            // }
 
             _unitOfWork.UserRepository.Update(user);
             _unitOfWork.Save();
@@ -183,10 +186,14 @@ namespace Genealogy.Service.Concrete
         /// <returns></returns>
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
-            if (password == null) throw new ArgumentNullException("password");
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
-            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
-            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
+            if (password == null)
+                throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password))
+                throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+            if (storedHash.Length != 64)
+                throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
+            if (storedSalt.Length != 128)
+                throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
             {
@@ -212,15 +219,15 @@ namespace Genealogy.Service.Concrete
         /// <summary>
         /// Изменить статус пользователя
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="isConfirmed"></param>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <param name="status">Новый статус пользователя</param>
         /// <returns></returns>
-        public bool ChangeUserStatus(Guid userId, bool isConfirmed = false)
+        public bool ChangeUserStatus(Guid userId, string status)
         {
             var user = GetUserById(userId);
             if (user != null)
             {
-                user.IsConfirmed = isConfirmed;
+                user.Status = status;
                 _unitOfWork.UserRepository.Update(user);
                 _unitOfWork.Save();
                 return true;
