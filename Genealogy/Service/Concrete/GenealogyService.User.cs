@@ -32,7 +32,7 @@ namespace Genealogy.Service.Concrete
                 throw new AppException("Неверный логин или пароль.");
 
             if (currentUser.Status == DefaultValues.UserStatuses.NotConfirmed)
-                throw new AppException("Пользователь заблокирован.");
+                throw new AppException("Пользователь не подтверждён.");
 
             if (currentUser.Status == DefaultValues.UserStatuses.Blocked)
                 throw new AppException("Пользователь заблокирован.");

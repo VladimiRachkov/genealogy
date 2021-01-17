@@ -11,6 +11,7 @@ namespace Genealogy.Models
         /// Идентификатор
         /// </summary>
         public Guid Id { get; set; }
+
         /// <summary>
         /// Имя
         /// </summary>
@@ -47,11 +48,26 @@ namespace Genealogy.Models
         public DateTime FinishDate { get; set; }
 
         /// <summary>
-        /// Флаг подтверждения регистрации
+        /// Идентификтор роли
         /// </summary>
         public Guid? RoleId { get; set; }
+
+        /// <summary>
+        /// Роль
+        /// </summary>
+        /// <value></value>
         public Role Role { get; set; }
+
+        /// <summary>
+        /// Почта
+        /// </summary>
+        /// <value></value>
         public string Email { get; set; }
+
+        /// <summary>
+        /// Статус
+        /// </summary>
+        /// <value></value>
         public string Status { get; set; }
 
     }
