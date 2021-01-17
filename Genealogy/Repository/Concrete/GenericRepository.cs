@@ -42,7 +42,7 @@ namespace Genealogy.Repository.Concrete
             }
             else
             {
-                 return query.ToList();
+                return query.ToList();
             }
         }
 
@@ -83,6 +83,11 @@ namespace Genealogy.Repository.Concrete
         {
             dbSet.Attach(entityToUpdate);
             _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
+        public virtual int Count()
+        {
+            return dbSet.Count();
         }
     }
 }

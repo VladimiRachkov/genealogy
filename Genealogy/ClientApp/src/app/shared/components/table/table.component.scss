@@ -1,0 +1,27 @@
+@import "../../../../assets/scss/variables.scss";
+
+.remove-icon {
+    color: rgba(0, 0, 0, 0.1);
+    &:hover {
+        color: red;
+    }
+}
+
+table {
+    * {
+        border: none;
+    }
+    tbody {
+        tr {
+            cursor: pointer;
+            &:hover {
+                background-color: $blue-100;
+            }
+        }
+    }
+}
+
+.hidden {
+    color: $gray-300;
+    text-decoration: line-through;
+}

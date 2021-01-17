@@ -1,4 +1,6 @@
-export interface PersonFilter {
+import { PaginatorOutDto } from "@models";
+
+export interface PersonFilter extends PaginatorOutDto {
   id?: string;
   lastname?: string;
   fio?: string;

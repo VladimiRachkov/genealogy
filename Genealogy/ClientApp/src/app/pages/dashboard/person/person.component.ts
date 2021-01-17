@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Table, Person, Cemetery, PersonDto, PersonFilter } from '@models';
+import { Table, Person, Cemetery, PersonDto, PersonFilter, Paginator } from '@models';
 import { CemeteryState, PersonState } from '@states';
-import { AddPerson, GetPerson, MarkAsRemovedPerson, UpdatePerson, FetchPersonList } from '@actions';
+import { AddPerson, GetPerson, MarkAsRemovedPerson, UpdatePerson, FetchPersonList, GetPersonsCount } from '@actions';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
 @Component({
@@ -18,12 +18,26 @@ export class PersonComponent implements OnInit, OnDestroy {
   personForm: FormGroup;
   person: Person;
 
+  paginatorOptions: Paginator;
+
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
 
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.updateList();
+    this.store.dispatch(new GetPersonsCount()).subscribe(data => {
+      const { count } = data.person;
+      console.log('COUNT', count);
+
+      this.paginatorOptions = {
+        index: 0,
+        step: 10,
+        count,
+      };
+
+      this.updateList();
+    });
+
     this.personForm = new FormGroup({
       id: new FormControl(null),
       lastname: new FormControl(null, [Validators.required]),
@@ -36,7 +50,7 @@ export class PersonComponent implements OnInit, OnDestroy {
       comment: new FormControl(null, null),
     });
     this.person = null;
-    this.personForm.valueChanges.pipe(untilDestroyed(this)).subscribe(data => console.log(data));
+    /// this.personForm.valueChanges.pipe(untilDestroyed(this)).subscribe(data => console.log(data));
   }
 
   ngOnDestroy() {}
@@ -53,19 +67,16 @@ export class PersonComponent implements OnInit, OnDestroy {
   }
 
   onSelect(id: string) {
+    console.log('ID', id)
     const filter: PersonFilter = { id };
+
     this.store.dispatch(new GetPerson(filter)).subscribe(() => {
-      const {
-        id,
-        lastname,
-        firstname,
-        patronymic,
-        cemeteryId,
-        startDate,
-        finishDate,
-        source,
-        comment,
-      } = this.store.selectSnapshot<PersonDto>(PersonState.person);
+      this.personForm.reset();
+
+      const person = this.store.selectSnapshot<PersonDto>(PersonState.person);
+      const { id, lastname, firstname, patronymic, cemeteryId, startDate, finishDate, source, comment } = person;
+
+      this.person = person as Person;
       this.personForm.setValue({ id, lastname, firstname, patronymic, cemeteryId, startDate, finishDate, source, comment });
     });
   }
@@ -79,8 +90,9 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UpdatePerson(person)).subscribe(() => this.updateList());
   }
 
-  private updateList() {
-    this.store.dispatch(new FetchPersonList({})).subscribe(() => {
+  private updateList(pageIndex: number = 0) {
+    const { step } = this.paginatorOptions;
+    this.store.dispatch(new FetchPersonList({ index: pageIndex, step })).subscribe(() => {
       this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList);
 
       const items = this.personList.map<Table.Item>(item => ({
@@ -91,6 +103,7 @@ export class PersonComponent implements OnInit, OnDestroy {
           item.finishDate,
           item.cemetery ? item.cemetery.name : null,
         ],
+        isHidden: item.isRemoved,
       }));
 
       this.tableData = {
@@ -98,6 +111,11 @@ export class PersonComponent implements OnInit, OnDestroy {
         items,
       };
       this.personForm.getRawValue();
+      this.personForm.updateValueAndValidity();
     });
+  }
+
+  onChangePage(pageIndex: number) {
+    this.updateList(pageIndex);
   }
 }

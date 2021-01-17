@@ -7,3 +7,4 @@ export * from './ui';
 export * from './section';
 export * from './link';
 export * from './user';
+export * from './paginator';

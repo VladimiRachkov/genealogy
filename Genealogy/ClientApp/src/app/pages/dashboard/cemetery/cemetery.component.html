@@ -1,11 +1,11 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
-    <app-table
+    <lancet-table
       [data]="tableData"
       [selectedId]="cemetery?.id"
       (change)="onSelect($event)"
       (remove)="onRemove($event)"
-    ></app-table>
+    ></lancet-table>
   </div>
   <div class="col-md-6 col-lg-4">
     <form [formGroup]="cemeteryForm" (ngSubmit)="onAdd()">

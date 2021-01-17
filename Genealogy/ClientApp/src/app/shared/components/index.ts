@@ -1,2 +1,2 @@
-export * from './components.module';
-export * from './dashboard';
+export * from './table/table.component';
+export * from './paginator/paginator.component';

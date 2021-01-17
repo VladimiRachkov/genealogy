@@ -29,3 +29,7 @@ export class UpdatePerson {
   static readonly type = '[Person] Update Person';
   constructor(readonly payload: PersonDto) {}
 }
+
+export class GetPersonsCount {
+  static readonly type = '[Person] Get Persons Count';
+}

@@ -7,5 +7,6 @@ export declare namespace Table {
   export interface Item {
     id: string;
     values: Array<string>;
+    isHidden?: boolean;
   }
 }

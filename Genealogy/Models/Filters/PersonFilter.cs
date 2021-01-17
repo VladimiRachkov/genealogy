@@ -2,7 +2,7 @@ using System;
 
 namespace Genealogy.Models
 {
-    public class PersonFilter
+    public class PersonFilter : PaginatorInDto
     {
         public Guid Id { get; set; }
         public string Lastname { get; set; }

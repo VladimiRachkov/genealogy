@@ -10,5 +10,6 @@ namespace Genealogy.Service.Astract
         PersonDto AddPerson(PersonDto newPerson);
         PersonDto MarkAsRemovedPerson(Guid id);
         PersonDto ChangePerson(PersonDto personDto);
+        CountOutDto GetPersonsCount();
     }
 }

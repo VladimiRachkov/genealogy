@@ -40,7 +40,7 @@ namespace Genealogy.Controllers
         }
 
         /// <summary>
-        /// Получить список кладбищ
+        /// Получить список 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -99,6 +99,21 @@ namespace Genealogy.Controllers
                 return Ok(resultPerson);
             }
             return new NoContentResult();
+        }
+
+        [HttpGet("count")]
+        public IActionResult GetCount()
+        {
+            CountOutDto result;
+            try
+            {
+                result = _genealogyService.GetPersonsCount();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
         }
     }
 }

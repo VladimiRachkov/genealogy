@@ -11,9 +11,12 @@ namespace Genealogy.Service.Concrete
     {
         public List<PersonDto> GetPerson(PersonFilter filter)
         {
+            var count = _unitOfWork.PersonRepository.Count();
             var persons = _unitOfWork.PersonRepository.Get(x =>
              (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
              (filter.Lastname != null ? x.Lastname == filter.Lastname : true), null, "Cemetery");
+
+            persons = persons.Where((item, index) => index >= filter.Step * filter.Index && index < (filter.Step * filter.Index) + filter.Step);
 
             if (filter.Fio != null)
             {
@@ -110,6 +113,13 @@ namespace Genealogy.Service.Concrete
                 return _mapper.Map<PersonDto>(result);
             }
             return null;
+        }
+
+        public CountOutDto GetPersonsCount()
+        {
+            var result = new CountOutDto();
+            result.Count = _unitOfWork.PersonRepository.Count();
+            return result;
         }
 
         private Person UpdatePerson(Person person)

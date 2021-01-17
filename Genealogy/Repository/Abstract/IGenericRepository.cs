@@ -16,5 +16,6 @@ namespace Genealogy.Repository.Abstract
         void Delete(object id);
         void Delete(TEntity entityToDelete);
         void Update(TEntity entityToUpdate);
+        int Count();
     }
 }

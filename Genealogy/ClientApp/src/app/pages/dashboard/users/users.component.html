@@ -1,6 +1,6 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
-    <app-table [data]="tableData" [selectedId]="user?.id" (change)="onSelect($event)" (remove)="onRemove($event)"></app-table>
+    <lancet-table [data]="tableData" [selectedId]="user?.id" (change)="onSelect($event)" (remove)="onRemove($event)"></lancet-table>
   </div>
   <div class="col-md-6 col-lg-4">
     <form [formGroup]="userForm" (ngSubmit)="onAdd()">
