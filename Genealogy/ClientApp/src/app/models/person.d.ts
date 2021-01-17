@@ -10,4 +10,5 @@ export interface Person {
   startDate: string;
   finishDate: string;
   isRemoved: boolean;
+  comment: string;
 }

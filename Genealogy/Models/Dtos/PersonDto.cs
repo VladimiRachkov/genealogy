@@ -15,5 +15,6 @@ namespace Genealogy.Models
         public string FinishDate { get; set; }
         public bool? isRemoved { get; set; }
         public Guid CemeteryId { get; set; }
+        public string Comment { get; set; }
     }
 }

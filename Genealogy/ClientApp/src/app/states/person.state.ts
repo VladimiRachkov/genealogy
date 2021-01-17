@@ -4,8 +4,9 @@ import { FetchPersonList, GetPerson, AddPerson, MarkAsRemovedPerson, UpdatePerso
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http';
-import { PersonDto, Person } from '@models';
+import { PersonDto, Person, PersonOutDto } from '@models';
 import { ApiService } from '@core';
+import { first } from 'lodash';
 
 export interface PersonStateModel {
   personList: Array<PersonDto>;
@@ -47,7 +48,7 @@ export class PersonState {
   @Action(GetPerson)
   getPerson(ctx: StateContext<PersonStateModel>, { payload: filter }): Observable<Array<PersonDto>> {
     const params: HttpParams = filter;
-    return this.apiService.get<Array<PersonDto>>('person', params).pipe(tap(personList => ctx.patchState({ person: personList[0] })));
+    return this.apiService.get<Array<PersonDto>>('person', params).pipe(tap(personList => ctx.patchState({ person: first(personList) })));
   }
 
   @Action(AddPerson)
@@ -57,7 +58,7 @@ export class PersonState {
 
   @Action(MarkAsRemovedPerson)
   markAsRemovedPerson(ctx: StateContext<PersonStateModel>, { payload: id }: MarkAsRemovedPerson): Observable<any> {
-    const personDto: PersonDto = { id };
+    const personDto: PersonOutDto = { id };
     return this.apiService.post<PersonDto>('person/remove', personDto);
   }
 

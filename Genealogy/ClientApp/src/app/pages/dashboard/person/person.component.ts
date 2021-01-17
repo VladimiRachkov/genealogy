@@ -32,6 +32,8 @@ export class PersonComponent implements OnInit, OnDestroy {
       startDate: new FormControl(null, [Validators.required]),
       finishDate: new FormControl(null, [Validators.required]),
       cemeteryId: new FormControl(null, null),
+      source: new FormControl(null, null),
+      comment: new FormControl(null, null),
     });
     this.person = null;
     this.personForm.valueChanges.pipe(untilDestroyed(this)).subscribe(data => console.log(data));
@@ -53,10 +55,18 @@ export class PersonComponent implements OnInit, OnDestroy {
   onSelect(id: string) {
     const filter: PersonFilter = { id };
     this.store.dispatch(new GetPerson(filter)).subscribe(() => {
-      const person = this.store.selectSnapshot<PersonDto>(PersonState.person);
-      const { id, lastname, firstname, patronymic, cemeteryId, startDate, finishDate } = person;
-      this.person = person as Person;
-      this.personForm.setValue({ id, lastname, firstname, patronymic, cemeteryId, startDate, finishDate });
+      const {
+        id,
+        lastname,
+        firstname,
+        patronymic,
+        cemeteryId,
+        startDate,
+        finishDate,
+        source,
+        comment,
+      } = this.store.selectSnapshot<PersonDto>(PersonState.person);
+      this.personForm.setValue({ id, lastname, firstname, patronymic, cemeteryId, startDate, finishDate, source, comment });
     });
   }
 

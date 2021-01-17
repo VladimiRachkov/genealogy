@@ -11,4 +11,9 @@ export interface PersonDto {
   finishDate?: string;
   isRemoved?: boolean;
   cemeteryId?: string;
+  comment?: string;
+}
+
+export interface PersonOutDto {
+  id: string;
 }
