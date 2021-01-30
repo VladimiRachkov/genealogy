@@ -18,7 +18,7 @@ namespace Genealogy.Controllers
         }
 
         /// <summary>
-        /// Получить ссылка для страницы
+        /// Получить ссылки для страницы
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>

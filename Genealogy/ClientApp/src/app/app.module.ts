@@ -16,7 +16,6 @@ import { NotifierModule } from 'angular-notifier';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LinkState } from './states/link.state';
-import { JwtInterceptor, ErrorInterceptor, ApiInterceptor, ApiService, StorageModule, AuthenticationService } from '@core';
 import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 import { CoreModule } from './core/core.module';
 
@@ -39,12 +38,10 @@ import { CoreModule } from './core/core.module';
     AngularEditorModule,
     NgxSpinnerModule,
     BrowserAnimationsModule,
-    CoreModule
+    CoreModule,
   ],
   exports: [],
-  providers: [
-    NgbModal,
-  ],
+  providers: [NgbModal],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

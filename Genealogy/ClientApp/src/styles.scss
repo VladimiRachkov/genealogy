@@ -1,6 +1,7 @@
 @import "../node_modules/modern-css-reset/dist/reset.css";
 @import "~angular-notifier/styles";
 @import "./assets/scss/theme.scss";
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 *,
 body {
@@ -11,3 +12,18 @@ body {
     background-image: url("./assets/background.png");
 }
 
+.ng-select.custom {
+    .ng-select-container {
+        border: 1px solid #a2a5ad;
+        min-width: 15rem;
+        height: calc(1.5em + 0.75rem + 2px) !important;
+        min-height: calc(1.5em + 0.75rem + 2px) !important;
+        color: #5d6270;
+        .ng-placeholder {
+            color: #5d6270 !important;
+        }
+    }
+    .ng-clear-wrapper .ng-clear {
+        font-size: 0;
+    }
+}

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Genealogy.Helpers;
 using Genealogy.Models;
 using Genealogy.Service.Astract;
 using Genealogy.Service.Helpers;
@@ -11,12 +13,23 @@ namespace Genealogy.Service.Concrete
     {
         public List<PersonDto> GetPerson(PersonFilter filter)
         {
+            if (filter.Fio == null && filter.Id == Guid.Empty)
+            {
+                return null;
+            }
+            return GetAllPersons(filter);
+        }
+
+        public List<PersonDto> GetAllPersons(PersonFilter filter)
+        {
             var count = _unitOfWork.PersonRepository.Count();
+
             var persons = _unitOfWork.PersonRepository.Get(x =>
              (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
-             (filter.Lastname != null ? x.Lastname == filter.Lastname : true), null, "Cemetery");
-
-            persons = persons.Where((item, index) => index >= filter.Step * filter.Index && index < (filter.Step * filter.Index) + filter.Step);
+             (filter.Lastname != null ? x.Lastname == filter.Lastname : true) &&
+             (filter.CemeteryId != Guid.Empty ? x.Cemetery.Id == filter.CemeteryId : true), x => x.OrderBy(item => item.Lastname)
+                .ThenBy(item => item.Firstname)
+                .ThenBy(item => item.Patronymic), "Cemetery");
 
             if (filter.Fio != null)
             {
@@ -41,17 +54,17 @@ namespace Genealogy.Service.Concrete
                     bool hasFirstname = false, hasLastname = false, hasPatronymic = false;
                     var score = names.Select(item => item.ToLower()).Select(str =>
                     {
-                        if (person.Firstname.ToLower().Contains(str) && !hasFirstname)
+                        if (person.Firstname != null && person.Firstname.ToLower().Contains(str) && !hasFirstname)
                         {
                             hasFirstname = true;
                             return 2;
                         }
-                        if (person.Lastname.ToLower().Contains(str) && !hasLastname)
+                        if (person.Lastname != null && person.Lastname.ToLower().Contains(str) && !hasLastname)
                         {
                             hasLastname = true;
                             return 4;
                         }
-                        if (person.Patronymic.ToLower().Contains(str) && !hasPatronymic)
+                        if (person.Patronymic != null && person.Patronymic.ToLower().Contains(str) && !hasPatronymic)
                         {
                             hasPatronymic = true;
                             return 1;
@@ -64,6 +77,12 @@ namespace Genealogy.Service.Concrete
                 .OrderByDescending(x => x.Item2)
                 .Select(x => x.Item1);
             }
+
+            if (filter.Step > 0)
+            {
+                persons = persons.Where((item, index) => index >= filter.Step * filter.Index && index < (filter.Step * filter.Index) + filter.Step);
+            }
+
             return persons.Select(i => _mapper.Map<PersonDto>(i)).ToList();
         }
 
@@ -86,31 +105,32 @@ namespace Genealogy.Service.Concrete
             return null;
         }
 
-        public PersonDto MarkAsRemovedPerson(Guid id)
-        {
-            if (id != Guid.Empty)
-            {
-                var person = _unitOfWork.PersonRepository.GetByID(id);
-                if (person != null)
-                {
-                    person.isRemoved = true;
-                    var updatedPerson = UpdatePerson(person);
-                    return _mapper.Map<PersonDto>(updatedPerson);
-                }
-                return null;
-            }
-            return null;
-        }
-
         public PersonDto ChangePerson(PersonDto personDto)
         {
             if (personDto != null && personDto.Id != null)
             {
-                var person = _mapper.Map<Person>(personDto);
-                person.Cemetery = _unitOfWork.CemeteryRepository.GetByID(personDto.CemeteryId);
+                PersonDto result;
+                //TODO: Сделать проверку всех свойств на наличие изменений
+                var changedPerson = _mapper.Map<Person>(personDto);
+                //changedPerson.Cemetery = _unitOfWork.CemeteryRepository.GetByID(personDto.CemeteryId);
 
-                var result = UpdatePerson(person);
-                return _mapper.Map<PersonDto>(result);
+                var person = _unitOfWork.PersonRepository.GetByID(personDto.Id);
+
+                if (personDto.isRemoved.Value && person.isRemoved)
+                {
+                    result = RemovePerson(person) ? personDto : null;
+                }
+                else
+                {
+                    ObjectValues.CopyValues(person, changedPerson);
+                    person = UpdatePerson(person);
+                    result = _mapper.Map<PersonDto>(person);
+                }
+
+                if (result != null)
+                {
+                    return _mapper.Map<PersonDto>(result);
+                }
             }
             return null;
         }
@@ -126,7 +146,18 @@ namespace Genealogy.Service.Concrete
         {
             _unitOfWork.PersonRepository.Update(person);
             _unitOfWork.Save();
+
             return _unitOfWork.PersonRepository.GetByID(person.Id);
         }
+
+        private bool RemovePerson(Person person)
+        {
+            _unitOfWork.PersonRepository.Delete(person);
+            _unitOfWork.Save();
+
+            return true;
+        }
+
+
     }
 }

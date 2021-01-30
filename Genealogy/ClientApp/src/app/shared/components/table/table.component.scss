@@ -1,9 +1,18 @@
 @import "../../../../assets/scss/variables.scss";
 
-.remove-icon {
-    color: rgba(0, 0, 0, 0.1);
-    &:hover {
-        color: red;
+.icon {
+    transition: color 0.5s;
+    &.remove {
+        color: $red-300;
+        &:hover {
+            color: $red-700;
+        }
+    }
+    &.restore {
+        color: $green-300;
+        &:hover {
+            color: $green-700;
+        }
     }
 }
 

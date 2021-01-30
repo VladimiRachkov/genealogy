@@ -1,6 +1,6 @@
 import { State, Selector, StateContext, Action } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { FetchPersonList, GetPerson, AddPerson, MarkAsRemovedPerson, UpdatePerson, ClearPersonList, GetPersonsCount } from '@actions';
+import { FetchPersonList, AddPerson, UpdatePerson, ClearPersonList, GetPersonsCount, FetchPerson, FetchAllPersons } from '@actions';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http';
@@ -13,6 +13,8 @@ export interface PersonStateModel {
   person: PersonDto;
   count: number;
 }
+
+const apiUrl = 'persons';
 
 @State<PersonStateModel>({
   name: 'person',
@@ -35,7 +37,7 @@ export class PersonState {
   @Action(FetchPersonList)
   fetchPersonList(ctx: StateContext<PersonStateModel>, { payload: filter }): Observable<Array<PersonDto>> {
     const params: HttpParams = filter;
-    return this.apiService.get<Array<PersonDto>>('person', params).pipe(tap(personList => ctx.patchState({ personList })));
+    return this.apiService.get<Array<PersonDto>>(apiUrl, params).pipe(tap(personList => ctx.patchState({ personList })));
   }
 
   @Action(ClearPersonList)
@@ -43,31 +45,32 @@ export class PersonState {
     ctx.patchState({ personList: [] });
   }
 
-  @Action(GetPerson)
+  @Action(FetchPerson)
   getPerson(ctx: StateContext<PersonStateModel>, { payload: filter }): Observable<Array<PersonDto>> {
     const params: HttpParams = filter;
-    return this.apiService.get<Array<PersonDto>>('person', params).pipe(tap(personList => ctx.patchState({ person: first(personList) })));
+    return this.apiService.get<Array<PersonDto>>(apiUrl, params).pipe(tap(personList => ctx.patchState({ person: first(personList) })));
+  }
+
+  @Action(FetchAllPersons)
+  getAllPersons(ctx: StateContext<PersonStateModel>, { payload: filter }): Observable<Array<PersonDto>> {
+    const params: HttpParams = filter;
+    const url = apiUrl + '/all';
+
+    return this.apiService.get<Array<PersonDto>>(url, params).pipe(tap(personList => ctx.patchState({ personList   })));
   }
 
   @Action(AddPerson)
   addPerson(ctx: StateContext<PersonStateModel>, { payload: person }: AddPerson): Observable<any> {
-    return this.apiService.post<PersonDto>('person', person).pipe(tap(data => console.log('ADD', data)));
-  }
-
-  @Action(MarkAsRemovedPerson)
-  markAsRemovedPerson(ctx: StateContext<PersonStateModel>, { payload: id }: MarkAsRemovedPerson): Observable<any> {
-    const personDto: PersonOutDto = { id };
-    return this.apiService.post<PersonDto>('person/remove', personDto);
+    return this.apiService.post<PersonDto>(apiUrl, person);
   }
 
   @Action(UpdatePerson)
   updatePerson(ctx: StateContext<PersonStateModel>, { payload: person }: UpdatePerson): Observable<any> {
-    console.log('PERSON', person);
-    return this.apiService.put<PersonDto>('person', person);
+    return this.apiService.put<PersonDto>(apiUrl, person);
   }
 
   @Action(GetPersonsCount)
   getPersonsCount(ctx: StateContext<PersonStateModel>): Observable<CountInDto> {
-    return this.apiService.get<CountInDto>('person/count', null).pipe(tap(res => ctx.patchState({ count: res.count })));
+    return this.apiService.get<CountInDto>(`${apiUrl}/count`, null).pipe(tap(res => ctx.patchState({ count: res.count })));
   }
 }

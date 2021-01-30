@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Table, Person, Cemetery, PersonDto, PersonFilter, Paginator } from '@models';
 import { CemeteryState, PersonState } from '@states';
-import { AddPerson, GetPerson, MarkAsRemovedPerson, UpdatePerson, FetchPersonList, GetPersonsCount } from '@actions';
-import { untilDestroyed } from 'ngx-take-until-destroy';
+import { AddPerson, UpdatePerson, GetPersonsCount, FetchPerson, FetchAllPersons } from '@actions';
 
 @Component({
   selector: 'dashboard-person',
@@ -19,37 +18,29 @@ export class PersonComponent implements OnInit, OnDestroy {
   person: Person;
 
   paginatorOptions: Paginator;
+  pageIndex: number = 0;
+  step: number = 10;
+  startIndex: number = 0;
 
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
 
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.store.dispatch(new GetPersonsCount()).subscribe(data => {
-      const { count } = data.person;
-      console.log('COUNT', count);
-
-      this.paginatorOptions = {
-        index: 0,
-        step: 10,
-        count,
-      };
-
-      this.updateList();
-    });
-
     this.personForm = new FormGroup({
       id: new FormControl(null),
-      lastname: new FormControl(null, [Validators.required]),
-      firstname: new FormControl(null, [Validators.required]),
-      patronymic: new FormControl(null, [Validators.required]),
-      startDate: new FormControl(null, [Validators.required]),
-      finishDate: new FormControl(null, [Validators.required]),
+      lastname: new FormControl(null, null),
+      firstname: new FormControl(null, null),
+      patronymic: new FormControl(null, null),
+      startDate: new FormControl(null, null),
+      finishDate: new FormControl(null, null),
       cemeteryId: new FormControl(null, null),
       source: new FormControl(null, null),
       comment: new FormControl(null, null),
     });
     this.person = null;
+
+    this.updatePaginator();
     /// this.personForm.valueChanges.pipe(untilDestroyed(this)).subscribe(data => console.log(data));
   }
 
@@ -63,14 +54,13 @@ export class PersonComponent implements OnInit, OnDestroy {
     const person = this.personForm.value as PersonDto;
 
     this.personForm.value.cemeteryId;
-    this.store.dispatch(new AddPerson(person)).subscribe(() => this.updateList());
+    this.store.dispatch(new AddPerson(person)).subscribe(() => this.updatePaginator());
   }
 
   onSelect(id: string) {
-    console.log('ID', id)
     const filter: PersonFilter = { id };
 
-    this.store.dispatch(new GetPerson(filter)).subscribe(() => {
+    this.store.dispatch(new FetchPerson(filter)).subscribe(() => {
       this.personForm.reset();
 
       const person = this.store.selectSnapshot<PersonDto>(PersonState.person);
@@ -82,7 +72,11 @@ export class PersonComponent implements OnInit, OnDestroy {
   }
 
   onRemove(id: string) {
-    this.store.dispatch(new MarkAsRemovedPerson(id)).subscribe(() => this.updateList());
+    this.store.dispatch(new UpdatePerson({ id, isRemoved: true })).subscribe(() => this.updatePaginator());
+  }
+
+  onRestore(id: string) {
+    this.store.dispatch(new UpdatePerson({ id, isRemoved: false })).subscribe(() => this.updatePaginator());
   }
 
   onUpdate() {
@@ -90,11 +84,13 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UpdatePerson(person)).subscribe(() => this.updateList());
   }
 
-  private updateList(pageIndex: number = 0) {
+  private updateList(pageIndex: number = this.pageIndex) {
+    this.paginatorOptions.index = pageIndex;
     const { step } = this.paginatorOptions;
-    this.store.dispatch(new FetchPersonList({ index: pageIndex, step })).subscribe(() => {
-      this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList);
 
+    this.store.dispatch(new FetchAllPersons({ index: pageIndex, step })).subscribe(() => {
+      this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList) || [];
+      
       const items = this.personList.map<Table.Item>(item => ({
         id: item.id,
         values: [
@@ -103,7 +99,7 @@ export class PersonComponent implements OnInit, OnDestroy {
           item.finishDate,
           item.cemetery ? item.cemetery.name : null,
         ],
-        isHidden: item.isRemoved,
+        isRemoved: item.isRemoved,
       }));
 
       this.tableData = {
@@ -116,6 +112,20 @@ export class PersonComponent implements OnInit, OnDestroy {
   }
 
   onChangePage(pageIndex: number) {
+    this.pageIndex = pageIndex;
+    this.startIndex = pageIndex * this.step;
     this.updateList(pageIndex);
+  }
+
+  private updatePaginator() {
+    this.store.dispatch(new GetPersonsCount()).subscribe(data => {
+      this.paginatorOptions = {
+        index: 0,
+        step: this.step,
+        count: data.person.count,
+      };
+
+      this.updateList();
+    });
   }
 }

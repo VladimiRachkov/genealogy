@@ -129,7 +129,7 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public IActionResult Update(Guid id, [FromBody] UserDto userDto)
         {
             // map dto to entity and set id
@@ -150,7 +150,7 @@ namespace Sirius.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
             _genealogyService.RemoveUser(id);
@@ -158,7 +158,7 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("status/{id}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public IActionResult ChangeStatus(Guid id, [FromQuery] string status)
         {
             if (_genealogyService.ChangeUserStatus(id, status))

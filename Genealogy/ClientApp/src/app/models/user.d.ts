@@ -1,4 +1,4 @@
-import { USER_STATUSES } from "@enums";
+import { USER_STATUS } from "@enums";
 
 export interface User {
   id: string;
@@ -9,7 +9,7 @@ export interface User {
   lastName: string;
   finishDate: Date;
   startDate: Date;
-  status: USER_STATUSES;
+  status: USER_STATUS;
   roleId: string;
   token: string;
 }

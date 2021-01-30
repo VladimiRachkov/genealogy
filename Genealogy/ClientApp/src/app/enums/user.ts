@@ -1,6 +1,6 @@
-export enum USER_STATUSES {
-  NOT_CONFIRMED = 'Не подтвержден e-mail',
-  ACTIVED = 'Активный',
-  BLOCKED = 'Заблокирован',
-  PAID = 'Оплачен',
+export enum USER_STATUS {
+  NOT_CONFIRMED = 'NOT_CONFIRMED',
+  ACTIVE = 'ACTIVE',
+  BLOCKED = 'BLOCKED',
+  PAID = 'PAID',
 }

@@ -1,4 +1,4 @@
-<nav aria-label="Page navigation example" *ngIf="options">
+<nav aria-label="Page navigation example" *ngIf="options?.count > 0 && options?.count > options?.step">
   <ul class="pagination justify-content-center">
     <li class="page-item">
       <a class="page-link" (click)="onPrevPage(i)" aria-label="Предыдущая страница">

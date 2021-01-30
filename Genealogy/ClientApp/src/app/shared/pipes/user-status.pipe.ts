@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { USER_STATUSES } from '@enums';
+import { USER_STATUS } from '@enums';
 
 @Pipe({
   name: 'user-status'
@@ -7,8 +7,7 @@ import { USER_STATUSES } from '@enums';
 export class UserStatusPipe implements PipeTransform {
 
   transform(value: string): any {
-    console.log(value, USER_STATUSES)
-    return USER_STATUSES[value];
+    return USER_STATUS[value];
   }
 
 }

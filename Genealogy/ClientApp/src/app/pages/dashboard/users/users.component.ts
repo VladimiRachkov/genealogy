@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { User, Table, UserFilter, UserDto } from '@models';
 import { Store, Select } from '@ngxs/store';
-import { FetchUserList, GetUser } from '@actions';
+import { FetchUserList, GetUser, UpdateUser } from '@actions';
 import { UserState } from '@states';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { USER_STATUSES } from '@enums';
+import { USER_STATUS } from '@enums';
 import { UserStatusPipe } from 'app/shared/pipes';
 
 @Component({
@@ -21,7 +21,7 @@ export class UsersComponent implements OnInit {
   tableData: Table.Data;
   userForm: FormGroup;
   user: User;
-  USER_STATUSES = USER_STATUSES;
+  USER_STATUS = USER_STATUS;
   hasUserActived: boolean;
 
   constructor(private store: Store, private userStatusPipe: UserStatusPipe) {}
@@ -42,7 +42,7 @@ export class UsersComponent implements OnInit {
       this.user = this.store.selectSnapshot<UserDto>(UserState.user) as User;
       const { id, lastName, firstName, email, status } = this.user;
       this.userForm.setValue({ id, lastName, firstName, email });
-      this.hasUserActived = this.user.status === USER_STATUSES.ACTIVED || this.user.status === USER_STATUSES.PAID;
+      this.hasUserActived = this.user.status === USER_STATUS.ACTIVE  || this.user.status === USER_STATUS.PAID;
     });
   }
 
@@ -57,6 +57,7 @@ export class UsersComponent implements OnInit {
       const items = this.userList.map<Table.Item>(item => ({
         id: item.id,
         values: [`${item.lastName} ${item.firstName}`, item.email, this.userStatusPipe.transform(item.status)],
+        isRemoved: item.status == USER_STATUS.BLOCKED
       }));
 
       this.tableData = {
@@ -66,10 +67,11 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  /** Временные заглушки */
-  onRemove(event: any) {}
+  onRemove(id: string) {
+    this.store.dispatch(new UpdateUser({ id, status: USER_STATUS.BLOCKED })).subscribe(() => this.updateList());
+  }
 
-  onAdd() {}
-
-  onBlock() {}
+  onRestore(id: string) {
+    this.store.dispatch(new UpdateUser({ id, status: USER_STATUS.ACTIVE })).subscribe(() => this.updateList());
+  }
 }

@@ -4,51 +4,49 @@
   </div>
   <div class="col-12">
     <p class="pl-4 pr-4 ml-4 mr-4">
-      Теперь собранные мной данные доступны онлайн. Сразу же после регистрации и оплаты абонентской платы 250 рублей - Вы получаете доступ к
-      базе на 1 месяц. Информация о пополнении базы данных новыми некрополями будут получать все зарегистрированные пользователи.
+      Теперь собранные мной данные доступны онлайн. Сразу же после регистрации и оплаты абонентской платы (250 рублей) Вы получаете доступ к
+      базе на 1 месяц. Информацию о пополнении базы данных новыми некрополями будут получать все зарегистрированные пользователи.
     </p>
   </div>
-  <div class="col-6 pt-2">
+  <div class="col-6 pt-2" *ngIf="hasAuth; else regButton">
     <form class="form-inline md-form mr-auto mb-4" [formGroup]="searchForm" (ngSubmit)="search()">
-      <input class="form-control mr-2" type="text" placeholder="Введите ФИО" aria-label="Search" formControlName="fio" required />
-      <select class="form-control mr-2" id="cemetery">
-        <option>Выберите место захоронения</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-      </select>
-      <button class="btn btn-primary text-uppercase" type="submit">Искать</button>
+      <input class="form-control mr-2" type="text" placeholder="Введите ФИО" aria-label="Name" formControlName="fio" required />
+
+      <ng-select
+        class="mr-2 custom"
+        [items]="cemeteries"
+        bindLabel="name"
+        bindValue="id"
+        id="cemetery"
+        aria-label="Cemetery"
+        formControlName="cemeteryId"
+        placeholder="Укажите место захоронения"
+      >
+      </ng-select>
+
+      <button class="btn btn-primary text-uppercase" type="submit">
+        <fa-icon icon="search"></fa-icon>
+        Искать
+      </button>
     </form>
   </div>
+
   <div class="col-12">
-    <table class="table table-striped" *ngIf="personList">
-      <thead>
-        <tr>
-          <th scope="col">ФИО</th>
-          <th scope="col">Даты</th>
-          <th scope="col">Сведения</th>
-          <th scope="col">Место захоронения</th>
-          <th scope="col">Источник информации</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of personList">
-          <td>{{ item.lastname }} {{ item.firstname }} {{ item.patronymic }}</td>
-          <td>{{ item.startDate }} - {{ item.finishDate }}</td>
-          <td>-</td>
-          <td>{{ item.cemetery.name }}</td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+    <lancet-table [data]="tableData" [selectedId]="person?.id" (change)="onSelect($event)"></lancet-table>
+    <lancet-paginator [options]="paginatorOptions"></lancet-paginator>
+
+    <ng-template #regButton>
+      <button class="btn btn-link text-uppercase" [routerLink]="['/login']"><u>Войти или зарегистрироваться</u></button>
+    </ng-template>
   </div>
+
   <div class="col-12">
     <p class="pl-4 pr-4 ml-4 mr-4">
       Если Вы не нашли сведений о нужных Вам захоронениях или необходимый Вам некрополь еще не создан, то Вы можете обратиться ко мне для
       заказа некрополистического исследования!
     </p>
   </div>
+
   <div class="col-12 text-center pb-4">
     <button class="btn btn-secondary text-uppercase">Заказать некрополистическое исследование</button>
   </div>

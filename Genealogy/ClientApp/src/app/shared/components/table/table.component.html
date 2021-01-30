@@ -1,29 +1,37 @@
 <table class="table table-striped" *ngIf="data?.items?.length > 0; else emptyList">
   <thead>
     <tr>
-      <th scope="col">#</th>
+      <th scope="col">№</th>
       <th scope="col" *ngFor="let field of data?.fields">{{ field }}</th>
-      <th scope="col"></th>
+      <th scope="col" *ngIf="showActionButtons"></th>
     </tr>
   </thead>
   <tbody>
     <ng-container *ngFor="let item of data?.items; let itemIndex = index">
       <tr
         (click)="onSelect(item.id)"
-        [ngClass]="{ 'text-primary': item.id == selectedId, hidden: item.isHidden }"
-        *ngIf="!item.isHidden || (item.isHidden && showHidden)"
+        [ngClass]="{ 'text-primary': item.id == selectedId, hidden: item.isRemoved }"
+        *ngIf="!item.isRemoved || (item.isRemoved && showRemoved)"
       >
-        <th scope="row">{{ itemIndex + 1 }}</th>
+        <th scope="row">{{ startIndex + itemIndex + 1 }}</th>
         <td *ngFor="let val of item.values">
           {{ val }}
         </td>
-        <td class="text-right">
-          <a (click)="onRemove(item.id)"><fa-icon class="remove-icon" icon="times"></fa-icon></a>
+        <td class="d-flex flex-column align-items-center" *ngIf="showActionButtons">
+          <a (click)="onRestore(item.id)" *ngIf="item.isRemoved">
+            <fa-icon class="icon restore" icon="trash-restore"></fa-icon>
+          </a>
+
+          <a (click)="onRemove(item.id)">
+            <fa-icon class="icon remove" icon="times"></fa-icon>
+          </a>
         </td>
       </tr>
     </ng-container>
   </tbody>
 </table>
 <ng-template #emptyList>
-  <h4 class="text-center">Список пуст</h4>
+  <h4 class="text-center">
+    <!-- Список пуст -->
+  </h4>
 </ng-template>

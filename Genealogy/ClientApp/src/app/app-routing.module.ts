@@ -21,7 +21,6 @@ const routes: Routes = [
   {
     path: 'necropolis',
     component: NecropolisComponent,
-    canActivate: [AuthGuard],
   },
   {
     path: 'catalog',
@@ -57,7 +56,7 @@ const routes: Routes = [
   {
     path: 'payment',
     component: PaymentComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: '**',

@@ -3,7 +3,6 @@ import { StorageModule, BaseLocalStorage } from './storage';
 import { ApiService, ApiInterceptor, AuthenticationService } from './services';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor, ErrorInterceptor } from './interceptors';
-import { LocalStorage } from './storage/interfaces/local-storage.interface';
 
 @NgModule({
   declarations: [],

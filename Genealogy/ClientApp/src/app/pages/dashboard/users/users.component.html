@@ -1,9 +1,18 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
-    <lancet-table [data]="tableData" [selectedId]="user?.id" (change)="onSelect($event)" (remove)="onRemove($event)"></lancet-table>
+    <lancet-table
+      [data]="tableData"
+      [selectedId]="user?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
+      (restore)="onRestore($event)"
+      [showActionButtons]="true"
+      [startIndex]="startIndex"
+    ></lancet-table>
   </div>
+
   <div class="col-md-6 col-lg-4">
-    <form [formGroup]="userForm" (ngSubmit)="onAdd()">
+    <form [formGroup]="userForm">
       <div class="form-group">
         <label for="lastName">Фамилия</label>
         <input type="text" class="form-control" id="lastName" formControlName="lastName" />
@@ -18,11 +27,10 @@
       </div>
       <input type="hidden" formControlName="id" />
       <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-primary" [disabled]="hasUserActived" (click)="onBlock()">Заблокировать</button>
-        <!-- <button type="button" class="btn btn-primary" [disabled]="(user$ | async) == null" (click)="onUpdate()">Изменить</button>
+        <!-- <button type="button" class="btn btn-primary" [disabled]="hasUserActived" (click)="onBlock()">Заблокировать</button>
+        <button type="button" class="btn btn-primary" [disabled]="(user$ | async) == null" (click)="onUpdate()">Изменить</button>
         <button type="reset" class="btn btn-primary" (click)="onReset()">Сброс</button> -->
       </div>
     </form>
   </div>
 </div>
-{{ user }}

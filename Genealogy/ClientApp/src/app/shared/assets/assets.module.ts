@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faTrashRestore, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   imports: [FontAwesomeModule],
@@ -8,6 +8,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 })
 export class AssetsModule {
   constructor(private library: FaIconLibrary) {
-    this.library.addIcons(faTimes);
+    this.library.addIcons(faTimes, faTrashRestore, faSearch);
+    
   }
 }

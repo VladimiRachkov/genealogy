@@ -1,6 +1,14 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
-    <lancet-table [data]="tableData" [selectedId]="person?.id" (change)="onSelect($event)" (remove)="onRemove($event)"></lancet-table>
+    <lancet-table
+      [data]="tableData"
+      [selectedId]="person?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
+      (restore)="onRestore($event)"
+      [showActionButtons]="true"
+      [startIndex]="startIndex"
+    ></lancet-table>
     <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
   </div>
   <div class="col-md-6 col-lg-4">

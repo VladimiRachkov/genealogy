@@ -13,9 +13,12 @@ import { LoginComponent } from './login';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register';
 import { PaymentComponent } from './payment/payment.component';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { CustomSelectService } from 'app/core/services/custom-select.service';
 
 @NgModule({
-  imports: [CommonModule, SharedModule, RouterModule, MaterialModule],
+  imports: [CommonModule, SharedModule, RouterModule, MaterialModule, FormsModule, NgSelectModule],
   exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, RegisterComponent],
   declarations: [
     StartComponent,
@@ -28,6 +31,6 @@ import { PaymentComponent } from './payment/payment.component';
     RegisterComponent,
     PaymentComponent,
   ],
-  providers: [NotifierService],
+  providers: [NotifierService, CustomSelectService],
 })
 export class PageModule {}

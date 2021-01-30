@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Genealogy.Data;
 using Genealogy.Helpers;
@@ -20,7 +22,9 @@ namespace Genealogy.Service.Concrete
         /// <returns></returns>
         public User Authenticate(AuthenticateUserDto userDto)
         {
-            if (string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
+            var email = userDto.Email.ToLower().Trim();
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userDto.Password))
                 throw new AppException("Не заполнено поле логина или пароля.");
 
             var currentUser = _unitOfWork.UserRepository.GetByEmail(userDto.Email);
@@ -58,6 +62,8 @@ namespace Genealogy.Service.Concrete
         /// <returns></returns>
         public User CreateUser(User user, string password)
         {
+            user.Email = user.Email.ToLower().Trim();
+
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Требуется ввести пароль.");
 
@@ -80,7 +86,7 @@ namespace Genealogy.Service.Concrete
                 roleId = DefaultValues.Roles.User.Id;
 
             user.Role = _unitOfWork.RoleRepository.GetRoleById(roleId);
-            user.Status = DefaultValues.UserStatuses.Actived;
+            user.Status = "ACTIVE";
 
             _unitOfWork.UserRepository.Add(user);
             _unitOfWork.Save();
@@ -116,15 +122,15 @@ namespace Genealogy.Service.Concrete
                 throw new AppException("Пользователь не найден.");
             }
 
-            if (userParam.Username != user.Username && _unitOfWork.UserRepository.CheckUsername(user.Username))
+            if (user.Status == "BLOCKED" && userParam.Status == "BLOCKED")
             {
-                throw new AppException("Пользователь " + userParam.Username + " существует.");
+                if (RemoveUser(user.Id))
+                {
+                    return user;
+                }
             }
 
-            user.FirstName = userParam.FirstName;
-            user.LastName = userParam.LastName;
-            user.Username = userParam.Username;
-            user.Status = userParam.Status;
+            ObjectValues.CopyValues(user, userParam);
 
             // if (!string.IsNullOrWhiteSpace(password))
             // {
@@ -139,7 +145,6 @@ namespace Genealogy.Service.Concrete
             _unitOfWork.Save();
             user = _unitOfWork.UserRepository.GetByID(user.Id);
             return user;
-
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Genealogy.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/person")]
+    [Route("api/persons")]
     public class PersonController : Controller
     {
         private IGenealogyService _genealogyService;
@@ -20,7 +20,7 @@ namespace Genealogy.Controllers
         }
 
         /// <summary>
-        /// Добавить кладбище
+        /// Добавить 
         /// </summary>
         /// <param name="newPerson"></param>
         /// <returns></returns>
@@ -59,29 +59,29 @@ namespace Genealogy.Controllers
         }
 
         /// <summary>
+        /// Получить список 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("all")]
+        public IActionResult GetAll([FromQuery] PersonFilter filter)
+        {
+            List<PersonDto> result = null;
+            try
+            {
+                result = _genealogyService.GetAllPersons(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Изменить поля 
         /// </summary>
         /// <param name="changedPerson"></param>
         /// <returns></returns>
-        [HttpPost("remove")]
-        public IActionResult MarkAsRemoved([FromBody] PersonDto changedPerson)
-        {
-            PersonDto resultPerson = null;
-            if (changedPerson != null && changedPerson.Id != null && changedPerson.Id != Guid.Empty)
-            {
-                try
-                {
-                    resultPerson = _genealogyService.MarkAsRemovedPerson(changedPerson.Id.Value);
-                }
-                catch (AppException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-                return Ok(resultPerson);
-            }
-            return new NoContentResult();
-        }
-
         [HttpPut]
         public IActionResult Put([FromBody] PersonDto changedPerson)
         {
