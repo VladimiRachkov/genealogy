@@ -23,6 +23,7 @@ export class UsersComponent implements OnInit {
   user: User;
   USER_STATUS = USER_STATUS;
   hasUserActived: boolean;
+  startIndex = 0;
 
   constructor(private store: Store, private userStatusPipe: UserStatusPipe) {}
 

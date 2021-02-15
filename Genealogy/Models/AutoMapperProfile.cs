@@ -27,6 +27,9 @@ namespace Genealogy.Models
             CreateMap<User, RegistrationUserDto>();
             CreateMap<RegistrationUserDto, User>();
 
+            CreateMap<BusinessObject, BusinessObjectOutDto>();
+            CreateMap<BusinessObjectInDto, BusinessObject>();
+
 
 
         }

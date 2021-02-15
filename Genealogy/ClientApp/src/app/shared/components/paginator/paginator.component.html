@@ -1,7 +1,7 @@
 <nav aria-label="Page navigation example" *ngIf="options?.count > 0 && options?.count > options?.step">
   <ul class="pagination justify-content-center">
     <li class="page-item">
-      <a class="page-link" (click)="onPrevPage(i)" aria-label="Предыдущая страница">
+      <a class="page-link" (click)="onPrevPage()" aria-label="Предыдущая страница">
         <span aria-hidden="true">&laquo;</span>
         <span class="sr-only">Previous</span>
       </a>
@@ -12,7 +12,7 @@
     </li>
 
     <li class="page-item">
-      <a class="page-link" (click)="onNextPage(i)" aria-label="Следующая страница">
+      <a class="page-link" (click)="onNextPage()" aria-label="Следующая страница">
         <span aria-hidden="true">&raquo;</span>
         <span class="sr-only">Next</span>
       </a>

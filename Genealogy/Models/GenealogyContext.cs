@@ -11,7 +11,10 @@ namespace Genealogy.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<PersonGroup> PersonGroups { get; set; }
+        public DbSet<BusinessObject> BusinessObjects { get; set; }
+        public DbSet<Metatype> Metatypes { get; set; }
+        public DbSet<ObjectRelation> ObjectRelations { get; set; }
+        public DbSet<LinkRelation> LinkRelations { get; set; }
         public GenealogyContext(DbContextOptions<GenealogyContext> options) : base(options) { }
-
     }
 }

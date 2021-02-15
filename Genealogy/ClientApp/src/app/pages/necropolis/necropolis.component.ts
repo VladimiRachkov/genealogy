@@ -84,4 +84,6 @@ export class NecropolisComponent implements OnInit {
       this.notifierService.notify('error', NOTIFICATIONS.INVALID_FORM, 'INVALID_FORM');
     }
   }
+
+  onSelect(id) {}
 }
