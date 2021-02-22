@@ -54,6 +54,8 @@ namespace Genealogy.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MetatypeId");
+
                     b.ToTable("BusinessObjects");
                 });
 
@@ -233,6 +235,14 @@ namespace Genealogy.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ObjectRelations");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.BusinessObject", b =>
+                {
+                    b.HasOne("Genealogy.Metatype", "Metatype")
+                        .WithMany()
+                        .HasForeignKey("MetatypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Genealogy.Models.Person", b =>

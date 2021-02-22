@@ -15,6 +15,7 @@ import { LinkEditorComponent } from './pages/link-editor/link-editor.component';
 import { MaterialModule } from 'app/material.module';
 import { UsersComponent } from './users/users.component';
 import { PersonComponent } from './person/person.component';
+import { CatalogComponent } from './catalog/catalog.component';
 
 const routes: Routes = [
   {
@@ -27,9 +28,6 @@ const routes: Routes = [
   imports: [
     SharedModule,
     RouterModule.forChild(routes),
-    NgxsModule.forRoot([], {
-      developmentMode: !environment.production,
-    }),
     HttpClientModule,
     AngularEditorModule,
     FormsModule,
@@ -44,6 +42,7 @@ const routes: Routes = [
     EditorComponent,
     LinkEditorComponent,
     UsersComponent,
+    CatalogComponent
   ],
 })
 export class DashboardModule {}

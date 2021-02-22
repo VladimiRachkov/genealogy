@@ -10,20 +10,14 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   get<T>(controller: string, params: HttpParams) {
-    return from(
-      this.http.get<T>(`/api/${controller}`, { params })
-    );
+    return this.http.get<T>(`/api/${controller}`, { params });
   }
 
-  post<T>(controller: string, body: T) {
-    return from(
-      this.http.post<T>(`/api/${controller}`, { ...body })
-    );
+  post<T>(controller: string, body: any) {
+    return this.http.post<T>(`/api/${controller}`, { ...body });
   }
 
-  put<T>(controller: string, body: T) {
-    return from(
-      this.http.put<T>(`/api/${controller}`, { ...body })
-    );
+  put<T>(controller: string, body: any) {
+    return this.http.put<T>(`/api/${controller}`, { ...body });
   }
 }

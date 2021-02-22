@@ -13,6 +13,7 @@ namespace Genealogy.Repository.Abstract
         RoleRepository RoleRepository { get; }
         PersonGroupRepository PersonGroupRepository { get; }
         BusinessObjectRepository BusinessObjectRepository { get; }
+        MetatypeRepository MetatypeRepository { get; }
         void Save();
     }
 }

@@ -51,7 +51,6 @@ export class PagesComponent implements OnInit {
   }
 
   resetForm() {
-    //this.pageForm.getRawValue();
     this.selectedPage = null;
   }
 
@@ -91,7 +90,6 @@ export class PagesComponent implements OnInit {
         items,
       };
       this.resetForm();
-      console.log('PAGES', this.pageList);
     });
   }
 }

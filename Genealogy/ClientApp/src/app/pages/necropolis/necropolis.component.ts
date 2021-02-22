@@ -78,7 +78,6 @@ export class NecropolisComponent implements OnInit {
           fields: ['ФИО', 'Дата рождения', 'Дата смерти', 'Место захоронения'],
           items,
         };
-        console.log('PERSON LIST', this.personList);
       });
     } else {
       this.notifierService.notify('error', NOTIFICATIONS.INVALID_FORM, 'INVALID_FORM');

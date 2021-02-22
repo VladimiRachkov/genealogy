@@ -30,7 +30,11 @@ table {
     }
 }
 
-.hidden {
+.removed {
     color: $gray-300;
     text-decoration: line-through;
+}
+
+.text-primary {
+    font-weight: 700;
 }

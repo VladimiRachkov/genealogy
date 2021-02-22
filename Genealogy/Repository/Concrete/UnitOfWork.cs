@@ -23,6 +23,8 @@ namespace Genealogy.Repository.Concrete
         private PersonGroupRepository personGroupRepository;
         public BusinessObjectRepository BusinessObjectRepository => businessObjectRepository ?? new BusinessObjectRepository(_genealogyContext);
         private BusinessObjectRepository businessObjectRepository;
+        public MetatypeRepository MetatypeRepository => metatypeRepository ?? new MetatypeRepository(_genealogyContext);
+        private MetatypeRepository metatypeRepository;
 
         public UnitOfWork(GenealogyContext genealogyContext)
         {

@@ -5,3 +5,5 @@ export * from './link.dto';
 export * from './user.dto';
 export * from './paginator.dto';
 export * from './count.dto';
+export * from './metatype.dto';
+export * from './business-object.dto';

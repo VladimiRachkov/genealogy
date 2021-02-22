@@ -24,10 +24,13 @@ namespace Genealogy.Service.Concrete
         {
             var count = _unitOfWork.PersonRepository.Count();
 
-            var persons = _unitOfWork.PersonRepository.Get(x =>
-             (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
-             (filter.Lastname != null ? x.Lastname == filter.Lastname : true) &&
-             (filter.CemeteryId != Guid.Empty ? x.Cemetery.Id == filter.CemeteryId : true), x => x.OrderBy(item => item.Lastname)
+            var persons = _unitOfWork.PersonRepository.Get(
+            x =>
+                (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
+                (filter.Lastname != null ? x.Lastname == filter.Lastname : true) &&
+                (filter.CemeteryId != Guid.Empty ? x.Cemetery.Id == filter.CemeteryId : true),
+            x =>
+                x.OrderBy(item => item.Lastname)
                 .ThenBy(item => item.Firstname)
                 .ThenBy(item => item.Patronymic), "Cemetery");
 

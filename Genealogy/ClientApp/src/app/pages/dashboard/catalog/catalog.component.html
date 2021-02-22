@@ -1,0 +1,70 @@
+<div class="row pt-2">
+  <div class="col-md-6 col-lg-8">
+    <lancet-table
+      [data]="tableData$ | async"
+      [selectedId]="(item$ | async)?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
+      (restore)="onRestore($event)"
+      [startIndex]="startIndex"
+      showActionButtons="true"
+      showRemoved="true"
+    ></lancet-table>
+    <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <form [formGroup]="catalogForm" (ngSubmit)="onAdd()">
+      <div class="form-group">
+        <label for="title">Название</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          aria-describedby="title"
+          placeholder="Введите название продукта"
+          formControlName="title"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="imageUrl">Изображение</label>
+        <input
+          type="text"
+          class="form-control"
+          id="imageUrl"
+          aria-describedby="imageUrl"
+          placeholder="Адрес изображения"
+          formControlName="imageUrl"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="price">Стоимость (₽)</label>
+        <input
+          type="number"
+          class="form-control"
+          id="price"
+          aria-describedby="price"
+          placeholder="Укажите стоимость"
+          formControlName="price"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="comment">Описание</label>
+        <textarea class="form-control" formControlName="description"> </textarea>
+      </div>
+
+      <input type="hidden" formControlName="id" />
+
+      <div class="btn-group" role="group">
+        <button type="submit" class="btn btn-primary">Добавить</button>
+        <button type="button" class="btn btn-primary" (click)="onUpdate()">Сохранить</button>
+        <button type="reset" class="btn btn-primary">Очистить</button>
+      </div>
+    </form>
+  </div>
+</div>

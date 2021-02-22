@@ -8,5 +8,6 @@ namespace Genealogy.Service.Astract
         List<BusinessObjectOutDto> GetBusinessObjects(BusinessObjectFilter filter);
         BusinessObjectOutDto CreateBusinessObject(BusinessObjectInDto boDto);
         BusinessObjectOutDto UpdateBusinessObject(BusinessObjectInDto boDto);
+        BusinessObjectsCountOutDto GetBusinessObjectsCount(BusinessObjectFilter filter);
     }
 }

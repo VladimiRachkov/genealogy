@@ -12,11 +12,16 @@ namespace Genealogy.Service.Concrete
         public List<BusinessObjectOutDto> GetBusinessObjects(BusinessObjectFilter filter)
         {
             var businessObjects = _unitOfWork.BusinessObjectRepository.Get(
-                x =>
-                    (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
-                    (filter.MetatypeId != Guid.Empty ? x.MetatypeId == filter.MetatypeId : true),
-                x =>
-                    x.OrderBy(item => item.Name));
+            x =>
+                (filter.Id != null ? x.Id == filter.Id : true) &&
+                (filter.MetatypeId != null ? x.Metatype.Id == filter.MetatypeId : true),
+            x =>
+                x.OrderBy(item => item.Name).ThenBy(item => item.Id), "Metatype");
+
+            if (filter.Step > 0)
+            {
+                businessObjects = businessObjects.Where((item, index) => index >= filter.Step * filter.Index && index < (filter.Step * filter.Index) + filter.Step);
+            }
 
             return businessObjects.Select(i => _mapper.Map<BusinessObjectOutDto>(i)).ToList();
         }
@@ -27,6 +32,13 @@ namespace Genealogy.Service.Concrete
             var id = Guid.NewGuid();
 
             newBO.Id = id;
+            newBO.StartDate = DateTime.Now;
+            newBO.Metatype = _unitOfWork.MetatypeRepository.GetByID(boDto.MetatypeId);
+
+            if (newBO.Name == null)
+            {
+                newBO.Name = newBO.Title;
+            }
 
             _unitOfWork.BusinessObjectRepository.Add(newBO);
             _unitOfWork.Save();
@@ -47,26 +59,64 @@ namespace Genealogy.Service.Concrete
 
                 var bo = _unitOfWork.BusinessObjectRepository.GetByID(boDto.Id);
 
-                if (boDto.IsRemoved.Value && bo.IsRemoved)
+                if (boDto.IsRemoved != null && boDto.IsRemoved.Value && bo.IsRemoved)
                 {
                     result = RemoveBusinessObject(bo) ? _mapper.Map<BusinessObjectOutDto>(bo) : null;
                 }
                 else
                 {
-                    ObjectValues.CopyValues(bo, updatedBO);
+                    if (boDto.Data != null)
+                    {
+                        bo.Data = boDto.Data;
+                    }
+
+                    if (boDto.Name != null)
+                    {
+                        bo.Name = boDto.Name;
+                    }
+
+                    if (boDto.Title != null)
+                    {
+                        bo.Title = boDto.Title;
+                    }
+
+                    if (boDto.IsRemoved != null)
+                    {
+                        if (boDto.IsRemoved.Value == true)
+                        {
+                            bo.FinishDate = DateTime.Now;
+                            bo.IsRemoved = true;
+                        }
+                        else
+                        {
+                            bo.IsRemoved = false;
+                        }
+                    }
 
                     _unitOfWork.BusinessObjectRepository.Update(bo);
                     _unitOfWork.Save();
 
-                    result = _mapper.Map<BusinessObjectOutDto>(_unitOfWork.PageRepository.GetByID(bo.Id));
+                    result = _mapper.Map<BusinessObjectOutDto>(bo);
                 }
 
                 if (result != null)
                 {
-                    return _mapper.Map<BusinessObjectOutDto>(result);
+                    result = _mapper.Map<BusinessObjectOutDto>(result);
                 }
             }
-            return null;
+            return result;
+        }
+
+        public BusinessObjectsCountOutDto GetBusinessObjectsCount(BusinessObjectFilter filter)
+        {
+            var result = new BusinessObjectsCountOutDto();
+
+            var businessObjects = _unitOfWork.BusinessObjectRepository.Get(
+                x =>
+                    (filter.MetatypeId != Guid.Empty ? x.Metatype.Id == filter.MetatypeId : true));
+
+            result.count = businessObjects.Count();
+            return result;
         }
 
         private bool RemoveBusinessObject(BusinessObject bo)

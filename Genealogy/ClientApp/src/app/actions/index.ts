@@ -4,3 +4,5 @@ export * from './person.actions';
 export * from './link.action';
 export * from './main.actions';
 export * from './user.action';
+export * from './metatype.actions';
+export * from './catalog.actions';

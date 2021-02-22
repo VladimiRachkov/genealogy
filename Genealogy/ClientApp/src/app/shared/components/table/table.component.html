@@ -8,11 +8,7 @@
   </thead>
   <tbody>
     <ng-container *ngFor="let item of data?.items; let itemIndex = index">
-      <tr
-        (click)="onSelect(item.id)"
-        [ngClass]="{ 'text-primary': item.id == selectedId, hidden: item.isRemoved }"
-        *ngIf="!item.isRemoved || (item.isRemoved && showRemoved)"
-      >
+      <tr (click)="onSelect(item.id)" [ngClass]="{ 'text-primary': item.id == selectedId, removed: item.isRemoved }">
         <th scope="row">{{ startIndex + itemIndex + 1 }}</th>
         <td *ngFor="let val of item.values">
           {{ val }}

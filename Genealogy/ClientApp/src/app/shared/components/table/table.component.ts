@@ -17,12 +17,6 @@ export class TableComponent {
   @Output() remove: EventEmitter<string> = new EventEmitter();
   @Output() restore: EventEmitter<string> = new EventEmitter();
 
-  ngOnChanges(): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-    console.log('TABLE', this.data)
-  }
-
   onRemove(value: string) {
     event.stopPropagation();
     this.remove.emit(value);

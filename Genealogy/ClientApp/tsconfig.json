@@ -23,7 +23,8 @@
       "@states": ["app/states"],
       "@enums": ["app/enums"],
       "@pages": ["app/pages"],
-      "@consts": ["app/consts"]
+      "@consts": ["app/consts"],
+      "@repository": ["app/repository"]
     }
   },
   "angularCompilerOptions": {

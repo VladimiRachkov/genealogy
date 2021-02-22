@@ -7,7 +7,20 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-12 pl-4 text-center">
-      <h4>Раздел в разработке</h4>
+      <div class="card-deck mb-3 text-center" *ngIf="products$ | async as list">
+        <div class="card mb-4 box-shadow" style="min-width: 18rem" *ngFor="let item of list" (click)="onCardClick(item)">
+          <img class="card-img-top" [src]="item.imageUrl" [alt]="item.title" />
+          <div class="card-body">
+            <h5 class="card-title">{{ item.title }}</h5>
+            <p class="card-text">{{ item.price | currency }}</p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">Купить</button>
+          </div>
+        </div>
+      </div>
+      <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
     </div>
   </div>
 </div>
+<app-purchase></app-purchase>
