@@ -12,5 +12,14 @@ namespace Genealogy.Data
             /// </summary>
             public static Guid Id { get { return _id; } }
         }
+
+        public static class Purchase
+        {
+            private static Guid _id = new Guid("d7d7f8ed-8448-48c7-b10c-1d7f98748bf6");
+            /// <summary>
+            /// Уровень доступа: Администратор
+            /// </summary>
+            public static Guid Id { get { return _id; } }
+        }
     }
 }

@@ -1,5 +1,6 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
+    <button (click)="onClickPurchaseButton()">Покупки</button>
     <lancet-table
       [data]="tableData$ | async"
       [selectedId]="(item$ | async)?.id"
@@ -68,3 +69,7 @@
     </form>
   </div>
 </div>
+
+<app-modal size="lg" header="Покупки пользователей">
+  <lancet-table [data]="purchaseTableData$ | async" [startIndex]="startIndex"></lancet-table>
+</app-modal>

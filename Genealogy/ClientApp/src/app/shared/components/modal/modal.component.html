@@ -3,7 +3,7 @@
     <div class="card-header">
       <div class="row">
         <div class="col text-left">
-          <span>{{ item.title }}</span>
+          <span>{{ header }}</span>
         </div>
         <div class="col">
           <button type="button" class="close" aria-label="Close">
@@ -13,11 +13,7 @@
       </div>
     </div>
     <div class="card-body">
-      <img class="card-img p-4" [src]="item.imageUrl" alt="{{ item.title }}" />
-      <p class="card-text pl-4 pr-4">{{ item.description }}</p>
-    </div>
-    <div class="card-footer text-muted">
-      <button class="btn btn-primary" (click)="onPayButtonClick()">Оплатить</button>
+      <ng-content></ng-content>
     </div>
   </div>
 </ng-template>

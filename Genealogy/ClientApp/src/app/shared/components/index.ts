@@ -1,2 +1,3 @@
 export * from './table/table.component';
 export * from './paginator/paginator.component';
+export * from './modal/modal.component';

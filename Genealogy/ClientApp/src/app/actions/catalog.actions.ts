@@ -24,3 +24,8 @@ export class GetCatalogItemsCount {
   static readonly type = '[Catalog] Get Catalog Item Count';
   constructor(readonly payload: BusinessObjectFilter) {}
 }
+
+export class FetchPurchaseList {
+  static readonly type = '[Catalog] Fetch Purchase List';
+  constructor(readonly payload: BusinessObjectFilter) {}
+}

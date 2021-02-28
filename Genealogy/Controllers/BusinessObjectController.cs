@@ -48,7 +48,7 @@ namespace Genealogy.Controllers
 
             try
             {
-                resultPage = _genealogyService.CreateBusinessObject(businessObject);
+                resultPage = _genealogyService.CreateBusinessObjectsFromDto(businessObject);
             }
             catch (AppException ex)
             {

@@ -14,9 +14,6 @@
             <h5 class="card-title">{{ item.title }}</h5>
             <p class="card-text">{{ item.price | currency }}</p>
           </div>
-          <div class="card-footer">
-            <button class="btn btn-primary">Купить</button>
-          </div>
         </div>
       </div>
       <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>

@@ -48,12 +48,22 @@ export class AuthenticationService {
   }
 
   checkAdmin(): Observable<any> {
-    let cookies = this.localStorage.getItem('currentUser');
-    console.log('CHECK', cookies)
+    const cookies = this.localStorage.getItem('currentUser');
     if (cookies) {
-      let currentUser = JSON.parse(cookies);
+      const currentUser = JSON.parse(cookies);
       return this.http.get(`/api/user/checkadmin/${currentUser.id}`).pipe(tap(value => this.store.dispatch(new SetAdminMode(value))));
     }
     return new Observable();
+  }
+
+  getUserId(): string {
+    const cookies = this.localStorage.getItem('currentUser');
+    
+    if (cookies) {
+      const currentUser = JSON.parse(cookies);
+      return currentUser.id;
+    }
+
+    return null;
   }
 }

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Genealogy.Service.Astract;
 using System.Threading.Tasks;
 using Genealogy.Models;
+using Genealogy.Service.Helpers;
+using System;
 
 namespace Genealogy.Controllers
 {
@@ -15,10 +17,36 @@ namespace Genealogy.Controllers
             _genealogyService = genealogyService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DoPayment([FromQuery] string returnUrl)
+        [HttpPost]
+        public async Task<IActionResult> DoPayment([FromBody] PaymentInDto payment)
         {
-            var result = await _genealogyService.DoPayment(returnUrl);
+            string result = null;
+            try
+            {
+                result = await _genealogyService.DoPayment(payment);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IActionResult ConfirmPayment([FromQuery] Guid purchaseId)
+        {
+            BusinessObjectOutDto result = null;
+            var dto = new PurchaseInDto();
+            dto.Id = purchaseId;
+
+            try
+            {
+                result = _genealogyService.ConfirmPurchase(dto);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(result);
         }
     }

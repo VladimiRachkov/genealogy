@@ -1,5 +1,5 @@
-import { AddCatalogItem, FetchCatalogItem, FetchCatalogList, GetCatalogItemsCount, UpdateCatalogItem } from '@actions';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AddCatalogItem, FetchCatalogItem, FetchCatalogList, FetchPurchaseList, GetCatalogItemsCount, UpdateCatalogItem } from '@actions';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { BusinessObject, BusinessObjectFilter, BusinessObjectOutDto, Paginator, Table } from '@models';
@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Pick } from 'app/helpers/json-parse';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { ModalComponent } from '@shared';
+import { DatePipe } from '@angular/common';
 
 const metatypeId = METATYPE_ID.PRODUCT;
 
@@ -18,9 +20,10 @@ const metatypeId = METATYPE_ID.PRODUCT;
   selector: 'dashboard-catalog',
   templateUrl: './catalog.component.html',
   styleUrls: ['./catalog.component.scss'],
+  providers: [DatePipe],
 })
 export class CatalogComponent implements OnInit, OnDestroy {
-  constructor(private store: Store) {}
+  @ViewChild(ModalComponent, { static: false }) purchaseModal: ModalComponent;
 
   @Select(CatalogState.item)
   item$: Observable<BusinessObject>;
@@ -28,7 +31,11 @@ export class CatalogComponent implements OnInit, OnDestroy {
   @Select(CatalogState.list)
   list$: Observable<BusinessObject[]>;
 
+  @Select(CatalogState.purchaseList)
+  purchaseList$: Observable<BusinessObject[]>;
+
   tableData$: Observable<Table.Data>;
+  purchaseTableData$: Observable<Table.Data>;
 
   catalogForm: FormGroup;
 
@@ -40,6 +47,8 @@ export class CatalogComponent implements OnInit, OnDestroy {
 
   pageIndex: number = 0;
   startIndex: number = 0;
+
+  constructor(private store: Store, private datePipe: DatePipe) {}
 
   ngOnInit() {
     this.list$.pipe(tap(() => this.updatePaginator()));
@@ -53,6 +62,23 @@ export class CatalogComponent implements OnInit, OnDestroy {
       ),
       map<Table.Item[], Table.Data>(items => ({
         fields: ['Название', 'Цена'],
+        items,
+      }))
+    );
+
+    this.purchaseTableData$ = this.purchaseList$.pipe(
+      map<BusinessObject[], Table.Item[]>(list =>
+        list.map(({ id, title, data, isRemoved, startDate }) => {
+          const props = this.parsePurchaseDataJSON(data);
+          
+          const date = this.datePipe.transform(startDate.toString(), 'dd.MM.yyyy');
+          const time = this.datePipe.transform(startDate.toString(), 'HH:MM');
+
+          return { id, values: [title, props.username, props.email, props.status, date, time], isRemoved };
+        })
+      ),
+      map<Table.Item[], Table.Data>(items => ({
+        fields: ['Название', 'Покупатель', 'Почта', 'Статус', 'Дата', 'Время'],
         items,
       }))
     );
@@ -115,6 +141,15 @@ export class CatalogComponent implements OnInit, OnDestroy {
     this.fetchList(pageIndex);
   }
 
+  onClickPurchaseButton() {
+    this.fetchPurchaseList().subscribe(() => this.purchaseModal.open());
+  }
+
+  private fetchPurchaseList(): Observable<void> {
+    const params: BusinessObjectFilter = { metatypeId: METATYPE_ID.PURCHASE };
+    return this.store.dispatch(new FetchPurchaseList(params));
+  }
+
   private fetchList(index: number = this.pageIndex) {
     const { step } = this.paginatorOptions;
     const params: BusinessObjectFilter = { metatypeId, index, step };
@@ -133,6 +168,14 @@ export class CatalogComponent implements OnInit, OnDestroy {
       imageUrl: String,
       price: String,
       description: String,
+    });
+  }
+
+  private parsePurchaseDataJSON(data: string) {
+    return Pick(JSON.parse(data), {
+      username: String,
+      email: String,
+      status: String,
     });
   }
 

@@ -1,1 +1,1 @@
-export * from './catalog.service';
+export * from './business-object.service';

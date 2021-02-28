@@ -7,3 +7,4 @@ export * from './paginator.dto';
 export * from './count.dto';
 export * from './metatype.dto';
 export * from './business-object.dto';
+export * from './payment.dto';

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ApiService } from '@core';
-import { BusinessObject, CatalogItem } from '@models';
+import { ApiService, AuthenticationService, UserService } from '@core';
+import { BusinessObject, CatalogItem, PaymentOutDto } from '@models';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 
@@ -15,7 +15,12 @@ export class PurchaseComponent implements OnInit {
   closeResult: string = null;
   item: CatalogItem;
 
-  constructor(private modalService: NgbModal, private store: Store, private apiService: ApiService) {}
+  constructor(
+    private modalService: NgbModal,
+    private store: Store,
+    private apiService: ApiService,
+    private authService: AuthenticationService
+  ) {}
 
   ngOnInit() {}
 
@@ -37,8 +42,13 @@ export class PurchaseComponent implements OnInit {
   }
 
   onPayButtonClick() {
-    const params: any = { returnUrl: 'http://37.230.116.107/payment' };
-    this.apiService.get<string>('payment', params).subscribe(res => window.open(res as string));
+    const userId = this.authService.getUserId();
+    const body: PaymentOutDto = { returnUrl: 'http://localhost:5000/api/payment', productId: this.item.id, userId };
+    this.apiService.post<string>('payment', body).subscribe(res => window.open(res as string));
+  }
+
+  onCloseButtonClick() {
+    this.modalService.dismissAll();
   }
 
   private getDismissReason(reason: any) {}

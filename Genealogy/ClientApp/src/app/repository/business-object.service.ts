@@ -7,28 +7,28 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class CatalogService {
+export class BusinessObjectService {
   constructor(private apiService: ApiService) {}
 
   url = 'businessobject';
 
-  FetchCatalogList(params: HttpParams): Observable<BusinessObjectInDto[]> {
+  FetchBusinessObjectList(params: HttpParams): Observable<BusinessObjectInDto[]> {
     return this.apiService.get(this.url, params);
   }
 
-  FetchCatalogItem(params: HttpParams): Observable<BusinessObjectInDto> {
+  FetchBusinessObject(params: HttpParams): Observable<BusinessObjectInDto> {
     return this.apiService.get(this.url, params);
   }
 
-  AddCatalogItem(body: BusinessObjectOutDto): Observable<BusinessObjectInDto> {
+  AddBusinessObject(body: BusinessObjectOutDto): Observable<BusinessObjectInDto> {
     return this.apiService.post<BusinessObjectInDto>(this.url, body);
   }
 
-  UpdateCatalogItem(body: BusinessObjectOutDto): Observable<BusinessObjectInDto> {
+  UpdateBusinessObject(body: BusinessObjectOutDto): Observable<BusinessObjectInDto> {
     return this.apiService.put<BusinessObjectInDto>(this.url, body);
   }
 
-  GetCatalogItemsCount(params: HttpParams): Observable<BusinessObjectsCountInDto> {
+  GetBusinessObjectsCount(params: HttpParams): Observable<BusinessObjectsCountInDto> {
     const url = this.url + '/count';
     return this.apiService.get<BusinessObjectsCountInDto>(url, params);
   }

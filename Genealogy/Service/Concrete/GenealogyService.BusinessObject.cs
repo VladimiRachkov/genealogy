@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Genealogy.Models;
 using Genealogy.Service.Astract;
 using Genealogy.Helpers;
+using Genealogy.Service.Helpers;
 
 namespace Genealogy.Service.Concrete
 {
@@ -26,24 +27,11 @@ namespace Genealogy.Service.Concrete
             return businessObjects.Select(i => _mapper.Map<BusinessObjectOutDto>(i)).ToList();
         }
 
-        public BusinessObjectOutDto CreateBusinessObject(BusinessObjectInDto boDto)
+        public BusinessObjectOutDto CreateBusinessObjectsFromDto(BusinessObjectInDto boDto)
         {
-            var newBO = _mapper.Map<BusinessObject>(boDto);
-            var id = Guid.NewGuid();
+            var bo = _mapper.Map<BusinessObject>(boDto);
+            var result = createBusinessObject(bo);
 
-            newBO.Id = id;
-            newBO.StartDate = DateTime.Now;
-            newBO.Metatype = _unitOfWork.MetatypeRepository.GetByID(boDto.MetatypeId);
-
-            if (newBO.Name == null)
-            {
-                newBO.Name = newBO.Title;
-            }
-
-            _unitOfWork.BusinessObjectRepository.Add(newBO);
-            _unitOfWork.Save();
-
-            var result = _unitOfWork.BusinessObjectRepository.GetByID(id);
             return _mapper.Map<BusinessObjectOutDto>(result);
         }
 
@@ -125,6 +113,46 @@ namespace Genealogy.Service.Concrete
             _unitOfWork.Save();
 
             return true;
+        }
+
+        private BusinessObject createBusinessObject(BusinessObject bo)
+        {
+            bo.Id = Guid.NewGuid();
+            bo.StartDate = DateTime.Now;
+
+            if (bo.Metatype == null)
+            {
+                if (bo.MetatypeId == null)
+                {
+                    throw new AppException("Не указан тип объекта.");
+                }
+                else
+                {
+                    bo.Metatype = _unitOfWork.MetatypeRepository.GetByID(bo.MetatypeId);
+                }
+            }
+
+            if (bo.Name == null)
+            {
+                bo.Name = bo.Title;
+            }
+
+            if (bo.Title == null)
+            {
+                bo.Title = bo.Name;
+            }
+
+            if (bo.Title == null && bo.Name == null)
+            {
+                var count = _unitOfWork.BusinessObjectRepository.Count();
+                bo.Title = bo.Name = $"{bo.Metatype.Title} {count}";
+            }
+
+            _unitOfWork.BusinessObjectRepository.Add(bo);
+            _unitOfWork.Save();
+
+            var result = _unitOfWork.BusinessObjectRepository.GetByID(bo.Id);
+            return result;
         }
     }
 }
