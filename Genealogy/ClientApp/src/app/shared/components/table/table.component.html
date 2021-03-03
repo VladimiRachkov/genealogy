@@ -4,6 +4,7 @@
       <th scope="col">№</th>
       <th scope="col" *ngFor="let field of data?.fields">{{ field }}</th>
       <th scope="col" *ngIf="showActionButtons"></th>
+      <th scope="col" *ngIf="data.items[0].status">Статус</th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +22,13 @@
           <a (click)="onRemove(item.id)">
             <fa-icon class="icon remove" icon="times"></fa-icon>
           </a>
+        </td>
+        <td>
+          <span *ngIf="item.status" [ngSwitch]="item.status">
+            <fa-icon class="text-success" icon="check" *ngSwitchCase="'Succeeded'"></fa-icon>
+            <fa-icon class="text-danger" icon="hourglass" *ngSwitchCase="'Pending'"></fa-icon>
+            <ng-container *ngSwitchDefault>{{ item.status }}</ng-container>
+          </span>
         </td>
       </tr>
     </ng-container>

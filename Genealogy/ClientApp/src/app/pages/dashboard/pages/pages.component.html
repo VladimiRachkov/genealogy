@@ -30,9 +30,9 @@
       </div>
       <hr />
       <div class="btn-group" role="group" aria-label="Toolbar">
-        <button type="button" class="btn btn-primary" [disabled]="selectedPage === null" (click)="onEditorOpen()">Редактировать</button>
-        <button type="submit" class="btn btn-primary" [disabled]="pageForm.invalid || selectedPage">Добавить</button>
-        <button type="button" class="btn btn-primary" [disabled]="selectedPage === null" (click)="updatePage()">Сохранить</button>
+        <button type="button" class="btn btn-outline-primary" [disabled]="selectedPage === null" (click)="onEditorOpen()">Редактировать</button>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="pageForm.invalid || selectedPage">Добавить</button>
+        <button type="button" class="btn btn-outline-primary" [disabled]="selectedPage === null" (click)="updatePage()">Сохранить</button>
       </div>
     </form>
   </div>

@@ -1,6 +1,5 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
-    <button (click)="onClickPurchaseButton()">Покупки</button>
     <lancet-table
       [data]="tableData$ | async"
       [selectedId]="(item$ | async)?.id"
@@ -14,6 +13,11 @@
     <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
   </div>
   <div class="col-md-6 col-lg-4">
+    <button class="btn btn-outline-success btn-block" (click)="onClickPurchaseButton()">
+      <fa-icon icon="shopping-cart"></fa-icon>
+      Покупки пользователей
+    </button>
+    <hr />
     <form [formGroup]="catalogForm" (ngSubmit)="onAdd()">
       <div class="form-group">
         <label for="title">Название</label>
@@ -62,9 +66,9 @@
       <input type="hidden" formControlName="id" />
 
       <div class="btn-group" role="group">
-        <button type="submit" class="btn btn-primary">Добавить</button>
-        <button type="button" class="btn btn-primary" (click)="onUpdate()">Сохранить</button>
-        <button type="reset" class="btn btn-primary">Очистить</button>
+        <button type="submit" class="btn btn-outline-primary">Добавить</button>
+        <button type="button" class="btn btn-outline-primary" (click)="onUpdate()">Сохранить</button>
+        <button type="reset" class="btn btn-outline-primary">Очистить</button>
       </div>
     </form>
   </div>

@@ -1,7 +1,7 @@
 <div class="container" *ngIf="page">
   <div class="row">
     <div class="col-12 pl-4">
-      <h4 class="text-uppercase">{{ page.title }}</h4>
+      <strong class="text-uppercase">{{ page.title }}</strong>
       <hr />
     </div>
   </div>
@@ -9,7 +9,7 @@
   <div class="row pt-2 pb-2" *ngIf="child; else tableOfContent">
     <div class="col-3">
       <ul class="nav flex-column">
-        <li class="nav-item text-uppercase font-weight-bold" *ngFor="let link of page.links; let last = last">
+        <li class="nav-item font-weight-bold" *ngFor="let link of page.links; let last = last">
           <a class="nav-link" [routerLink]="['/', page.name, link.route]" routerLinkActive="active">{{ link.caption }}</a>
           <hr *ngIf="!last" />
         </li>

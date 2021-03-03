@@ -16,6 +16,7 @@ import { MaterialModule } from 'app/material.module';
 import { UsersComponent } from './users/users.component';
 import { PersonComponent } from './person/person.component';
 import { CatalogComponent } from './catalog/catalog.component';
+import { MailComponent } from './mail/mail.component';
 
 const routes: Routes = [
   {
@@ -42,7 +43,8 @@ const routes: Routes = [
     EditorComponent,
     LinkEditorComponent,
     UsersComponent,
-    CatalogComponent
+    CatalogComponent,
+    MailComponent,
   ],
 })
 export class DashboardModule {}

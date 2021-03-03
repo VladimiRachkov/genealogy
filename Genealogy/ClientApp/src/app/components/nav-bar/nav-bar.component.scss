@@ -13,10 +13,14 @@ nav {
 .navbar-brand {
     padding: 0;
 }
-.navbar-nav .nav-link {
-    padding-top: 0;
-    padding-bottom: 0;
-    height: 50px;
-    line-height: 50px;
-    color: $brown-900;
+.navbar-nav {
+    .nav-link {
+        padding-top: 0;
+        padding-bottom: 0;
+        height: 50px;
+        line-height: 50px;
+        &:hover {
+            color: $brown-800;
+        }
+    }
 }

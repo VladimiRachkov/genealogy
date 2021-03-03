@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Cemetery, Paginator, Person, PersonFilter, Table } from '@models';
@@ -9,6 +9,7 @@ import { isNil } from 'lodash';
 import { NotifierService } from 'angular-notifier';
 import { NOTIFICATIONS } from '@enums';
 import { Observable } from 'rxjs';
+import { FeedbackComponent } from '@shared';
 
 @Component({
   selector: 'app-necropolis',
@@ -16,6 +17,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./necropolis.component.scss'],
 })
 export class NecropolisComponent implements OnInit {
+  @ViewChild(FeedbackComponent, { static: false }) feedbackModal: FeedbackComponent;
+
   personList: Array<Person> = null;
   searchForm: FormGroup;
   hasAuth: boolean = false;
@@ -38,8 +41,6 @@ export class NecropolisComponent implements OnInit {
       fio: new FormControl(null, [Validators.required]),
       cemeteryId: new FormControl(null, [Validators.required]),
     });
-
-    this.searchForm.valueChanges.subscribe(data => console.log(data));
 
     if (this.hasAuth) {
       this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
@@ -85,4 +86,8 @@ export class NecropolisComponent implements OnInit {
   }
 
   onSelect(id) {}
+  
+  onOrderButtonClick() {
+    this.feedbackModal.open('Некрополистическое исследование');
+  }
 }

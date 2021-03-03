@@ -70,15 +70,15 @@ export class CatalogComponent implements OnInit, OnDestroy {
       map<BusinessObject[], Table.Item[]>(list =>
         list.map(({ id, title, data, isRemoved, startDate }) => {
           const props = this.parsePurchaseDataJSON(data);
-          
-          const date = this.datePipe.transform(startDate.toString(), 'dd.MM.yyyy');
-          const time = this.datePipe.transform(startDate.toString(), 'HH:MM');
 
-          return { id, values: [title, props.username, props.email, props.status, date, time], isRemoved };
+          const date = this.datePipe.transform(startDate.toString(), 'dd.MM.yyyy');
+          const time = this.datePipe.transform(startDate.toString(), 'hh:mm');
+
+          return { id, values: [title, props.username, props.email, date, time], isRemoved, status: props.status };
         })
       ),
       map<Table.Item[], Table.Data>(items => ({
-        fields: ['Название', 'Покупатель', 'Почта', 'Статус', 'Дата', 'Время'],
+        fields: ['Название', 'Покупатель', 'Почта', 'Дата', 'Время'],
         items,
       }))
     );

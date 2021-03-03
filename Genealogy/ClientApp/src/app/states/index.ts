@@ -5,3 +5,4 @@ export * from './main.state';
 export * from './user.state';
 export * from './metatype.state';
 export * from './catalog.state';
+export * from './main.state';

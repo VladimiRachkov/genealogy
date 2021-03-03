@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LinkState } from './states/link.state';
 import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 import { CoreModule } from './core/core.module';
+import { MailState } from './states/mail.state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,11 +27,11 @@ import { CoreModule } from './core/core.module';
     ComponentModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([MainState, PersonState, CemeteryState, PageState, LinkState, UserState, MetatypeState, CatalogState], {
+    NgxsModule.forRoot([MainState, PersonState, CemeteryState, PageState, LinkState, UserState, MetatypeState, CatalogState, MailState], {
       developmentMode: !environment.production,
     }),
     NgxsResetPluginModule.forRoot(),
-    NgxsLoggerPluginModule.forRoot(),
+    //NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     SharedModule,
     NotifierModule,

@@ -36,8 +36,12 @@ export class ModalComponent implements OnInit {
     );
   }
 
-  onCloseButtonClick() {
+  close() {
     this.modalService.dismissAll();
+  }
+
+  onCloseButtonClick() {
+    this.close();
   }
 
   private getDismissReason(reason: any) {

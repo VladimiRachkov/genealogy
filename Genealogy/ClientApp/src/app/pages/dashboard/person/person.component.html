@@ -92,16 +92,16 @@
 
       <input type="hidden" formControlName="id" />
       <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="submit" class="btn btn-primary" [disabled]="personForm.invalid || person">Добавить</button>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="personForm.invalid || person">Добавить</button>
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-outline-primary"
           [disabled]="!(person !== null && !personForm.invalid && personForm.dirty)"
           (click)="onUpdate()"
         >
           Сохранить
         </button>
-        <button type="reset" class="btn btn-primary">Новая запись</button>
+        <button type="reset" class="btn btn-outline-primary">Новая запись</button>
       </div>
     </form>
   </div>

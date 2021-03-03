@@ -8,5 +8,6 @@ export declare namespace Table {
     id: string;
     values: Array<string>;
     isRemoved?: boolean;
+    status?: string;
   }
 }

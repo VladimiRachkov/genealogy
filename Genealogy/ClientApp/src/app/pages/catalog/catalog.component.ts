@@ -51,15 +51,6 @@ export class CatalogComponent implements OnInit {
 
   ngOnDestroy() {}
 
-  onSelect(id: string) {
-    const params: BusinessObjectFilter = { id };
-    this.store.dispatch(new FetchCatalogItem(params)).subscribe(() => {
-      const item = this.store.selectSnapshot<BusinessObject>(CatalogState.item);
-      const { id, title, data } = item;
-      const { imageUrl, price, description } = this.parseJSON(data);
-    });
-  }
-
   onRemove(id: string) {
     this.updateItem({ id, isRemoved: true });
   }

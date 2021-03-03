@@ -1,0 +1,19 @@
+<div class="row pt-2">
+  <div class="col-12">
+    <lancet-table
+      [data]="tableData$ | async"
+      [selectedId]="(item$ | async)?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
+      (restore)="onRestore($event)"
+      [startIndex]="startIndex"
+      showActionButtons="true"
+      showRemoved="true"
+    ></lancet-table>
+    <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
+  </div>
+</div>
+
+<app-modal size="md" header="Сообщение">
+  {{ messageText }}
+</app-modal>

@@ -1,8 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiService, AuthenticationService, UserService } from '@core';
+import { NOTIFICATIONS } from '@enums';
 import { BusinessObject, CatalogItem, PaymentOutDto } from '@models';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
+import { NotifierService } from 'angular-notifier';
+import { isNil } from 'lodash';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-purchase',
@@ -19,7 +24,9 @@ export class PurchaseComponent implements OnInit {
     private modalService: NgbModal,
     private store: Store,
     private apiService: ApiService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private router: Router,
+    private notifierService: NotifierService
   ) {}
 
   ngOnInit() {}
@@ -43,7 +50,15 @@ export class PurchaseComponent implements OnInit {
 
   onPayButtonClick() {
     const userId = this.authService.getUserId();
-    const body: PaymentOutDto = { returnUrl: 'http://localhost:5000/api/payment', productId: this.item.id, userId };
+    if (isNil(userId)) {
+      this.router.navigate(['/login']);
+      this.modalService.dismissAll();
+      this.notifierService.notify('error', NOTIFICATIONS.NOT_AUTHORIZED, 'NOT_AUTHORIZED');
+      return;
+    }
+    const hostname = environment.apiUrl;
+    const body: PaymentOutDto = { returnUrl: hostname + '/api/payment', productId: this.item.id, userId };
+
     this.apiService.post<string>('payment', body).subscribe(res => window.open(res as string));
   }
 

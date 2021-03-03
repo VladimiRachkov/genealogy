@@ -40,7 +40,6 @@ namespace Genealogy.Service.Concrete
                     Confirmation = new Confirmation
                     {
                         Type = ConfirmationType.Redirect,
-                        ConfirmationUrl = $"{payment.ReturnUrl}?purchaseId={purchase.Id}",
                         ReturnUrl = $"{payment.ReturnUrl}?purchaseId={purchase.Id}"
                     }
                 };

@@ -3,7 +3,7 @@
     <div class="card-header">
       <div class="row">
         <div class="col text-left">
-          <span>{{ item.title }}</span>
+          <strong class="text-uppercase">{{ item.title }}</strong>
         </div>
         <div class="col">
           <button type="button" class="close" aria-label="Close">
@@ -17,7 +17,7 @@
       <p class="card-text pl-4 pr-4">{{ item.description }}</p>
     </div>
     <div class="card-footer text-muted">
-      <button class="btn btn-primary" (click)="onPayButtonClick()">Оплатить</button>
+      <button class="btn btn-outline-primary" (click)="onPayButtonClick()">Оплатить</button>
     </div>
   </div>
 </ng-template>
