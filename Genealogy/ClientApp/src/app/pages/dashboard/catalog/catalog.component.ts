@@ -72,7 +72,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
           const props = this.parsePurchaseDataJSON(data);
 
           const date = this.datePipe.transform(startDate.toString(), 'dd.MM.yyyy');
-          const time = this.datePipe.transform(startDate.toString(), 'hh:mm');
+          const time = this.datePipe.transform(startDate.toString(), 'HH:mm');
 
           return { id, values: [title, props.username, props.email, date, time], isRemoved, status: props.status };
         })

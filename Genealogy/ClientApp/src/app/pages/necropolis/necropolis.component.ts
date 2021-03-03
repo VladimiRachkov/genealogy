@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Cemetery, Paginator, Person, PersonFilter, Table } from '@models';
-import { ClearPersonList, FetchCemeteryList, FetchPersonList, GetPersonsCount } from '@actions';
-import { CemeteryState, MainState, PersonState, UserState } from '@states';
-import { switchMapTo, tap } from 'rxjs/operators';
+import { ClearPersonList, FetchCemeteryList, FetchPersonList } from '@actions';
+import { CemeteryState, MainState, PersonState } from '@states';
 import { isNil } from 'lodash';
 import { NotifierService } from 'angular-notifier';
 import { NOTIFICATIONS } from '@enums';
-import { Observable } from 'rxjs';
 import { FeedbackComponent } from '@shared';
 
 @Component({

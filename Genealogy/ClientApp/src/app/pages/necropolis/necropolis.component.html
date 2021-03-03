@@ -32,7 +32,7 @@
   </div>
 
   <div class="col-12">
-    <lancet-table [data]="tableData" [selectedId]="person?.id" (change)="onSelect($event)"></lancet-table>
+    <lancet-table [data]="tableData" (change)="onSelect($event)"></lancet-table>
 
     <ng-template #regButton>
       <button class="btn btn-link text-uppercase" [routerLink]="['/login']"><u>Войти или зарегистрироваться</u></button>

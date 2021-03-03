@@ -51,7 +51,7 @@ export class MailComponent implements OnInit {
           const props = this.parseJSON(data);
 
           const date = this.datePipe.transform(startDate.toString(), 'dd.MM.yyyy');
-          const time = this.datePipe.transform(startDate.toString(), 'hh:mm');
+          const time = this.datePipe.transform(startDate.toString(), 'HH:mm');
 
           return { id, values: [title, props.username, props.email, date, time], isRemoved };
         })
@@ -79,6 +79,14 @@ export class MailComponent implements OnInit {
 
   onRestore(id: string) {
     this.updateItem({ id, isRemoved: false });
+  }
+
+  onChangePage(pageIndex: number) {
+    const { step } = this.paginatorOptions;
+
+    this.pageIndex = pageIndex;
+    this.startIndex = pageIndex * step;
+    this.fetchList(pageIndex);
   }
 
   private updateItem(body: BusinessObjectOutDto) {

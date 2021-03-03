@@ -26,13 +26,20 @@ export class FeedbackComponent implements OnInit {
 
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder, private store: Store, private authService: AuthenticationService, private notifierService: NotifierService) {}
+  error: string;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private store: Store,
+    private authService: AuthenticationService,
+    private notifierService: NotifierService
+  ) {}
 
   ngOnInit() {
     this.feedbackForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.email]],
-      email: ['', Validators.required],
-      title: [null],
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      title: [''],
       message: ['', Validators.required],
     });
 
@@ -61,10 +68,10 @@ export class FeedbackComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    // stop here if form is invalid
-    // if (this.feedbackForm.invalid) {
-    //   return;
-    // }
+    if (this.feedbackForm.invalid) {
+      this.notifierService.notify('error', NOTIFICATIONS.INVALID_FORM, 'MAIL');
+      return;
+    }
 
     const { username, email, message, title } = this.feedbackForm.value;
 

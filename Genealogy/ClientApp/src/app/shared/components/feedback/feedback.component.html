@@ -22,8 +22,7 @@
       </div>
 
       <div class="col-12">
-        <button [disabled]="loading" class="btn btn-outline-secondary">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        <button class="btn btn-outline-secondary">
           Отправить
         </button>
         <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
