@@ -1,0 +1,30 @@
+<div class="row pt-2">
+  <div class="col-md-6 col-lg-8">
+    <lancet-table
+      [data]="tableData$ | async"
+      [selectedId]="(item$ | async)?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
+      (restore)="onRestore($event)"
+      [startIndex]="startIndex"
+      showActionButtons="true"
+      showRemoved="true"
+    ></lancet-table>
+    <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <form [formGroup]="settingsForm" (ngSubmit)="addPage()">
+      <div class="form-group">
+        <label for="data">Значение</label>
+        <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Укажите значение" formControlName="data" />
+      </div>
+      <input type="hidden" formControlName="id" />
+      <hr />
+      <hr />
+      <!-- <div class="btn-group" role="group" aria-label="Toolbar">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="settingForm.invalid || selectedPage">Добавить</button>
+        <button type="button" class="btn btn-outline-primary" [disabled]="selectedPage === null" (click)="updatePage()">Сохранить</button>
+      </div> -->
+    </form>
+  </div>
+</div>

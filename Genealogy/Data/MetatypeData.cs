@@ -30,5 +30,14 @@ namespace Genealogy.Data
             /// </summary>
             public static Guid Id { get { return _id; } }
         }
+
+        public static class Setting
+        {
+            private static Guid _id = new Guid("2cd71918-67a0-4ccc-8980-69017b0aeb03");
+            /// <summary>
+            /// Метатип Параметр настройки
+            /// </summary>
+            public static Guid Id { get { return _id; } }
+        }
     }
 }

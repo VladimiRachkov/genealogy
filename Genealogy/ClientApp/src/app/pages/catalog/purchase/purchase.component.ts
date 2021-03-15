@@ -8,6 +8,7 @@ import { Store } from '@ngxs/store';
 import { NotifierService } from 'angular-notifier';
 import { isNil } from 'lodash';
 import { environment } from '@env/environment';
+import { FeedbackComponent } from '@shared';
 
 @Component({
   selector: 'app-purchase',
@@ -16,6 +17,7 @@ import { environment } from '@env/environment';
 })
 export class PurchaseComponent implements OnInit {
   @ViewChild('content', { static: false }) content;
+  @ViewChild(FeedbackComponent, { static: false }) feedbackModal: FeedbackComponent;
 
   closeResult: string = null;
   item: CatalogItem;
@@ -64,6 +66,10 @@ export class PurchaseComponent implements OnInit {
 
   onCloseButtonClick() {
     this.modalService.dismissAll();
+  }
+
+  onMessageButtonClick() {
+    this.feedbackModal.open('Вопрос о продукте: ' + this.item.title);
   }
 
   private getDismissReason(reason: any) {}

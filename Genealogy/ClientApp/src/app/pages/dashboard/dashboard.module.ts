@@ -17,6 +17,7 @@ import { UsersComponent } from './users/users.component';
 import { PersonComponent } from './person/person.component';
 import { CatalogComponent } from './catalog/catalog.component';
 import { MailComponent } from './mail/mail.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,7 @@ const routes: Routes = [
     UsersComponent,
     CatalogComponent,
     MailComponent,
+    SettingsComponent
   ],
 })
 export class DashboardModule {}
