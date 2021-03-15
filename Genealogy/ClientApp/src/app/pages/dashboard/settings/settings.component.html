@@ -13,7 +13,7 @@
     <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
   </div>
   <div class="col-md-6 col-lg-4">
-    <form [formGroup]="settingsForm" (ngSubmit)="addPage()">
+    <form [formGroup]="settingsForm">
       <div class="form-group">
         <label for="data">Значение</label>
         <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Укажите значение" formControlName="data" />
