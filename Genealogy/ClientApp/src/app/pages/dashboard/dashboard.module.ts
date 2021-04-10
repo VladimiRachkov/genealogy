@@ -2,11 +2,9 @@ import { NgModule } from '@angular/core';
 import { DashboardComponent } from './dashboard.component';
 import { CemeteryComponent } from './cemetery/cemetery.component';
 import { Routes, RouterModule } from '@angular/router';
-import { NgxsModule } from '@ngxs/store';
-import { environment } from '@env/environment';
 import { PagesComponent } from './pages/pages.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { SharedModule } from '@shared';
@@ -46,7 +44,7 @@ const routes: Routes = [
     UsersComponent,
     CatalogComponent,
     MailComponent,
-    SettingsComponent
+    SettingsComponent,
   ],
 })
 export class DashboardModule {}

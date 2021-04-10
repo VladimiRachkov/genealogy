@@ -1,7 +1,8 @@
-import { FetchSettingList, GetSettingsCount, UpdateSetting } from '@actions';
+import { CreateSetting, FetchSetting, FetchSettingList, GetSettingsCount, UpdateSetting } from '@actions';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { METATYPE_ID } from '@enums';
 import { BusinessObject, BusinessObjectFilter, BusinessObjectOutDto, Paginator, Table } from '@models';
 import { Select, Store } from '@ngxs/store';
 import { ModalComponent } from '@shared';
@@ -9,6 +10,8 @@ import { SettingState } from '@states';
 import { MailState } from 'app/states/mail.state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+const metatypeId = METATYPE_ID.SETTING;
 
 @Component({
   selector: 'dashboard-settings',
@@ -27,37 +30,53 @@ export class SettingsComponent implements OnInit {
 
   tableData$: Observable<Table.Data>;
 
-  paginatorOptions: Paginator = {
-    index: 0,
-    step: 10,
-    count: null,
-  };
-
-  pageIndex: number = 0;
-  startIndex: number = 0;
-
   settingsForm: FormGroup;
 
-  constructor(private store: Store, private datePipe: DatePipe) {}
+  selectedId: string;
+  selectedSetting: BusinessObject;
+
+  constructor(private store: Store) {}
 
   ngOnInit() {
-    //this.updatePaginator();
-
     this.settingsForm = new FormGroup({
       id: new FormControl(null),
+      name: new FormControl(null, [Validators.required]),
       data: new FormControl(null, [Validators.required]),
     });
 
     this.tableData$ = this.list$.pipe(
-      map<BusinessObject[], Table.Item[]>(list => list.map(({ id, title, data }) => ({ id, values: [title, data] }))),
+      map<BusinessObject[], Table.Item[]>(list => list.map(({ id, name, data }) => ({ id, values: [name, data] }))),
       map<Table.Item[], Table.Data>(items => ({
         fields: ['Параметр', 'Значение'],
         items,
       }))
     );
+
+    this.fetchList();
   }
 
-  onSelect(id: string) {}
+  onAdd() {
+    const { name, data } = this.settingsForm.value;
+    const body = { name, data, metatypeId };
+    console.log(body);
+
+    this.store.dispatch(new CreateSetting(body)).subscribe(() => this.fetchList());
+  }
+
+  onSelect(id: string) {
+    const params: BusinessObjectFilter = { id };
+    this.store.dispatch(new FetchSetting(params)).subscribe(() => {
+      const item = this.store.selectSnapshot<BusinessObject>(SettingState.item);
+      const { id, name, data } = item;
+      this.settingsForm.setValue({ id, name, data });
+    });
+  }
+
+  onUpdate() {
+    const { name, data } = this.settingsForm.value;
+    const { id } = this.store.selectSnapshot<BusinessObject>(SettingState.item);
+    this.updateItem({ id, name, data });
+  }
 
   onRemove(id: string) {
     this.updateItem({ id, isRemoved: true });
@@ -67,40 +86,12 @@ export class SettingsComponent implements OnInit {
     this.updateItem({ id, isRemoved: false });
   }
 
-  onChangePage(pageIndex: number) {
-    const { step } = this.paginatorOptions;
-
-    this.pageIndex = pageIndex;
-    this.startIndex = pageIndex * step;
-    this.fetchList(pageIndex);
-  }
-
   private updateItem(body: BusinessObjectOutDto) {
     this.store.dispatch(new UpdateSetting(body)).subscribe(() => this.fetchList());
+    
   }
 
-  private fetchList(index: number = this.pageIndex) {
-    const { step } = this.paginatorOptions;
-    const params: BusinessObjectFilter = { index, step };
-
-    this.paginatorOptions.index = index;
-
+  private fetchList() {
     this.store.dispatch(new FetchSettingList()).subscribe();
-  }
-
-  private updatePaginator() {
-    const { step } = this.paginatorOptions;
-
-    this.store.dispatch(new GetSettingsCount()).subscribe(() => {
-      const count = this.store.selectSnapshot<number>(MailState.count);
-
-      this.paginatorOptions = {
-        index: 0,
-        step,
-        count,
-      };
-
-      this.fetchList();
-    });
   }
 }

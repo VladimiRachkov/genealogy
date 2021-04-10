@@ -64,6 +64,7 @@ export class SettingState {
   @Action(CreateSetting)
   createMessage(ctx: StateContext<SettingStateModel>, { payload }) {
     const body: BusinessObjectOutDto = { ...payload, metatypeId };
+    console.log('CreateSetting', body)
     return this.boService.AddBusinessObject(body).pipe(tap(item => ctx.patchState({ item })));
   }
 

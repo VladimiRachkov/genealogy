@@ -6,25 +6,30 @@
       (change)="onSelect($event)"
       (remove)="onRemove($event)"
       (restore)="onRestore($event)"
-      [startIndex]="startIndex"
       showActionButtons="true"
       showRemoved="true"
     ></lancet-table>
     <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
   </div>
   <div class="col-md-6 col-lg-4">
-    <form [formGroup]="settingsForm">
+    <form [formGroup]="settingsForm" (submit)="onAdd()">
+      <div class="form-group">
+        <label for="name">Значение</label>
+        <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Введите название" formControlName="name" />
+      </div>
       <div class="form-group">
         <label for="data">Значение</label>
-        <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Укажите значение" formControlName="data" />
+        <input type="text" class="form-control" id="data" aria-describedby="data" placeholder="Укажите значение" formControlName="data" />
       </div>
       <input type="hidden" formControlName="id" />
       <hr />
       <hr />
-      <!-- <div class="btn-group" role="group" aria-label="Toolbar">
-        <button type="submit" class="btn btn-outline-primary" [disabled]="settingForm.invalid || selectedPage">Добавить</button>
-        <button type="button" class="btn btn-outline-primary" [disabled]="selectedPage === null" (click)="updatePage()">Сохранить</button>
-      </div> -->
+      <div class="btn-group" role="group" aria-label="Toolbar">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="settingsForm.invalid">Добавить</button>
+        <button type="button" class="btn btn-outline-primary" [disabled]="selectedSetting === null" (click)="onUpdate()">
+          Сохранить
+        </button>
+      </div>
     </form>
   </div>
 </div>

@@ -1,16 +1,16 @@
 import { BusinessObjectFilter, BusinessObjectOutDto } from '@models';
 
 export class FetchSettingList {
-  static readonly type = '[Settings] Fetch Settings List';
+  static readonly type = '[Settings] Fetch Setting List';
 }
 
 export class FetchSetting {
-  static readonly type = '[Settings] Fetch Message';
+  static readonly type = '[Settings] Fetch Setting';
   constructor(readonly payload: BusinessObjectFilter) {}
 }
 
 export class CreateSetting {
-  static readonly type = '[Settings] Create Message';
+  static readonly type = '[Settings] Create Setting';
   constructor(readonly payload: BusinessObjectOutDto) {}
 }
 

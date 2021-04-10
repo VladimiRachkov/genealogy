@@ -5,6 +5,8 @@ using Genealogy.Models;
 using Genealogy.Service.Astract;
 using Genealogy.Helpers;
 using Genealogy.Service.Helpers;
+using Genealogy.Data;
+using Newtonsoft.Json;
 
 namespace Genealogy.Service.Concrete
 {
@@ -15,6 +17,7 @@ namespace Genealogy.Service.Concrete
             var businessObjects = _unitOfWork.BusinessObjectRepository.Get(
             x =>
                 (filter.Id != null ? x.Id == filter.Id : true) &&
+                (filter.Name != null ? x.Name == filter.Name : true) &&
                 (filter.MetatypeId != null ? x.Metatype.Id == filter.MetatypeId : true),
             x =>
                 x.OrderBy(item => item.Name).ThenBy(item => item.Id), "Metatype");
@@ -31,6 +34,8 @@ namespace Genealogy.Service.Concrete
         {
             var bo = _mapper.Map<BusinessObject>(boDto);
             var result = createBusinessObject(bo);
+
+            SendMessage(boDto);
 
             return _mapper.Map<BusinessObjectOutDto>(result);
         }
@@ -120,6 +125,7 @@ namespace Genealogy.Service.Concrete
             bo.Id = Guid.NewGuid();
             bo.StartDate = DateTime.Now;
 
+
             if (bo.Metatype == null)
             {
                 if (bo.MetatypeId == null)
@@ -134,12 +140,20 @@ namespace Genealogy.Service.Concrete
 
             if (bo.Name == null)
             {
-                bo.Name = bo.Title;
+                bo.Name = bo.Title.Trim();
+            }
+            else
+            {
+                bo.Name = bo.Name.Trim();
             }
 
             if (bo.Title == null)
             {
-                bo.Title = bo.Name;
+                bo.Title = bo.Name.Trim();
+            }
+            else
+            {
+                bo.Title = bo.Title.Trim();
             }
 
             if (bo.Title == null && bo.Name == null)
@@ -152,7 +166,10 @@ namespace Genealogy.Service.Concrete
             _unitOfWork.Save();
 
             var result = _unitOfWork.BusinessObjectRepository.GetByID(bo.Id);
+
             return result;
         }
+
+
     }
 }
