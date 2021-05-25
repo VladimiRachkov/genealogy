@@ -3,12 +3,13 @@ using Genealogy.Service.Astract;
 using System.Threading.Tasks;
 using Genealogy.Models;
 using Genealogy.Service.Helpers;
+using Yandex.Checkout.V3;
 using System;
 
 namespace Genealogy.Controllers
 {
     [Produces("application/json")]
-    [Route("api/payment")]
+    [Route("api")]
     public class PaymentController : Controller
     {
         private IGenealogyService _genealogyService;
@@ -17,7 +18,7 @@ namespace Genealogy.Controllers
             _genealogyService = genealogyService;
         }
 
-        [HttpPost]
+        [HttpPost("payment")]
         public async Task<IActionResult> DoPayment([FromBody] PaymentInDto payment)
         {
             string result = null;
@@ -32,16 +33,19 @@ namespace Genealogy.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        public IActionResult ConfirmPayment([FromQuery] Guid purchaseId)
+        [HttpPost("purchase")]
+        public IActionResult Confirm([FromBody] object sender)
         {
             BusinessObjectOutDto result = null;
-            var dto = new PurchaseInDto();
-            dto.Id = purchaseId;
-
             try
             {
-                result = _genealogyService.ConfirmPurchase(dto);
+                Message message = Client.ParseMessage(Request.Method, Request.ContentType, Request.Body);
+                Payment payment = message?.Object;
+
+                if (message?.Event == Event.PaymentSucceeded && payment.Paid)
+                {
+                    result = _genealogyService.ConfirmPurchase(message?.Object);
+                }
             }
             catch (AppException ex)
             {

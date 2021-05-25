@@ -6,18 +6,19 @@ using Yandex.Checkout.V3;
 using System.Linq;
 using Genealogy.Service.Helpers;
 using Genealogy.Data;
+using System.Collections.Generic;
 using System;
 
 namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
+        private Client client = new Yandex.Checkout.V3.Client(shopId: "739084", secretKey: "test_5LLiubI6pAXxCt-13sfn9WymESZgeE9Z30BrZIB3BAQ");
         public async Task<string> DoPayment(PaymentInDto payment)
         {
             NewPayment newPayment = null;
             BusinessObject purchase = null;
 
-            var client = new Yandex.Checkout.V3.Client(shopId: "739084", secretKey: "test_5LLiubI6pAXxCt-13sfn9WymESZgeE9Z30BrZIB3BAQ");
             AsyncClient asyncClient = client.MakeAsync();
 
             try
@@ -33,10 +34,14 @@ namespace Genealogy.Service.Concrete
 
                 purchase = createPurchase(product, user);
 
+                var metadata = new Dictionary<string, string>();
+                metadata.Add("purchaseId", purchase.Id.ToString());
+
                 newPayment = new NewPayment
                 {
                     Amount = new Amount { Value = productProps.price, Currency = "RUB" },
                     Description = $"Пользователь {user.LastName} {user.FirstName} ({user.Email}) оплатил {product.Title}",
+                    Metadata = metadata,
                     Confirmation = new Confirmation
                     {
                         Type = ConfirmationType.Redirect,
@@ -60,18 +65,19 @@ namespace Genealogy.Service.Concrete
             return null;
         }
 
-        public BusinessObjectOutDto ConfirmPurchase(PurchaseInDto purchaseDto)
+        public BusinessObjectOutDto ConfirmPurchase(Payment payment)
         {
-            var purchase = _unitOfWork.BusinessObjectRepository.GetByID((purchaseDto.Id));
-            var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
+            Guid purchaseId;
+            BusinessObjectOutDto result = null;
 
-            purchaseProps.status = PurchaseStatus.Succeeded;
+            if (payment != null)
+            {
+                string value = "";
+                payment.Metadata.TryGetValue("purchaseId", out value);
+                purchaseId = Guid.Parse(value);
+                result = confirmPurchase(purchaseId);
 
-            var updatedBO = new BusinessObjectInDto();
-            updatedBO.Id = purchase.Id;
-            updatedBO.Data = JsonConvert.SerializeObject(purchaseProps);
-
-            var result = UpdateBusinessObject(updatedBO);
+            }
             return result;
         }
 
@@ -86,6 +92,26 @@ namespace Genealogy.Service.Concrete
             purchase.Data = JsonConvert.SerializeObject(new CustomProps.Purchase(product.Title, username, user.Email));
 
             var result = createBusinessObject(purchase);
+            return result;
+        }
+
+        private BusinessObjectOutDto confirmPurchase(Guid purchaseId)
+        {
+            var purchase = _unitOfWork.BusinessObjectRepository.GetByID((purchaseId));
+            BusinessObjectOutDto result = null;
+
+            if (purchase != null)
+            {
+                var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
+
+                purchaseProps.status = PurchaseStatus.Succeeded;
+
+                var updatedBO = new BusinessObjectInDto();
+                updatedBO.Id = purchase.Id;
+                updatedBO.Data = JsonConvert.SerializeObject(purchaseProps);
+
+                result = UpdateBusinessObject(updatedBO);
+            }
             return result;
         }
     }
