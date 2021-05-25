@@ -59,7 +59,7 @@ export class PurchaseComponent implements OnInit {
       return;
     }
     const hostname = environment.apiUrl;
-    const body: PaymentOutDto = { returnUrl: hostname + '/api/payment', productId: this.item.id, userId };
+    const body: PaymentOutDto = { returnUrl: hostname + '/api/shop/payment', productId: this.item.id, userId };
 
     this.apiService.post<string>('payment', body).subscribe(res => window.open(res as string));
   }

@@ -6,6 +6,7 @@ import { UserState } from 'app/states/user.state';
 import { Observable } from 'rxjs';
 import { User } from '@models';
 import { HttpParams } from '@angular/common/http';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-profile',
@@ -30,7 +31,7 @@ export class ProfileComponent implements OnInit {
   }
 
   onPayment() {
-    const params: any = { returnUrl: 'http://37.230.116.107/payment' };
-    this.apiService.get<string>('payment', params).subscribe(res => window.open(res as string));
+    const params: any = { returnUrl: environment.apiUrl + '/shop/success' };
+    this.apiService.get<string>('/shop/payment', params).subscribe(res => window.open(res as string));
   }
 }

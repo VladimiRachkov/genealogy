@@ -9,7 +9,7 @@ using System;
 namespace Genealogy.Controllers
 {
     [Produces("application/json")]
-    [Route("api")]
+    [Route("api/shop")]
     public class PaymentController : Controller
     {
         private IGenealogyService _genealogyService;
