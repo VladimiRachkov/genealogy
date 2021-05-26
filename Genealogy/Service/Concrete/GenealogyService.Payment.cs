@@ -16,6 +16,7 @@ namespace Genealogy.Service.Concrete
         private Client client = new Yandex.Checkout.V3.Client(shopId: "739084", secretKey: "test_5LLiubI6pAXxCt-13sfn9WymESZgeE9Z30BrZIB3BAQ");
         public async Task<string> DoPayment(PaymentInDto payment)
         {
+            string result = null;
             NewPayment newPayment = null;
             BusinessObject purchase = null;
 
@@ -30,7 +31,6 @@ namespace Genealogy.Service.Concrete
                 userFilter.Id = payment.UserId;
 
                 var user = GetUserById(payment.UserId);
-
 
                 purchase = createPurchase(product, user);
 
@@ -49,20 +49,20 @@ namespace Genealogy.Service.Concrete
                     }
                 };
 
+                Payment paymentResult = await asyncClient.CreatePaymentAsync(newPayment);
+
+                if (paymentResult.Status == PaymentStatus.Pending)
+                {
+                    result = paymentResult.Confirmation.ConfirmationUrl;
+                }
+
             }
             catch (AppException ex)
             {
                 throw ex;
             }
-            Payment paymentResult = await asyncClient.CreatePaymentAsync(newPayment);
 
-            if (paymentResult.Status == PaymentStatus.Pending)
-            {
-                string url = paymentResult.Confirmation.ConfirmationUrl;
-                return url;
-            }
-
-            return null;
+            return result;
         }
 
         public BusinessObjectOutDto ConfirmPurchase(Payment payment)
