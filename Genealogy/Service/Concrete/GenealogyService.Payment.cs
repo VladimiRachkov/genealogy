@@ -8,6 +8,7 @@ using Genealogy.Service.Helpers;
 using Genealogy.Data;
 using System.Collections.Generic;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace Genealogy.Service.Concrete
 {
@@ -72,11 +73,19 @@ namespace Genealogy.Service.Concrete
 
             if (payment != null)
             {
-                string value = "";
-                payment.Metadata.TryGetValue("purchaseId", out value);
-                purchaseId = Guid.Parse(value);
-                result = confirmPurchase(purchaseId);
+                _logger.LogDebug("ConfirmPurchase", payment.Id);
 
+                if (payment.Status == PaymentStatus.Succeeded)
+                {
+                    string value = "";
+                    payment.Metadata.TryGetValue("purchaseId", out value);
+                    purchaseId = Guid.Parse(value);
+                    result = confirmPurchase(purchaseId);
+                }
+            }
+            else
+            {
+                _logger.LogDebug("Payment is null");
             }
             return result;
         }
@@ -106,13 +115,20 @@ namespace Genealogy.Service.Concrete
 
                 purchaseProps.status = PurchaseStatus.Succeeded;
 
-                var updatedBO = new BusinessObjectInDto();
-                updatedBO.Id = purchase.Id;
-                updatedBO.Data = JsonConvert.SerializeObject(purchaseProps);
+                purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+                var updatedBO = _mapper.Map<BusinessObjectInDto>(purchase);
 
                 result = UpdateBusinessObject(updatedBO);
             }
             return result;
+        }
+
+        public void CheckPayments()
+        {
+            var filter = new BusinessObjectFilter() { MetatypeId = MetatypeData.Purchase.Id };
+            var purchases = GetBusinessObjects(filter);
+
+
         }
     }
 

@@ -47,6 +47,7 @@ namespace SpaPrerendering
             services.AddScoped<IGenealogyService, GenealogyService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<DbContext, GenealogyContext>();
+            services.AddHostedService<PurchaseManageService>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<GenealogyContext>(options => options.UseNpgsql(connection));
@@ -81,7 +82,6 @@ namespace SpaPrerendering
                     ValidateAudience = false
                 };
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

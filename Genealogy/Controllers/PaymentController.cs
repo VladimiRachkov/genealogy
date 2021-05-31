@@ -34,18 +34,17 @@ namespace Genealogy.Controllers
         }
 
         [HttpPost("purchase")]
-        public IActionResult Confirm([FromBody] object sender)
+        public IActionResult Confirm([FromBody] Payment payment)
         {
             BusinessObjectOutDto result = null;
             try
             {
-                Message message = Client.ParseMessage(Request.Method, Request.ContentType, Request.Body);
-                Payment payment = message?.Object;
+                //Message message = Client.ParseMessage(Request.Method, Request.ContentType, Request.Body);
+                //Payment payment = message?.Object;
 
-                if (message?.Event == Event.PaymentSucceeded && payment.Paid)
-                {
-                    result = _genealogyService.ConfirmPurchase(message?.Object);
-                }
+
+                result = _genealogyService.ConfirmPurchase(payment);
+
             }
             catch (AppException ex)
             {

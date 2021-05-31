@@ -9,5 +9,7 @@ namespace Genealogy.Service.Astract
     {
         Task<string> DoPayment(PaymentInDto payment);
         BusinessObjectOutDto ConfirmPurchase(Payment payment);
+
+        void CheckPayments();
     }
 }

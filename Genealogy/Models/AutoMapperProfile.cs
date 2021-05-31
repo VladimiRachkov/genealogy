@@ -29,6 +29,7 @@ namespace Genealogy.Models
 
             CreateMap<BusinessObject, BusinessObjectOutDto>();
             CreateMap<BusinessObjectInDto, BusinessObject>();
+            CreateMap<BusinessObject, BusinessObjectInDto>();
 
             CreateMap<Metatype, MetatypeOutDto>();
             CreateMap<MetatypeOutDto, Metatype>();
