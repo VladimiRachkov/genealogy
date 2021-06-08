@@ -6,9 +6,11 @@ namespace Genealogy.Service.Astract
 {
     partial interface IGenealogyService
     {
-        List<BusinessObjectOutDto> GetBusinessObjects(BusinessObjectFilter filter);
+        List<BusinessObjectOutDto> GetBusinessObjectsDto(BusinessObjectFilter filter);
+        IEnumerable<BusinessObject> GetBusinessObjects(BusinessObjectFilter filter);
         BusinessObjectOutDto CreateBusinessObjectsFromDto(BusinessObjectInDto boDto);
-        BusinessObjectOutDto UpdateBusinessObject(BusinessObjectInDto boDto);
+        BusinessObjectOutDto UpdateBusinessObjectDto(BusinessObjectInDto boDto);
+        BusinessObject UpdateBusinessObject(BusinessObject changedBO);
         BusinessObjectsCountOutDto GetBusinessObjectsCount(BusinessObjectFilter filter);
     }
 }

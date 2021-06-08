@@ -23,13 +23,15 @@ namespace Genealogy.Models
             public string product { get; set; }
             public string username { get; set; }
             public string email { get; set; }
+            public string paymentId { get; set; }
             public PurchaseStatus status { get; set; }
-            public Purchase(string product, string username, string email, PurchaseStatus status = PurchaseStatus.Pending)
+            public Purchase(string product, string username, string email, string paymentId, PurchaseStatus status = PurchaseStatus.Pending)
             {
                 this.product = product;
                 this.username = username;
                 this.email = email;
                 this.status = status;
+                this.paymentId = paymentId;
             }
         }
     }

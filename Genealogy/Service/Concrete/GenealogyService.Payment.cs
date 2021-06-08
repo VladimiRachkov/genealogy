@@ -57,6 +57,17 @@ namespace Genealogy.Service.Concrete
                     result = paymentResult.Confirmation.ConfirmationUrl;
                 }
 
+                if (purchase != null)
+                {
+                    var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
+
+                    purchaseProps.paymentId = paymentResult.Id;
+                    purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+                    
+                    UpdateBusinessObject(purchase);
+                }
+
+
             }
             catch (AppException ex)
             {
@@ -80,7 +91,10 @@ namespace Genealogy.Service.Concrete
                     string value = "";
                     payment.Metadata.TryGetValue("purchaseId", out value);
                     purchaseId = Guid.Parse(value);
-                    result = confirmPurchase(purchaseId);
+
+                    var confirmedPurchase = confirmPurchase(purchaseId);
+
+                    result = _mapper.Map<BusinessObjectOutDto>(confirmedPurchase);
                 }
             }
             else
@@ -98,16 +112,16 @@ namespace Genealogy.Service.Concrete
             purchase.Title = product.Title;
             purchase.Name = product.Name;
             purchase.MetatypeId = MetatypeData.Purchase.Id;
-            purchase.Data = JsonConvert.SerializeObject(new CustomProps.Purchase(product.Title, username, user.Email));
+            purchase.Data = JsonConvert.SerializeObject(new CustomProps.Purchase(product.Title, username, user.Email, new Guid().ToString()));
 
             var result = createBusinessObject(purchase);
             return result;
         }
 
-        private BusinessObjectOutDto confirmPurchase(Guid purchaseId)
+        private BusinessObject confirmPurchase(Guid purchaseId)
         {
             var purchase = _unitOfWork.BusinessObjectRepository.GetByID((purchaseId));
-            BusinessObjectOutDto result = null;
+            BusinessObject result = null;
 
             if (purchase != null)
             {
@@ -116,9 +130,8 @@ namespace Genealogy.Service.Concrete
                 purchaseProps.status = PurchaseStatus.Succeeded;
 
                 purchase.Data = JsonConvert.SerializeObject(purchaseProps);
-                var updatedBO = _mapper.Map<BusinessObjectInDto>(purchase);
 
-                result = UpdateBusinessObject(updatedBO);
+                result = UpdateBusinessObject(purchase);
             }
             return result;
         }
@@ -126,7 +139,7 @@ namespace Genealogy.Service.Concrete
         public void CheckPayments()
         {
             var filter = new BusinessObjectFilter() { MetatypeId = MetatypeData.Purchase.Id };
-            var purchases = GetBusinessObjects(filter);
+            var purchases = GetBusinessObjectsDto(filter);
 
 
         }

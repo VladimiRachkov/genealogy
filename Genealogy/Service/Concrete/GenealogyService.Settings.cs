@@ -13,7 +13,7 @@ namespace Genealogy.Service.Concrete
                 Name = name
             };
 
-            return GetBusinessObjects(filter).FirstOrDefault().Data;
+            return GetBusinessObjectsDto(filter).FirstOrDefault().Data;
         }
 
     }

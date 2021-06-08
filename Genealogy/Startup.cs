@@ -47,11 +47,11 @@ namespace SpaPrerendering
             services.AddScoped<IGenealogyService, GenealogyService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<DbContext, GenealogyContext>();
-            services.AddHostedService<PurchaseManageService>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<GenealogyContext>(options => options.UseNpgsql(connection));
 
+            services.AddHostedService<PurchaseManageService>();
             // Auto Mapper Configurations
             var mappingConfig = new MapperConfiguration(cfg =>
             {

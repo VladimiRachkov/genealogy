@@ -27,7 +27,7 @@ namespace Genealogy.Controllers
             
             try
             {
-                result = _genealogyService.GetBusinessObjects(filter);
+                result = _genealogyService.GetBusinessObjectsDto(filter);
             }
             catch (AppException ex)
             {
@@ -69,7 +69,7 @@ namespace Genealogy.Controllers
 
             try
             {
-                resultPage = _genealogyService.UpdateBusinessObject(businessObject);
+                resultPage = _genealogyService.UpdateBusinessObjectDto(businessObject);
             }
             catch (AppException ex)
             {

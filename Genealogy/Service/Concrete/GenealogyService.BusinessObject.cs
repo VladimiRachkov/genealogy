@@ -12,7 +12,19 @@ namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
-        public List<BusinessObjectOutDto> GetBusinessObjects(BusinessObjectFilter filter)
+        public List<BusinessObjectOutDto> GetBusinessObjectsDto(BusinessObjectFilter filter)
+        {
+            var businessObjects = GetBusinessObjects(filter);
+
+            if (businessObjects != null)
+            {
+                return businessObjects.Select(i => _mapper.Map<BusinessObjectOutDto>(i)).ToList();
+            }
+
+            return null;
+        }
+
+        public IEnumerable<BusinessObject> GetBusinessObjects(BusinessObjectFilter filter)
         {
             var businessObjects = _unitOfWork.BusinessObjectRepository.Get(
             x =>
@@ -27,7 +39,7 @@ namespace Genealogy.Service.Concrete
                 businessObjects = businessObjects.Where((item, index) => index >= filter.Step * filter.Index && index < (filter.Step * filter.Index) + filter.Step);
             }
 
-            return businessObjects.Select(i => _mapper.Map<BusinessObjectOutDto>(i)).ToList();
+            return businessObjects;
         }
 
         public BusinessObjectOutDto CreateBusinessObjectsFromDto(BusinessObjectInDto boDto)
@@ -40,61 +52,69 @@ namespace Genealogy.Service.Concrete
             return _mapper.Map<BusinessObjectOutDto>(result);
         }
 
-        public BusinessObjectOutDto UpdateBusinessObject(BusinessObjectInDto boDto)
+        public BusinessObjectOutDto UpdateBusinessObjectDto(BusinessObjectInDto boDto)
         {
             BusinessObjectOutDto result = null;
 
             if (boDto != null && boDto.Id != null)
             {
+                var changedBO = _mapper.Map<BusinessObject>(boDto);
+                var updatedBO = UpdateBusinessObject(changedBO);
+
+                result = _mapper.Map<BusinessObjectOutDto>(updatedBO);
+            }
+
+            return result;
+        }
+
+        public BusinessObject UpdateBusinessObject(BusinessObject changedBO)
+        {
+            BusinessObject result = null;
+
+            if (changedBO != null && changedBO.Id != null)
+            {
                 //TODO: Сделать проверку всех свойств на наличие изменений
-                var updatedBO = _mapper.Map<BusinessObject>(boDto);
+
                 //changedPerson.Cemetery = _unitOfWork.CemeteryRepository.GetByID(personDto.CemeteryId);
 
-                var bo = _unitOfWork.BusinessObjectRepository.GetByID(boDto.Id);
+                var bo = _unitOfWork.BusinessObjectRepository.GetByID(changedBO.Id);
 
-                if (boDto.IsRemoved != null && boDto.IsRemoved.Value && bo.IsRemoved)
+                if (changedBO.IsRemoved && bo.IsRemoved)
                 {
-                    result = RemoveBusinessObject(bo) ? _mapper.Map<BusinessObjectOutDto>(bo) : null;
+                    result = RemoveBusinessObject(bo) ? _mapper.Map<BusinessObject>(bo) : null;
                 }
                 else
                 {
-                    if (boDto.Data != null)
+                    if (changedBO.Data != null)
                     {
-                        bo.Data = boDto.Data;
+                        bo.Data = changedBO.Data;
                     }
 
-                    if (boDto.Name != null)
+                    if (changedBO.Name != null)
                     {
-                        bo.Name = boDto.Name;
+                        bo.Name = changedBO.Name;
                     }
 
-                    if (boDto.Title != null)
+                    if (changedBO.Title != null)
                     {
-                        bo.Title = boDto.Title;
+                        bo.Title = changedBO.Title;
                     }
 
-                    if (boDto.IsRemoved != null)
+                    if (changedBO.IsRemoved == true)
                     {
-                        if (boDto.IsRemoved.Value == true)
-                        {
-                            bo.FinishDate = DateTime.Now;
-                            bo.IsRemoved = true;
-                        }
-                        else
-                        {
-                            bo.IsRemoved = false;
-                        }
+                        bo.FinishDate = DateTime.Now;
+                        bo.IsRemoved = true;
                     }
+                    else
+                    {
+                        bo.IsRemoved = false;
+                    }
+
 
                     _unitOfWork.BusinessObjectRepository.Update(bo);
                     _unitOfWork.Save();
 
-                    result = _mapper.Map<BusinessObjectOutDto>(bo);
-                }
-
-                if (result != null)
-                {
-                    result = _mapper.Map<BusinessObjectOutDto>(result);
+                    result = bo;
                 }
             }
             return result;
