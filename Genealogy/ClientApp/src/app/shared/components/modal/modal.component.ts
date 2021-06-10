@@ -44,7 +44,5 @@ export class ModalComponent implements OnInit {
     this.close();
   }
 
-  private getDismissReason(reason: any) {
-    console.log(reason);
-  }
+  private getDismissReason(reason: any) {}
 }

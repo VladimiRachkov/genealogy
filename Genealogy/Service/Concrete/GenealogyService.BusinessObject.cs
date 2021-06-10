@@ -3,10 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Genealogy.Models;
 using Genealogy.Service.Astract;
-using Genealogy.Helpers;
 using Genealogy.Service.Helpers;
-using Genealogy.Data;
-using Newtonsoft.Json;
 
 namespace Genealogy.Service.Concrete
 {
@@ -30,7 +27,8 @@ namespace Genealogy.Service.Concrete
             x =>
                 (filter.Id != null ? x.Id == filter.Id : true) &&
                 (filter.Name != null ? x.Name == filter.Name : true) &&
-                (filter.MetatypeId != null ? x.Metatype.Id == filter.MetatypeId : true),
+                (filter.MetatypeId != null ? x.Metatype.Id == filter.MetatypeId : true) &&
+                (filter.UserId != null ? x.UserId == filter.UserId : true),
             x =>
                 x.OrderBy(item => item.Name).ThenBy(item => item.Id), "Metatype");
 

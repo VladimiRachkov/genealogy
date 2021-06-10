@@ -28,7 +28,6 @@ export class LinkState {
   addLink(ctx: StateContext<LinkStateModel>, { payload: link }: AddLink): Observable<any> {
     return this.apiService.post<LinkDto>('link', link).pipe(
       map<LinkDto, Link>(item => item),
-      tap(linkList => console.log('link list', linkList)),
       tap(linkList => ctx.patchState({ linkList }))
     );
   }
@@ -44,7 +43,6 @@ export class LinkState {
 
   @Action(UpdateLinkList)
   updateLinkList(ctx: StateContext<LinkStateModel>, { payload: links }): Observable<any> {
-    console.log('LIST', links)
     return this.apiService
       .post<{ links: Array<LinkDto> }>('link/list', { links })
       .pipe(

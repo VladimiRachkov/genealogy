@@ -27,6 +27,14 @@
             </li>
           </ul>
         </div>
+        <div class="tab-content">
+          <h2>Покупки</h2>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let purchase of purchases">
+              <span>{{ purchase.startDate | date: 'dd.MM.yyyy' }} - {{ purchase.title }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

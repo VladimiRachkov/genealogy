@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PageModule } from './pages/page.module';
 import { StartComponent } from './pages/start/start.component';
-import { CatalogComponent } from './pages/catalog/catalog.component';
 import { NecropolisComponent } from './pages/necropolis/necropolis.component';
 import { GakoComponent } from './pages/gako/gako.component';
 import { PageViewerComponent } from './pages/page-viewer/page-viewer.component';
@@ -11,7 +10,7 @@ import { ROLES } from '@enums';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register';
 import { PaymentComponent } from './pages/payment/payment.component';
-import { AuthGuard, SubscriptionGuard } from './core/guards';
+import { AuthGuard } from './core/guards';
 
 const routes: Routes = [
   {
@@ -24,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'catalog',
-    component: CatalogComponent,
+    loadChildren: () => import('./pages/catalog/catalog.module').then(m => m.CatalogModule),
   },
   {
     path: 'gako',

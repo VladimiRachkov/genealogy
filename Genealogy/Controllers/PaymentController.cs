@@ -10,7 +10,7 @@ namespace Genealogy.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/shop")]
+    [Route("api/catalog")]
     public class PaymentController : Controller
     {
         private IGenealogyService _genealogyService;

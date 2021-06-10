@@ -41,7 +41,6 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.person = null;
 
     this.updatePaginator();
-    /// this.personForm.valueChanges.pipe(untilDestroyed(this)).subscribe(data => console.log(data));
   }
 
   ngOnDestroy() {}

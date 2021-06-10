@@ -30,67 +30,76 @@ public class PurchaseManageService : BackgroundService
         stoppingToken.Register(() =>
             _logger.LogDebug($" PurchaseManageService background task is stopping."));
 
-        while (!stoppingToken.IsCancellationRequested)
+        try
         {
-            AsyncClient asyncClient = client.MakeAsync();
-            _logger.LogDebug($"PurchaseManageService task doing background work.");
-
-            BusinessObjectFilter filter = new BusinessObjectFilter()
+            while (!stoppingToken.IsCancellationRequested)
             {
-                MetatypeId = MetatypeData.Purchase.Id
-            };
 
-            var purchases = _genealogyContext.BusinessObjects.Where(bo => bo.MetatypeId == MetatypeData.Purchase.Id).ToList();
-            var list = purchases;
+                AsyncClient asyncClient = client.MakeAsync();
+                _logger.LogDebug($"PurchaseManageService task doing background work.");
 
-            foreach (var purchase in list)
-            {
-                var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
-
-                if (purchaseProps.status == PurchaseStatus.Succeeded)
+                BusinessObjectFilter filter = new BusinessObjectFilter()
                 {
-                    continue;
-                }
+                    MetatypeId = MetatypeData.Purchase.Id
+                };
 
-                var response = await asyncClient.GetPaymentAsync(purchaseProps.paymentId);
+                var purchases = _genealogyContext.BusinessObjects.Where(bo => bo.MetatypeId == MetatypeData.Purchase.Id).ToList();
+                var list = purchases;
 
-                switch (purchaseProps.status)
+                foreach (var purchase in list)
                 {
-                    case PurchaseStatus.Pending:
-                        var time1 = DateTime.Now;
-                        var time2 = purchase.StartDate;
-                        var span = time1.Subtract(time2).TotalMinutes;
+                    var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
-                        if (DateTime.Now.Subtract(purchase.StartDate).TotalMinutes > timeout)
-                        {
-                            await removePurchase(purchase, @"Timeout {timeout} minutes.");
-                        }
-                        break;
-                }
+                    if (purchaseProps.status == PurchaseStatus.Succeeded)
+                    {
+                        continue;
+                    }
 
-                switch (response.Status)
-                {
-                    case PaymentStatus.Succeeded:
-                        purchaseProps.status = PurchaseStatus.Succeeded;
-                        purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+                    var response = await asyncClient.GetPaymentAsync(purchaseProps.paymentId);
 
-                        await updatePurchase(purchase, "Payment successed.");
-                        await productAction(Guid.Parse(purchaseProps.productId), purchase.UserId);
+                    switch (purchaseProps.status)
+                    {
+                        case PurchaseStatus.Pending:
+                            var time1 = DateTime.Now;
+                            var time2 = purchase.StartDate;
+                            var span = time1.Subtract(time2).TotalMinutes;
 
-                        break;
+                            if (DateTime.Now.Subtract(purchase.StartDate).TotalMinutes > timeout)
+                            {
+                                await removePurchase(purchase, @"Timeout {timeout} minutes.");
+                            }
+                            break;
+                    }
 
-                    case PaymentStatus.Canceled:
-                        await removePurchase(purchase, "Canceled.");
-                        break;
-                }
+                    switch (response.Status)
+                    {
+                        case PaymentStatus.Succeeded:
+                            purchaseProps.status = PurchaseStatus.Succeeded;
+                            purchase.Data = JsonConvert.SerializeObject(purchaseProps);
 
-                _logger.LogDebug($"{purchase.Id} {purchase.Title}");
-            };
+                            await updatePurchase(purchase, "Payment successed.");
+                            await productAction(Guid.Parse(purchaseProps.productId), purchase.UserId);
 
-            await Task.Delay(5000, stoppingToken);
+                            break;
+
+                        case PaymentStatus.Canceled:
+                            await removePurchase(purchase, "Canceled.");
+                            break;
+                    }
+
+                    _logger.LogDebug($"{purchase.Id} {purchase.Title}");
+                };
+
+                await Task.Delay(60000, stoppingToken);
+            }
+
+            _logger.LogDebug($"PurchaseManageService background task is stopping.");
         }
-
-        _logger.LogDebug($"PurchaseManageService background task is stopping.");
+        catch (ApplicationException e)
+        {
+            _logger.LogError(e.ToString());
+            throw e;
+        }
     }
 
     private async Task<int> removePurchase(BusinessObject purchase, string reason)
@@ -103,7 +112,7 @@ public class PurchaseManageService : BackgroundService
         }
         catch (ApplicationException e)
         {
-            _logger.LogError(e.ToString());
+            _logger.LogError($"PurchaseManageService removing has error. Reason: {e.ToString()}");
             throw e;
         }
     }
@@ -117,7 +126,7 @@ public class PurchaseManageService : BackgroundService
         }
         catch (ApplicationException e)
         {
-            _logger.LogError(e.ToString());
+            _logger.LogError($"PurchaseManageService updating has error. Reason: {e.ToString()}");
             throw e;
         }
     }
@@ -146,11 +155,11 @@ public class PurchaseManageService : BackgroundService
             }
             catch (ApplicationException e)
             {
-                _logger.LogError(e.ToString());
+                _logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
                 throw e;
             }
         }
 
-        throw new ApplicationException();
+        return 0;
     }
 }

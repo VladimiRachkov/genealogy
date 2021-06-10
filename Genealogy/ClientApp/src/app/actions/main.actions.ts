@@ -11,3 +11,7 @@ export class SetAuthorization {
 export class FetchActiveSubscribe {
   static readonly type = '[Main] Fetch ActiveSubscribe';
 }
+
+export class FetchPurchases {
+  static readonly type = '[Main] Fetch Purchases';
+}

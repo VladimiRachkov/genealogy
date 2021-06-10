@@ -58,7 +58,6 @@ export class SettingsComponent implements OnInit {
   onAdd() {
     const { name, data } = this.settingsForm.value;
     const body = { name, data, metatypeId };
-    console.log(body);
 
     this.store.dispatch(new CreateSetting(body)).subscribe(() => this.fetchList());
   }

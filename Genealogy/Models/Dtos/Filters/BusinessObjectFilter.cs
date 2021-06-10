@@ -8,5 +8,6 @@ namespace Genealogy.Models
         public string Name { get; set; }
         public Guid? MetatypeId { get; set; }
         public bool? IsRemoved { get; set; }
+        public Guid? UserId { get; set; }
     }
 }

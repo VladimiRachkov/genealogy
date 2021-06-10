@@ -1,22 +1,20 @@
-import { Component, OnInit, ViewChild, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Store, Select } from '@ngxs/store';
 import { FetchFreePageList, AddLink, FetchLinkList, UpdateLinkList } from '@actions';
-import { Page, Link, LinkDto, LinkFilter } from '@models';
+import { Page, Link, LinkDto } from '@models';
 import { PageState } from '@states';
 import { Observable, combineLatest } from 'rxjs';
-import { switchMapTo, filter } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { LinkState } from 'app/states/link.state';
-import { untilDestroyed } from 'ngx-take-until-destroy';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { link } from 'fs';
 
 @Component({
   selector: 'app-link-editor',
   templateUrl: './link-editor.component.html',
   styleUrls: ['./link-editor.component.scss'],
 })
-export class LinkEditorComponent implements OnInit, OnDestroy {
+export class LinkEditorComponent implements OnInit {
   @ViewChild('content', { static: false }) content;
 
   @Select(PageState.freePageList) freePageList$: Observable<Array<Page>>;
@@ -30,7 +28,7 @@ export class LinkEditorComponent implements OnInit, OnDestroy {
   constructor(private modalService: NgbModal, private store: Store) {}
 
   ngOnInit() {
-    combineLatest(this.freePageList$, this.linkList$)
+    combineLatest([this.freePageList$, this.linkList$])
       .pipe(filter(data => data[0] != null && data[1] != null))
       .subscribe(data => {
         this.pages = [];
@@ -49,33 +47,25 @@ export class LinkEditorComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {}
-
   public open(pageId: string) {
     this.pageId = pageId;
-    this.store
-      .dispatch(new FetchFreePageList(this.pageId))
-      .pipe(switchMapTo(this.store.dispatch(new FetchLinkList(null))))
-      .subscribe(data => {
-        console.log('LIST', data);
-      });
+    this.store.dispatch([new FetchFreePageList(this.pageId), new FetchLinkList(null)]).subscribe(() => {
+      const options: NgbModalOptions = {
+        ariaLabelledBy: 'modal-basic-title',
+        size: 'xl',
+        windowClass: 'your-custom-dialog-class',
+      };
 
-    const options: NgbModalOptions = {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'xl',
-      windowClass: 'your-custom-dialog-class',
-    };
-
-    this.modalService.open(this.content, options).result.then(
-      result => {},
-      reason => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      }
-    );
+      this.modalService.open(this.content, options).result.then(
+        result => {},
+        reason => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+    });
   }
 
   onSelect(targetPageId: string) {
-    console.log(targetPageId);
     const link: LinkDto = {
       pageId: this.pageId,
       targetPageId,

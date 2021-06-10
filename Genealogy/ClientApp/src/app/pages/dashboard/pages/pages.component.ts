@@ -69,7 +69,7 @@ export class PagesComponent implements OnInit {
   }
 
   onEditorClose(result: string) {
-    console.log(result);
+
   }
 
   onLinkEditorOpen() {

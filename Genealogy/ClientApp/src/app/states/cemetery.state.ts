@@ -45,7 +45,7 @@ export class CemeteryState {
 
   @Action(AddCemetery)
   addCemetery(ctx: StateContext<CemeteryStateModel>, { payload: cemetery }: AddCemetery): Observable<any> {
-    return this.apiService.post<CemeteryDto>('cemetery', cemetery).pipe(tap(data => console.log('ADD', data)));
+    return this.apiService.post<CemeteryDto>('cemetery', cemetery);
   }
 
   @Action(MarkAsRemovedCemetery)

@@ -54,7 +54,6 @@ export class MailState {
 
   @Action(CreateMessage)
   createMessage(ctx: StateContext<MailStateModel>, { payload }) {
-    console.log(payload);
     const body: BusinessObjectOutDto = payload;
     return this.boService.AddBusinessObject(body).pipe(tap(item => ctx.patchState({ item })));
   }

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StartComponent } from './start/start.component';
-import { CatalogComponent } from './catalog/catalog.component';
 import { NecropolisComponent } from './necropolis/necropolis.component';
 import { GakoComponent } from './gako/gako.component';
 import { NotifierService } from 'angular-notifier';
@@ -16,14 +15,12 @@ import { PaymentComponent } from './payment/payment.component';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CustomSelectService } from 'app/core/services/custom-select.service';
-import { PurchaseComponent } from './catalog/purchase/purchase.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule, RouterModule, MaterialModule, FormsModule, NgSelectModule],
-  exports: [StartComponent, CatalogComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, RegisterComponent],
+  exports: [StartComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, RegisterComponent],
   declarations: [
     StartComponent,
-    CatalogComponent,
     NecropolisComponent,
     GakoComponent,
     PageViewerComponent,
@@ -31,7 +28,6 @@ import { PurchaseComponent } from './catalog/purchase/purchase.component';
     ProfileComponent,
     RegisterComponent,
     PaymentComponent,
-    PurchaseComponent,
   ],
   providers: [NotifierService, CustomSelectService],
 })

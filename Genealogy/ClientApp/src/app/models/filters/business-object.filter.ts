@@ -9,4 +9,5 @@ export interface BusinessObjectFilter extends PaginatorOutDto {
   finishDate?: Date;
   isRemoved?: boolean;
   data?: string;
+  userId?: string;
 }

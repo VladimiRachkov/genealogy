@@ -8,6 +8,7 @@ import {
   faCheck,
   faRubleSign,
   faShoppingCart,
+  faThumbsUp,
 } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
@@ -16,6 +17,6 @@ import {
 })
 export class AssetsModule {
   constructor(private library: FaIconLibrary) {
-    this.library.addIcons(faTimes, faTrashRestore, faSearch, faHourglass, faCheck, faRubleSign, faShoppingCart);
+    this.library.addIcons(faTimes, faTrashRestore, faSearch, faHourglass, faCheck, faRubleSign, faShoppingCart, faThumbsUp);
   }
 }

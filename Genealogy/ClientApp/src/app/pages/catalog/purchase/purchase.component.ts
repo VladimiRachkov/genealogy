@@ -24,7 +24,6 @@ export class PurchaseComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private store: Store,
     private apiService: ApiService,
     private authService: AuthenticationService,
     private router: Router,
@@ -59,9 +58,9 @@ export class PurchaseComponent implements OnInit {
       return;
     }
     const hostname = environment.apiUrl;
-    const body: PaymentOutDto = { returnUrl: hostname + '/api/shop/payment', productId: this.item.id, userId };
+    const body: PaymentOutDto = { returnUrl: hostname + '/catalog/info', productId: this.item.id, userId };
 
-    this.apiService.post<string>('shop/payment', body).subscribe(res => window.open(res as string));
+    this.apiService.post<string>('catalog/payment', body).subscribe(res => window.open(res as string, '_self'));
   }
 
   onCloseButtonClick() {

@@ -45,8 +45,6 @@ export class FeedbackComponent implements OnInit {
 
     const id = this.authService.getUserId();
 
-    console.log(id);
-
     if (!isNil(id)) {
       const userFilter: UserFilter = { id };
       this.store.dispatch(new GetUser(userFilter)).subscribe(() => {

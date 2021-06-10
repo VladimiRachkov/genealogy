@@ -47,7 +47,6 @@ export class PageState {
   fetchPageList(ctx: StateContext<PageStateModel>, { payload: filter }): Observable<Array<PageDto>> {
     const params: HttpParams = filter;
     return this.apiService.get<Array<PageDto>>('page/list', params).pipe(
-      tap(data => console.log('FETCH', data)),
       tap(pageList => ctx.patchState({ pageList }))
     );
   }
@@ -60,7 +59,7 @@ export class PageState {
 
   @Action(AddPage)
   addPage(ctx: StateContext<PageStateModel>, { payload: page }: AddPage): Observable<any> {
-    return this.apiService.post<PageDto>('page', page).pipe(tap(data => console.log('ADD', data)));
+    return this.apiService.post<PageDto>('page', page);
   }
 
   @Action(MarkAsRemovedPage)
