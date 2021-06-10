@@ -58,5 +58,6 @@ namespace Genealogy.Repository.Concrete
         {
             return _dbContext.Users.Any(u => u.Email == email);
         }
+        
     }
 }

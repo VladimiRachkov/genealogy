@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService, ApiService } from '@core';
-import { Store, Select } from '@ngxs/store';
-import { GetUser } from '@actions';
+import { Store } from '@ngxs/store';
+import { FetchActiveSubscribe, GetUser } from '@actions';
 import { UserState } from 'app/states/user.state';
-import { Observable } from 'rxjs';
-import { User } from '@models';
-import { HttpParams } from '@angular/common/http';
+import { BusinessObject, User } from '@models';
 import { environment } from '@env/environment';
+import { MainState } from '@states';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +14,8 @@ import { environment } from '@env/environment';
 })
 export class ProfileComponent implements OnInit {
   user: User;
+  subscription: BusinessObject;
+  hasSubscription = false;
 
   constructor(private authenticationService: AuthenticationService, private store: Store, private apiService: ApiService) {}
 
@@ -23,6 +24,11 @@ export class ProfileComponent implements OnInit {
     this.store.dispatch(new GetUser({ id: currentUser.id })).subscribe(() => {
       this.user = this.store.selectSnapshot<User>(UserState.user);
       console.log(this.user);
+    });
+
+    this.store.dispatch(new FetchActiveSubscribe()).subscribe(() => {
+      this.subscription = this.store.selectSnapshot(MainState.subscription);
+      this.hasSubscription = this.store.selectSnapshot(MainState.hasSubscription);
     });
   }
 

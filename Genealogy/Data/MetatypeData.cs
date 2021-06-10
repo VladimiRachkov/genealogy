@@ -39,5 +39,14 @@ namespace Genealogy.Data
             /// </summary>
             public static Guid Id { get { return _id; } }
         }
+
+        public static class Subscribe
+        {
+            private static Guid _id = new Guid("212a4d4e-2830-4f01-b416-a09397858f11");
+            /// <summary>
+            /// Метатип Подписка
+            /// </summary>
+            public static Guid Id { get { return _id; } }
+        }
     }
 }

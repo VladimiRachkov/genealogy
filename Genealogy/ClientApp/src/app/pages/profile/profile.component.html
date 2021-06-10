@@ -2,74 +2,31 @@
   <div class="row">
     <div class="col-2 text-center">
       <div class="btn-group-vertical" role="group" aria-label="Profile menu">
-        <ul class="nav nav-pills flex-column" id="myTab" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#info" role="tab" aria-controls="home" aria-selected="true">
-              Информация
-            </a>
-          </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" id="home-tab" data-toggle="tab" href="#payment" role="tab" aria-controls="payment" aria-selected="false">
-              Пополнить баланс
-            </a>
-          </li> -->
-        </ul>
-        <hr />
         <button class="btn btn-link" (click)="onLogout()">Выйти</button>
       </div>
     </div>
     <div class="col-10">
-      <div class="tab-content" id="myTabContent">
-        <!-- <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="profile-tab">
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="profile-tab">
           <h2>Данные профиля</h2>
           <ul class="list-group list-group-flush" *ngIf="user">
             <li class="list-group-item">{{ user.lastName }} {{ user.firstName }}</li>
-            <li class="list-group-item">Регистрация {{ user.startDate }}</li>
+            <li class="list-group-item">Дата регистрации {{ user.startDate | date: 'dd.MM.yyyy' }}</li>
           </ul>
         </div>
-        <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="home-tab">
-          <h2>Пополнение баланса</h2>
+        <div class="tab-content">
+          <h2>Подписка</h2>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">Текущий баланс: 0</li>
+            <li class="list-group-item">
+              <span *ngIf="subscription; else noSubscription"
+                >Подписка активирована до {{ subscription.finishDate | date: 'dd.MM.yyyy' }}</span
+              >
+              <ng-template #noSubscription>
+                <span>Подписка не активна</span>
+              </ng-template>
+            </li>
           </ul>
-          <div class="row mt-4">
-            <div class="col-12 text-center">
-              <button class="btn btn-outline-success" (click)="onPayment()">Пополнить</button>
-              <hr>
-              <h5>Вы можете проверить оплату банковскими картами разных типов</h5>
-              <table class="table table-sm table-dark">
-                <thead>
-                  <tr>
-                    <th scope="col">НОМЕР</th>
-                    <th scope="col">ТИП КАРТЫ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>5555555555554477</td>
-                    <td>MasterCard (с 3-D Secure)</td>
-                  </tr>
-                  <tr>
-                    <td>5555555555554444</td>
-                    <td>MasterCard</td>
-                  </tr>
-                  <tr>
-                    <td>6759649826438453</td>
-                    <td>Maestro</td>
-                  </tr>
-                  <tr>
-                    <td>4111111111111111</td>
-                    <td>Visa</td>
-                  </tr>
-                  <tr>
-                    <td>4175001000000017</td>
-                    <td>Visa Electron</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>

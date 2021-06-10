@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/page")]
     public class PageController : Controller
@@ -22,6 +23,7 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="newPage"></param>-
         /// <returns></returns>
+        [Authorize(Roles = "Администратор")]
         [HttpPost]
         public IActionResult Add([FromBody] PageDto newPage)
         {
@@ -62,6 +64,7 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="changedPage"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Администратор")]
         [HttpPost("remove")]
         public IActionResult Remove([FromBody] PageDto changedPage)
         {
@@ -86,6 +89,7 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="changedPage"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Администратор")]
         [HttpPut]
         public IActionResult Put([FromBody] PageDto changedPage)
         {

@@ -12,5 +12,5 @@ export class AppComponent {
   constructor(@Inject('MESSAGE') message: string) {
     this.message = message;
   }
+
 }
-	

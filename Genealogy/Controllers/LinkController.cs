@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/link")]
     public class LinkController : Controller

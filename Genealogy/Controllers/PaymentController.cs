@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Genealogy.Models;
 using Genealogy.Service.Helpers;
 using Yandex.Checkout.V3;
-using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/shop")]
     public class PaymentController : Controller

@@ -13,5 +13,6 @@ namespace Genealogy.Models
         public DateTime FinishDate { get; set; }
         public bool IsRemoved { get; set; }
         public string Data { get; set; }
+        public Guid UserId { get; set; }
     }
 }

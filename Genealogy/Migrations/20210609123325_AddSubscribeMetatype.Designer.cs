@@ -3,15 +3,17 @@ using System;
 using Genealogy.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Genealogy.Migrations
 {
     [DbContext(typeof(GenealogyContext))]
-    partial class GenealogyContextModelSnapshot : ModelSnapshot
+    [Migration("20210609123325_AddSubscribeMetatype")]
+    partial class AddSubscribeMetatype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,8 +53,6 @@ namespace Genealogy.Migrations
                     b.Property<DateTime>("StartDate");
 
                     b.Property<string>("Title");
-
-                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 

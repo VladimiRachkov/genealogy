@@ -144,7 +144,7 @@ namespace Genealogy.Service.Concrete
         {
             bo.Id = Guid.NewGuid();
             bo.StartDate = DateTime.Now;
-
+            bo.UserId = GetCurrentUserId();
 
             if (bo.Metatype == null)
             {

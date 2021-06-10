@@ -82,6 +82,14 @@ namespace SpaPrerendering
                     ValidateAudience = false
                 };
             });
+
+            // services.AddAuthorization(options =>
+            // {
+            //     options.AddPolicy("Admins", policy =>
+            //                       policy.RequireClaim("Администратор"));
+            // });
+
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +101,7 @@ namespace SpaPrerendering
             }
 
             app.UseAuthentication();
+            app.UseIdentity();
 
             app.UseMvc(routes =>
             {

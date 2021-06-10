@@ -74,15 +74,15 @@ public class PurchaseManageService : BackgroundService
                         purchaseProps.status = PurchaseStatus.Succeeded;
                         purchase.Data = JsonConvert.SerializeObject(purchaseProps);
 
-                        await updatePurchase(purchase, "Paymeny successed.");
+                        await updatePurchase(purchase, "Payment successed.");
+                        await productAction(Guid.Parse(purchaseProps.productId), purchase.UserId);
+
                         break;
 
                     case PaymentStatus.Canceled:
                         await removePurchase(purchase, "Canceled.");
                         break;
                 }
-
-
 
                 _logger.LogDebug($"{purchase.Id} {purchase.Title}");
             };
@@ -96,13 +96,61 @@ public class PurchaseManageService : BackgroundService
     private async Task<int> removePurchase(BusinessObject purchase, string reason)
     {
         _logger.LogDebug($"PurchaseManageService removes purchase {purchase.Id}. Reason: {reason}");
-        _genealogyContext.BusinessObjects.Remove(purchase);
-        return await _genealogyContext.SaveChangesAsync();
+        try
+        {
+            _genealogyContext.BusinessObjects.Remove(purchase);
+            return await _genealogyContext.SaveChangesAsync();
+        }
+        catch (ApplicationException e)
+        {
+            _logger.LogError(e.ToString());
+            throw e;
+        }
     }
     private async Task<int> updatePurchase(BusinessObject purchase, string reason)
     {
         _logger.LogDebug($"PurchaseManageService updates purchase {purchase.Id}. Reason: {reason}");
-        _genealogyContext.BusinessObjects.Update(purchase);
-        return await _genealogyContext.SaveChangesAsync();
+        try
+        {
+            _genealogyContext.BusinessObjects.Update(purchase);
+            return await _genealogyContext.SaveChangesAsync();
+        }
+        catch (ApplicationException e)
+        {
+            _logger.LogError(e.ToString());
+            throw e;
+        }
+    }
+
+    private async Task<int> productAction(Guid productId, Guid userId)
+    {
+        if (productId == ProductData.Subscribe.Id)
+        {
+            var subscribeMetatype = _genealogyContext.Metatypes.Where(metatype => metatype.Id == MetatypeData.Subscribe.Id).FirstOrDefault();
+            var subscribe = new BusinessObject()
+            {
+                Id = Guid.NewGuid(),
+                StartDate = DateTime.Now,
+                FinishDate = DateTime.Now.AddMonths(1),
+                UserId = userId,
+                MetatypeId = ProductData.Subscribe.Id,
+                Metatype = subscribeMetatype,
+                IsRemoved = false,
+                Name = "SUBSCRIBLE",
+                Title = "Подписка"
+            };
+            try
+            {
+                _genealogyContext.BusinessObjects.Add(subscribe);
+                return await _genealogyContext.SaveChangesAsync();
+            }
+            catch (ApplicationException e)
+            {
+                _logger.LogError(e.ToString());
+                throw e;
+            }
+        }
+
+        throw new ApplicationException();
     }
 }

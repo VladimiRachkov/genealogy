@@ -63,7 +63,7 @@ namespace Genealogy.Service.Concrete
 
                     purchaseProps.paymentId = paymentResult.Id;
                     purchase.Data = JsonConvert.SerializeObject(purchaseProps);
-                    
+
                     UpdateBusinessObject(purchase);
                 }
 
@@ -112,7 +112,7 @@ namespace Genealogy.Service.Concrete
             purchase.Title = product.Title;
             purchase.Name = product.Name;
             purchase.MetatypeId = MetatypeData.Purchase.Id;
-            purchase.Data = JsonConvert.SerializeObject(new CustomProps.Purchase(product.Title, username, user.Email, new Guid().ToString()));
+            purchase.Data = JsonConvert.SerializeObject(new CustomProps.Purchase(product.Title, username, user.Email, new Guid().ToString(), product.Id.ToString()));
 
             var result = createBusinessObject(purchase);
             return result;

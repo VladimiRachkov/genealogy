@@ -9,6 +9,7 @@ using Genealogy.Helpers;
 using Genealogy.Models;
 using Genealogy.Service.Astract;
 using Genealogy.Service.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace Genealogy.Service.Concrete
 {
@@ -257,6 +258,19 @@ namespace Genealogy.Service.Concrete
         public bool CheckAdminByUserId(Guid userId)
         {
             return _unitOfWork.UserRepository.GetByID(userId).RoleId == DefaultValues.Roles.Admin.Id;
+        }
+
+        public Guid GetCurrentUserId()
+        {
+            var result = Guid.Empty;
+            var userId = _httpContextAccessor.HttpContext.User.Identity.Name;
+
+            if (!String.IsNullOrEmpty(userId))
+            {
+                result = Guid.Parse(userId);
+            }
+
+            return result;
         }
     }
 }

@@ -14,7 +14,12 @@
     </p>
   </div>
   <div class="col-6 pt-2" *ngIf="hasAuth; else regButton">
-    <form class="form-inline md-form mr-auto mb-4" [formGroup]="searchForm" (ngSubmit)="search()">
+    <form
+      class="form-inline md-form mr-auto mb-4"
+      [formGroup]="searchForm"
+      (ngSubmit)="search()"
+      *ngIf="hasSubscription; else needSubscription"
+    >
       <input class="form-control mr-2" type="text" placeholder="Введите ФИО" aria-label="Name" formControlName="fio" required />
 
       <ng-select
@@ -34,6 +39,16 @@
         Искать
       </button>
     </form>
+
+    <ng-template #needSubscription>
+      <div class="card p-4">
+        <div class="alert alert-warning">
+          <h4 class="alert-heading">ВНИМАНИЕ!</h4>
+          Для того, что бы воспользоваться поиском по базе данных некрополей необходимо оплатить подписку.
+        </div>
+        <button class="btn btn-primary text-uppercase" [routerLink]="['/catalog']">Перейти в магазин</button>
+      </div>
+    </ng-template>
   </div>
 
   <div class="col-12">

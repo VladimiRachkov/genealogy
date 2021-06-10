@@ -36,6 +36,7 @@ namespace Sirius.Controllers
         [HttpPost("auth")]
         public IActionResult Authenticate([FromBody] AuthenticateUserDto userDto)
         {
+            var pathBase = HttpContext.Request.PathBase;
             User user;
             try
             {
@@ -51,6 +52,7 @@ namespace Sirius.Controllers
             var secretKey = _configuration.GetSection("AppSettings").GetChildren().AsEnumerable().Where(i => i.Key == "Secret").FirstOrDefault().Value;
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secretKey);
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -61,6 +63,7 @@ namespace Sirius.Controllers
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
@@ -129,7 +132,7 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "Администратор")]
         public IActionResult Update(Guid id, [FromBody] UserDto userDto)
         {
             // map dto to entity and set id
@@ -150,7 +153,7 @@ namespace Sirius.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "Администратор")]
         public IActionResult Delete(Guid id)
         {
             _genealogyService.RemoveUser(id);
@@ -158,7 +161,7 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("status/{id}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "Администратор")]
         public IActionResult ChangeStatus(Guid id, [FromQuery] string status)
         {
             if (_genealogyService.ChangeUserStatus(id, status))

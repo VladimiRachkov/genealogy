@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Cemetery, Paginator, Person, PersonFilter, Table } from '@models';
-import { ClearPersonList, FetchCemeteryList, FetchPersonList } from '@actions';
+import { ClearPersonList, FetchActiveSubscribe, FetchCemeteryList, FetchPersonList } from '@actions';
 import { CemeteryState, MainState, PersonState } from '@states';
 import { isNil } from 'lodash';
 import { NotifierService } from 'angular-notifier';
@@ -19,7 +19,9 @@ export class NecropolisComponent implements OnInit {
 
   personList: Array<Person> = null;
   searchForm: FormGroup;
-  hasAuth: boolean = false;
+
+  hasAuth = false;
+  hasSubscription: boolean = null;
 
   tableData: Table.Data;
   paginatorOptions: Paginator = {
@@ -44,6 +46,10 @@ export class NecropolisComponent implements OnInit {
       this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
         const cemeteryList = this.store.selectSnapshot(CemeteryState.cemeteryList);
         this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
+      });
+
+      this.store.dispatch(new FetchActiveSubscribe()).subscribe(() => {
+        this.hasSubscription = this.store.selectSnapshot(MainState.hasSubscription);
       });
     }
 
@@ -84,7 +90,7 @@ export class NecropolisComponent implements OnInit {
   }
 
   onSelect(id) {}
-  
+
   onOrderButtonClick() {
     this.feedbackModal.open('Некрополистическое исследование');
   }

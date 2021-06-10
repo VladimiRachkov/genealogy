@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Genealogy.Service.Astract;
-using Genealogy.Models;
-using System.Collections.Generic;
-using Genealogy.Service.Helpers;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Genealogy.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/mail")]
     public class MailController : Controller

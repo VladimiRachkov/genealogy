@@ -76,5 +76,7 @@ namespace Genealogy.Service.Astract
         /// <param name="userId"></param>
         /// <returns></returns>
         bool CheckAdminByUserId(Guid userId);
+
+        Guid GetCurrentUserId();
     }
 }

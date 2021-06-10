@@ -24,7 +24,8 @@
       "@enums": ["app/enums"],
       "@pages": ["app/pages"],
       "@consts": ["app/consts"],
-      "@repository": ["app/repository"]
+      "@repository": ["app/repository"],
+      "@guards": ["app/guards"]
     }
   },
   "angularCompilerOptions": {
