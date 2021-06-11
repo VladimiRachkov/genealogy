@@ -12,5 +12,14 @@ namespace Genealogy.Data
             /// </summary>
             public static Guid Id { get { return _id; } }
         }
+
+        public static class Book
+        {
+            private static Guid _id = new Guid("b0263094-e3b2-499d-87b5-425446e71ed6");
+            /// <summary>
+            /// Метатип Подписка
+            /// </summary>
+            public static Guid Id { get { return _id; } }
+        }
     }
 }

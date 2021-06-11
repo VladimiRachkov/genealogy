@@ -8,12 +8,18 @@ using System.Linq;
 using Newtonsoft.Json;
 using Yandex.Checkout.V3;
 using System;
+using Genealogy.Repository.Concrete;
+using Genealogy.Service.Concrete;
+using Genealogy.Service.Astract;
+using Genealogy.Repository.Abstract;
 
 public class PurchaseManageService : BackgroundService
 {
     private readonly ILogger<PurchaseManageService> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly GenealogyContext _genealogyContext;
+    private readonly IServiceScope _scope;
+    private readonly IGenealogyService _service;
     private Client client = new Yandex.Checkout.V3.Client(shopId: "739084", secretKey: "test_5LLiubI6pAXxCt-13sfn9WymESZgeE9Z30BrZIB3BAQ");
 
     private readonly int timeout = 10;
@@ -22,11 +28,17 @@ public class PurchaseManageService : BackgroundService
     {
         _logger = logger;
         _serviceScopeFactory = scopeFactory;
-        _genealogyContext = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<GenealogyContext>();
+        _scope = serviceProvider.CreateScope();
+        _genealogyContext = _scope.ServiceProvider.GetRequiredService<GenealogyContext>();
+        _scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        _service = _scope.ServiceProvider.GetRequiredService<IGenealogyService>();
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+
+        var a = _service.GetCemeteryList();
+
         stoppingToken.Register(() =>
             _logger.LogDebug($" PurchaseManageService background task is stopping."));
 
@@ -90,7 +102,7 @@ public class PurchaseManageService : BackgroundService
                     _logger.LogDebug($"{purchase.Id} {purchase.Title}");
                 };
 
-                await Task.Delay(60000, stoppingToken);
+                await Task.Delay(5000, stoppingToken);
             }
 
             _logger.LogDebug($"PurchaseManageService background task is stopping.");
@@ -133,6 +145,15 @@ public class PurchaseManageService : BackgroundService
 
     private async Task<int> productAction(Guid productId, Guid userId)
     {
+        var product = _service.GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
+        var bookProps = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
+
+        if (!String.IsNullOrEmpty(bookProps.message))
+        {
+            var user = _service.GetUserById(userId);
+            await _service.SendEmailToUser(product.Title, user.Email, bookProps.message);
+        }
+
         if (productId == ProductData.Subscribe.Id)
         {
             var subscribeMetatype = _genealogyContext.Metatypes.Where(metatype => metatype.Id == MetatypeData.Subscribe.Id).FirstOrDefault();
@@ -148,6 +169,7 @@ public class PurchaseManageService : BackgroundService
                 Name = "SUBSCRIBLE",
                 Title = "Подписка"
             };
+
             try
             {
                 _genealogyContext.BusinessObjects.Add(subscribe);
@@ -159,7 +181,6 @@ public class PurchaseManageService : BackgroundService
                 throw e;
             }
         }
-
         return 0;
     }
 }

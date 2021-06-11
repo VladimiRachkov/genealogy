@@ -89,6 +89,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
       imageUrl: new FormControl(null, null),
       price: new FormControl(null, null),
       description: new FormControl(null, null),
+      message: new FormControl(null, null),
     });
 
     this.updatePaginator();
@@ -111,9 +112,9 @@ export class CatalogComponent implements OnInit, OnDestroy {
     this.store.dispatch(new FetchCatalogItem(params)).subscribe(() => {
       const item = this.store.selectSnapshot<BusinessObject>(CatalogState.item);
       const { id, title, data } = item;
-      const { imageUrl, price, description } = this.parseJSON(data);
+      const { imageUrl, price, description, message } = this.parseJSON(data);
 
-      this.catalogForm.setValue({ id, title, imageUrl, price, description });
+      this.catalogForm.setValue({ id, title, imageUrl, price, description, message });
     });
   }
 
@@ -126,9 +127,9 @@ export class CatalogComponent implements OnInit, OnDestroy {
   }
 
   onUpdate() {
-    const { title, imageUrl, price, description } = this.catalogForm.value;
+    const { title, imageUrl, price, description, message } = this.catalogForm.value;
     const { id } = this.store.selectSnapshot<BusinessObject>(CatalogState.item);
-    const data = JSON.stringify({ imageUrl, price, description });
+    const data = JSON.stringify({ imageUrl, price, description, message });
 
     this.updateItem({ id, title, data });
   }
@@ -168,6 +169,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
       imageUrl: String,
       price: String,
       description: String,
+      message: String,
     });
   }
 

@@ -11,11 +11,13 @@ namespace Genealogy.Models
             public int price { get; set; }
             public string imageUrl { get; set; }
             public string description { get; set; }
-            public Product(int price, string imageUrl, string description)
+            public string message { get; set; }
+            public Product(int price, string imageUrl, string description, string message = "")
             {
                 this.price = price;
                 this.imageUrl = imageUrl;
                 this.description = description;
+                this.message = message;
             }
         }
         public class Purchase

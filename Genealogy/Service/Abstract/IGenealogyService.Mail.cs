@@ -8,5 +8,6 @@ namespace Genealogy.Service.Astract
     {
         Task SendEmailAsync(string subject, string message, string emailFrom, string name);
         void SendMessage(BusinessObjectInDto boDto);
+        Task<bool> SendEmailToUser(string subject, string email, string message);
     }
 }
