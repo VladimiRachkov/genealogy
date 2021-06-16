@@ -44,6 +44,7 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get([FromQuery] PageFilter filter)
         {
@@ -115,6 +116,7 @@ namespace Genealogy.Controllers
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("list")]
         public IActionResult GetPages([FromQuery] PageFilter filter)
         {
