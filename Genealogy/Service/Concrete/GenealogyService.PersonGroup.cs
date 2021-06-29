@@ -9,6 +9,18 @@ namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
-        public List<PersonGroupDto> GetPersonGroup(PersonGroupFilter filter) => new List<PersonGroupDto>();
+        public PersonGroup CreatePersonGroup()
+        {
+            var id = Guid.NewGuid();
+            var personGroup = new PersonGroup(id);
+            PersonGroup result = null;
+
+            if (_unitOfWork.PersonGroupRepository.Add(personGroup))
+            {
+                result = _unitOfWork.PersonGroupRepository.GetByID(id);
+            }
+
+            return result;
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace Genealogy.Service.Concrete
             x =>
                 x.OrderBy(item => item.Lastname)
                 .ThenBy(item => item.Firstname)
-                .ThenBy(item => item.Patronymic), "Cemetery");
+                .ThenBy(item => item.Patronymic), "Cemetery,PersonGroup");
 
             if (filter.Fio != null)
             {

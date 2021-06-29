@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using Genealogy.Repository.Abstract;
 using Genealogy.Service.Astract;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,14 +16,16 @@ namespace Genealogy.Service.Concrete
         private readonly IMapper _mapper;
         private readonly ILogger<IGenealogyService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHostingEnvironment _appEnvironment;
 
-        public GenealogyService(IUnitOfWork unitOfWork, IConfiguration configuration, IMapper mapper, ILogger<IGenealogyService> logger, IHttpContextAccessor httpContextAccessor)
+        public GenealogyService(IUnitOfWork unitOfWork, IConfiguration configuration, IMapper mapper, ILogger<IGenealogyService> logger, IHttpContextAccessor httpContextAccessor, IHostingEnvironment appEnvironment)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _mapper = mapper;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _appEnvironment = appEnvironment;
         }
 
         #region IDisposable

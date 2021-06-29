@@ -1,4 +1,5 @@
-import { Cemetery } from '@models';
+import { Cemetery, PersonGroupDto } from '@models';
+import { Person } from '../person';
 
 export interface PersonDto {
   id?: string;
@@ -12,6 +13,7 @@ export interface PersonDto {
   isRemoved?: boolean;
   cemeteryId?: string;
   comment?: string;
+  personGroup?: PersonGroupDto;
 }
 
 export interface PersonOutDto {

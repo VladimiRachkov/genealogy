@@ -4,3 +4,4 @@ export * from './person.filter';
 export * from './link.filter';
 export * from './user.filter';
 export * from './business-object.filter';
+export * from './person-group';

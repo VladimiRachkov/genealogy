@@ -151,7 +151,8 @@ namespace Genealogy.Controllers
             }
             return Ok(result);
         }
-
+        
+        [AllowAnonymous]
         [HttpGet("withlinks")]
         public IActionResult GetWithLinks([FromQuery] PageFilter filter)
         {

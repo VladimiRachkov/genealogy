@@ -34,6 +34,9 @@ namespace Genealogy.Models
             CreateMap<Metatype, MetatypeOutDto>();
             CreateMap<MetatypeOutDto, Metatype>();
 
+            CreateMap<PersonGroup, PersonGroupDto>();
+            CreateMap<PersonGroupDto, PersonGroup>();
+
 
 
         }

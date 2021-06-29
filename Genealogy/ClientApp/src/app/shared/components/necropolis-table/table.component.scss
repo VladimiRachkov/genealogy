@@ -1,0 +1,41 @@
+@import "../../../../assets/scss/variables.scss";
+
+
+.icon {
+    transition: color 0.5s;
+    &.remove {
+        color: $red-300;
+        &:hover {
+            color: $red-700;
+        }
+    }
+    &.restore {
+        color: $green-300;
+        &:hover {
+            color: $green-700;
+        }
+    }
+}
+
+table {
+    * {
+        border: none;
+    }
+    tbody {
+        tr {
+            cursor: pointer;
+            &:hover {
+                background-color: $blue-100;
+            }
+        }
+    }
+}
+
+.removed {
+    color: $gray-300;
+    text-decoration: line-through;
+}
+
+.text-primary {
+    font-weight: 700;
+}

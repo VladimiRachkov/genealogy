@@ -1,0 +1,27 @@
+<ng-container *ngIf="item.values as values">
+  <h5 class="card-title">{{ values[0] }}</h5>
+  {{ values[1] }} - {{ values[2] }}
+</ng-container>
+
+<ng-content></ng-content>
+<!-- <tr (click)="onSelect(item.id)" [ngClass]="{ 'text-primary': item.id == selectedId, removed: item.isRemoved }">
+  <td *ngFor="let val of item.values">
+    {{ val }}
+  </td>
+  <td class="d-flex flex-column align-items-center" *ngIf="showActionButtons">
+    <a (click)="onRestore(item.id)" *ngIf="item.isRemoved">
+      <fa-icon class="icon restore" icon="trash-restore"></fa-icon>
+    </a>
+
+    <a (click)="onRemove(item.id)">
+      <fa-icon class="icon remove" icon="times"></fa-icon>
+    </a>
+  </td>
+  <td>
+    <span *ngIf="item.status" [ngSwitch]="item.status">
+      <fa-icon class="text-success" icon="check" *ngSwitchCase="'Succeeded'"></fa-icon>
+      <fa-icon class="text-danger" icon="hourglass" *ngSwitchCase="'Pending'"></fa-icon>
+      <ng-container *ngSwitchDefault>{{ item.status }}</ng-container>
+    </span>
+  </td>
+</tr> -->

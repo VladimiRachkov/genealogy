@@ -17,7 +17,7 @@
     <form
       class="form-inline md-form mr-auto mb-4"
       [formGroup]="searchForm"
-      (ngSubmit)="search()"
+      (ngSubmit)="onSearch()"
       *ngIf="hasSubscription; else needSubscription"
     >
       <input class="form-control mr-2" type="text" placeholder="Введите ФИО" aria-label="Name" formControlName="fio" required />
@@ -51,8 +51,13 @@
     </ng-template>
   </div>
 
-  <div class="col-12">
-    <lancet-table [data]="tableData" (change)="onSelect($event)"></lancet-table>
+  <div class="col-md-8 col-sm-10 col-xs-12">
+    <ng-container *ngIf="tableData">
+      <necropolis-table [data]="tableData" (change)="onSelect($event)" *ngIf="tableData.items.length > 0; else emptyList"></necropolis-table>
+      <ng-template #emptyList>
+        <h4 class="text-center">Записей не найдено</h4>
+      </ng-template>
+    </ng-container>
 
     <ng-template #regButton>
       <button class="btn btn-link text-uppercase" [routerLink]="['/login']"><u>Войти или зарегистрироваться</u></button>

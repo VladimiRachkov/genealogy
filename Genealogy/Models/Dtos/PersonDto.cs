@@ -16,5 +16,6 @@ namespace Genealogy.Models
         public bool? isRemoved { get; set; }
         public Guid CemeteryId { get; set; }
         public string Comment { get; set; }
+        public PersonGroup PersonGroup { get; set; }
     }
 }

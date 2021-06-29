@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Table, Person, Cemetery, PersonDto, PersonFilter, Paginator } from '@models';
 import { CemeteryState, PersonState } from '@states';
 import { AddPerson, UpdatePerson, GetPersonsCount, FetchPerson, FetchAllPersons } from '@actions';
+import { FileUploadService } from 'app/core/services/file-upload.service';
 
 @Component({
   selector: 'dashboard-person',
@@ -17,6 +18,8 @@ export class PersonComponent implements OnInit, OnDestroy {
   personForm: FormGroup;
   person: Person;
 
+  fileForm: FormGroup;
+
   paginatorOptions: Paginator;
   pageIndex: number = 0;
   step: number = 10;
@@ -24,7 +27,7 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private fileUploadService: FileUploadService) {}
 
   ngOnInit() {
     this.personForm = new FormGroup({
@@ -39,6 +42,10 @@ export class PersonComponent implements OnInit, OnDestroy {
       comment: new FormControl(null, null),
     });
     this.person = null;
+
+    this.fileForm = new FormGroup({
+      docFile: new FormControl(null, Validators.required),
+    });
 
     this.updatePaginator();
   }
@@ -89,7 +96,7 @@ export class PersonComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(new FetchAllPersons({ index: pageIndex, step })).subscribe(() => {
       this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList) || [];
-      
+
       const items = this.personList.map<Table.Item>(item => ({
         id: item.id,
         values: [
@@ -114,6 +121,13 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.pageIndex = pageIndex;
     this.startIndex = pageIndex * this.step;
     this.updateList(pageIndex);
+  }
+
+  onUploadDocFile(file) {
+    console.log(file);
+    this.fileUploadService.postFile(file[0]).subscribe(res => {
+      console.log('UPLOAD', res);
+    });
   }
 
   private updatePaginator() {

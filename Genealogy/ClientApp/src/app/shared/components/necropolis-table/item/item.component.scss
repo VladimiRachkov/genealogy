@@ -1,0 +1,13 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .cell {
+        &:first-of-type {
+            flex-basis: 50%;
+        }
+        text-align: left;
+        flex-basis: 25%;
+    }
+}

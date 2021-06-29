@@ -7,10 +7,9 @@ namespace Genealogy.Models
     public class PersonGroup
     {
         public Guid Id { get; set; }
-        public List<Person> Persons { get; set; }
-        PersonGroup()
+        public PersonGroup(Guid id)
         {
-            Persons = new List<Person>();
+            Id = id;
         }
 
     }

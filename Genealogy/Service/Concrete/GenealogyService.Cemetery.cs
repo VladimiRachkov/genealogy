@@ -38,6 +38,24 @@ namespace Genealogy.Service.Concrete
             return null;
         }
 
+        protected Cemetery addCemetery(string name)
+        {
+            var id = Guid.NewGuid();
+            var cemetery = new Cemetery()
+            {
+                Id = id,
+                Name = name,
+                Location = null,
+                isRemoved = false
+            };
+
+            _unitOfWork.CemeteryRepository.Add(cemetery);
+            _unitOfWork.Save();
+
+            return _unitOfWork.CemeteryRepository.GetByID(id);
+        }
+
+
         public List<CemeteryDto> GetCemeteryList()
         {
             return _unitOfWork.CemeteryRepository.Get().Select(i => _mapper.Map<CemeteryDto>(i)).ToList();

@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { Cemetery, Paginator, Person, PersonFilter, Table } from '@models';
+import { Paginator, Person, PersonFilter, Table } from '@models';
 import { ClearPersonList, FetchActiveSubscribe, FetchCemeteryList, FetchPersonList } from '@actions';
 import { CemeteryState, MainState, PersonState } from '@states';
-import { isNil } from 'lodash';
+import { isNil, isEmpty, difference } from 'lodash';
 import { NotifierService } from 'angular-notifier';
 import { NOTIFICATIONS } from '@enums';
 import { FeedbackComponent } from '@shared';
@@ -56,10 +56,18 @@ export class NecropolisComponent implements OnInit {
     this.store.dispatch(new ClearPersonList());
   }
 
-  search() {
+  onSearch() {
+    this.search();
+  }
+
+  onOrderButtonClick() {
+    this.feedbackModal.open('Некрополистическое исследование');
+  }
+
+  private search() {
     const { fio, cemeteryId } = this.searchForm.value;
 
-    if (!isNil(fio) && !isNil(cemeteryId)) {
+    if (!isEmpty(fio) && !isNil(cemeteryId)) {
       const { index, step } = this.paginatorOptions;
       const filter: PersonFilter = { fio: fio.toLowerCase(), cemeteryId, index, step };
 
@@ -68,30 +76,49 @@ export class NecropolisComponent implements OnInit {
 
         this.paginatorOptions.count = this.personList.length;
 
-        const items = this.personList.map<Table.Item>(item => ({
-          id: item.id,
-          values: [
-            `${item.lastname} ${item.firstname} ${item.patronymic}`,
-            item.startDate,
-            item.finishDate,
-            item.cemetery ? item.cemetery.name : null,
-          ],
-          isRemoved: item.isRemoved,
-        }));
+        const items = this.convertToItems(this.personList);
 
-        this.tableData = {
-          fields: ['ФИО', 'Дата рождения', 'Дата смерти', 'Место захоронения'],
+        const persons = (this.tableData = {
+          fields: ['ФИО', 'Дата рождения', 'Дата смерти'],
           items,
-        };
+        });
       });
     } else {
       this.notifierService.notify('error', NOTIFICATIONS.INVALID_FORM, 'INVALID_FORM');
     }
   }
 
-  onSelect(id) {}
+  private convertToItems(persons: Person[], isChild: boolean = false) {
+    if (isEmpty(persons)) {
+      return [];
+    }
+    let addedChildIds = new Array<string>();
 
-  onOrderButtonClick() {
-    this.feedbackModal.open('Некрополистическое исследование');
+    persons.forEach(person => {
+      if (!isNil(person.personGroup) && !isChild) {
+      }
+    });
+
+    return persons
+      .map<Table.Item>(person => {
+        let childs: Person[];
+
+        if (addedChildIds.includes(person.id)) {
+          return null;
+        }
+
+        if (!isNil(person.personGroup) && !isChild) {
+          childs = persons.filter(p => p.id !== person.id && p.personGroup && p.personGroup.id === person.personGroup.id);
+          childs.forEach(c => addedChildIds.push(c.id));
+        }
+
+        return {
+          id: person.id,
+          values: [`${person.lastname} ${person.firstname} ${person.patronymic}`, person.startDate, person.finishDate],
+          isRemoved: person.isRemoved,
+          childs: this.convertToItems(childs),
+        };
+      })
+      .filter(item => !isNil(item));
   }
 }

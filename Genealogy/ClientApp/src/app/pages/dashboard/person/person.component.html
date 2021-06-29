@@ -12,6 +12,12 @@
     <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
   </div>
   <div class="col-md-6 col-lg-4">
+    <form>
+      <div class="form-group">
+        <label for="docFile">Загрузить Word документ</label>
+        <input type="file" class="form-control-file" (change)="onUploadDocFile($event.target.files)" id="docFile" accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+      </div>
+    </form>
     <form [formGroup]="personForm" (ngSubmit)="onAdd()">
       <div class="form-group">
         <label for="lastname">Фамилия</label>

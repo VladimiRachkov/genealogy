@@ -1,3 +1,4 @@
+import { PersonGroup } from '@models';
 import { Cemetery } from './cemetery';
 
 export interface Person {
@@ -11,4 +12,5 @@ export interface Person {
   finishDate: string;
   isRemoved: boolean;
   comment: string;
+  personGroup?: PersonGroup;
 }

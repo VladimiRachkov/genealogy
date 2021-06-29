@@ -22,11 +22,12 @@ namespace Genealogy.Controllers
         /// Получить список бизнес-объектов 
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get([FromQuery] BusinessObjectFilter filter)
         {
             List<BusinessObjectOutDto> result = null;
-            
+
             try
             {
                 result = _genealogyService.GetBusinessObjectsDto(filter);
@@ -84,6 +85,7 @@ namespace Genealogy.Controllers
         /// Получить кол-во объектов
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("count")]
         public IActionResult GetCount([FromQuery] BusinessObjectFilter filter)
         {

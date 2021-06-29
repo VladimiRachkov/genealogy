@@ -6,6 +6,6 @@ namespace Genealogy.Service.Astract
 {
     partial interface IGenealogyService
     {
-        List<PersonGroupDto> GetPersonGroup(PersonGroupFilter filter);
+        PersonGroup CreatePersonGroup();
     }
 }

@@ -9,5 +9,6 @@ export declare namespace Table {
     values: Array<string>;
     isRemoved?: boolean;
     status?: string;
+    childs?: Item[];
   }
 }

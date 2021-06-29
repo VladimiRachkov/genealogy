@@ -102,7 +102,7 @@ public class PurchaseManageService : BackgroundService
                     _logger.LogDebug($"{purchase.Id} {purchase.Title}");
                 };
 
-                await Task.Delay(5000, stoppingToken);
+                await Task.Delay(60000, stoppingToken);
             }
 
             _logger.LogDebug($"PurchaseManageService background task is stopping.");
