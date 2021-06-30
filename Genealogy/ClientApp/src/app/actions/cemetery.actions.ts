@@ -14,10 +14,16 @@ export class AddCemetery {
   constructor(readonly payload: CemeteryDto) {}
 }
 
-export class MarkAsRemovedCemetery {
-  static readonly type = '[Cemetery] Mark As Removed Cemetery';
+export class RemoveCemetery {
+  static readonly type = '[Cemetery] Remove Cemetery';
   constructor(readonly payload: string) {}
 }
+
+export class RestoreCemetery {
+  static readonly type = '[Cemetery] Restore Cemetery';
+  constructor(readonly payload: string) {}
+}
+
 
 export class UpdateCemetery {
   static readonly type = '[Cemetery] Update Cemetery';

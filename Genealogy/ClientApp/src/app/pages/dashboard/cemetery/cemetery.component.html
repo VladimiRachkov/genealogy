@@ -5,6 +5,8 @@
       [selectedId]="cemetery?.id"
       (change)="onSelect($event)"
       (remove)="onRemove($event)"
+      (restore)="onRestore($event)"
+      [showActionButtons]="true"
     ></lancet-table>
   </div>
   <div class="col-md-6 col-lg-4">

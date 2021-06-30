@@ -10,13 +10,6 @@ namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
-        private UnitOfWork unitOfWork;
-
-        public GenealogyService(UnitOfWork unitOfWork)
-        {
-            this.unitOfWork = unitOfWork;
-        }
-
         public List<CemeteryDto> GetCemetery(CemeteryFilter filter)
         {
             return _unitOfWork.CemeteryRepository.Get(x =>
@@ -61,22 +54,6 @@ namespace Genealogy.Service.Concrete
             return _unitOfWork.CemeteryRepository.Get().Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
         }
 
-        public CemeteryDto MarkAsRemovedCemetery(Guid id)
-        {
-            if (id != Guid.Empty)
-            {
-                var cemetery = _unitOfWork.CemeteryRepository.GetByID(id);
-                if (cemetery != null)
-                {
-                    cemetery.isRemoved = true;
-                    var updatedCemetery = UpdateCemetery(cemetery);
-                    return _mapper.Map<CemeteryDto>(updatedCemetery);
-                }
-                return null;
-            }
-            return null;
-        }
-
         public CemeteryDto ChangeCemetery(CemeteryDto cemeteryDto)
         {
             if (cemeteryDto != null && cemeteryDto.Id != null)
@@ -93,6 +70,59 @@ namespace Genealogy.Service.Concrete
             _unitOfWork.CemeteryRepository.Update(cemetery);
             _unitOfWork.Save();
             return _unitOfWork.CemeteryRepository.GetByID(cemetery.Id);
+        }
+
+        public CemeteryDto RemoveCemetery(Guid cemeteryId)
+        {
+            if (cemeteryId != Guid.Empty)
+            {
+                var cemetery = _unitOfWork.CemeteryRepository.GetByID(cemeteryId);
+                if (cemetery != null)
+                {
+                    if (!cemetery.isRemoved)
+                    {
+                        var persons = getPersonByCemeteryId(cemeteryId);
+                        persons.ToList().ForEach(item => item.isRemoved = true);
+                        updatePersons(persons);
+
+                        cemetery.isRemoved = true;
+                        cemetery = UpdateCemetery(cemetery);
+
+                    }
+                    else
+                    {
+                        removePersonsByCemeteryId(cemeteryId);
+                        removeCemetery(cemetery);
+                    }
+                }
+                return _mapper.Map<CemeteryDto>(cemetery);
+            }
+            return null;
+        }
+
+        private void removeCemetery(Cemetery cemetery)
+        {
+            _unitOfWork.CemeteryRepository.Delete(cemetery);
+            _unitOfWork.Save();
+        }
+
+        public CemeteryDto RestoreCemetery(Guid cemeteryId)
+        {
+            if (cemeteryId != Guid.Empty)
+            {
+                var cemetery = _unitOfWork.CemeteryRepository.GetByID(cemeteryId);
+                if (cemetery != null && cemetery.isRemoved)
+                {
+                    var persons = getPersonByCemeteryId(cemeteryId);
+                    persons.ToList().ForEach(item => item.isRemoved = false);
+                    updatePersons(persons);
+
+                    cemetery.isRemoved = false;
+                    cemetery = UpdateCemetery(cemetery);
+                }
+                return _mapper.Map<CemeteryDto>(cemetery);
+            }
+            return null;
         }
     }
 }

@@ -161,6 +161,22 @@ namespace Genealogy.Service.Concrete
             return true;
         }
 
+        private IEnumerable<Person> getPersonByCemeteryId(Guid cemeteryId)
+        {
+            return _unitOfWork.PersonRepository.Get(x => (cemeteryId != Guid.Empty ? x.Cemetery.Id == cemeteryId : true));
+        }
 
+        private void updatePersons(IEnumerable<Person> persons)
+        {
+            persons.ToList().ForEach(person => _unitOfWork.PersonRepository.Update(person));
+            _unitOfWork.Save();
+        }
+
+        private void removePersonsByCemeteryId(Guid cemeteryId)
+        {
+            var persons = getPersonByCemeteryId(cemeteryId);
+            persons.ToList().ForEach(person => _unitOfWork.PersonRepository.Delete(person));
+            _unitOfWork.Save();
+        }
     }
 }

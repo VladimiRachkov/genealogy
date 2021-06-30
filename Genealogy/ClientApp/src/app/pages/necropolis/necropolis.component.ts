@@ -112,11 +112,14 @@ export class NecropolisComponent implements OnInit {
           childs.forEach(c => addedChildIds.push(c.id));
         }
 
+        const firstname = !isEmpty(person.firstname) ? person.firstname : '';
+        const lastname = !isEmpty(person.lastname) ? person.lastname : '';
+        const patronymic = !isEmpty(person.patronymic) ? person.patronymic : '';
         return {
           id: person.id,
-          values: [`${person.lastname} ${person.firstname} ${person.patronymic}`, person.startDate, person.finishDate],
+          values: [`${lastname} ${firstname}  ${patronymic}`, person.startDate, person.finishDate],
           isRemoved: person.isRemoved,
-          childs: this.convertToItems(childs),
+          childs: this.convertToItems(childs, true),
         };
       })
       .filter(item => !isNil(item));

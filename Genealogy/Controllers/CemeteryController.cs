@@ -59,19 +59,43 @@ namespace Genealogy.Controllers
         }
 
         /// <summary>
-        /// Изменить поля 
+        /// Удаление кладбища по Id
         /// </summary>
-        /// <param name="changedCemetery"></param>
+        /// <param name="cemeteryId"></param>
         /// <returns></returns>
-        [HttpPost("remove")]
-        public IActionResult MarkAsRemoved([FromBody] CemeteryDto changedCemetery)
+        [HttpDelete("{id}")]
+        public IActionResult Remove(Guid id)
         {
             CemeteryDto resultCemetery = null;
-            if (changedCemetery != null && changedCemetery.Id != null && changedCemetery.Id != Guid.Empty)
+            if (id != null && id != Guid.Empty)
             {
                 try
                 {
-                    resultCemetery = _genealogyService.MarkAsRemovedCemetery(changedCemetery.Id.Value);
+                    resultCemetery = _genealogyService.RemoveCemetery(id);
+                }
+                catch (AppException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+                return Ok(resultCemetery);
+            }
+            return new NoContentResult();
+        }
+
+        /// <summary>
+        /// Изменить поля 
+        /// </summary>
+        /// <param name="cemeteryId"></param>
+        /// <returns></returns>
+        [HttpPost("{id}/restore")]
+        public IActionResult Restore(Guid id)
+        {
+            CemeteryDto resultCemetery = null;
+            if (id != null && id != Guid.Empty)
+            {
+                try
+                {
+                    resultCemetery = _genealogyService.RestoreCemetery(id);
                 }
                 catch (AppException ex)
                 {

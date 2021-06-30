@@ -9,7 +9,9 @@ namespace Genealogy.Service.Astract
         List<CemeteryDto> GetCemetery(CemeteryFilter filter);
         CemeteryDto AddCemetery(CemeteryDto newCemetery);
         List<CemeteryDto> GetCemeteryList();
-        CemeteryDto MarkAsRemovedCemetery(Guid cemetery);
+        CemeteryDto RemoveCemetery(Guid cemetery);
         CemeteryDto ChangeCemetery(CemeteryDto cemeteryDto);
+        CemeteryDto RestoreCemetery(Guid cemeteryId);
+
     }
 }

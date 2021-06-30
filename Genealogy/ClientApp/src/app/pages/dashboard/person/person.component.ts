@@ -4,8 +4,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Table, Person, Cemetery, PersonDto, PersonFilter, Paginator } from '@models';
 import { CemeteryState, PersonState } from '@states';
-import { AddPerson, UpdatePerson, GetPersonsCount, FetchPerson, FetchAllPersons } from '@actions';
+import { AddPerson, UpdatePerson, GetPersonsCount, FetchPerson, FetchAllPersons, FetchCemeteryList, FetchPersonList } from '@actions';
 import { FileUploadService } from 'app/core/services/file-upload.service';
+import { NotifierService } from 'angular-notifier';
+import { isEmpty } from 'lodash';
 
 @Component({
   selector: 'dashboard-person',
@@ -17,17 +19,14 @@ export class PersonComponent implements OnInit, OnDestroy {
   personList: Array<Person>;
   personForm: FormGroup;
   person: Person;
-
   fileForm: FormGroup;
-
-  paginatorOptions: Paginator;
-  pageIndex: number = 0;
-  step: number = 10;
-  startIndex: number = 0;
+  searchForm: FormGroup;
+  cemeteries: Array<{ id: string; name: string }>;
+  filter: PersonFilter = {};
 
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
 
-  constructor(private store: Store, private fileUploadService: FileUploadService) {}
+  constructor(private store: Store, private fileUploadService: FileUploadService, private notifierService: NotifierService) {}
 
   ngOnInit() {
     this.personForm = new FormGroup({
@@ -47,7 +46,26 @@ export class PersonComponent implements OnInit, OnDestroy {
       docFile: new FormControl(null, Validators.required),
     });
 
-    this.updatePaginator();
+    this.searchForm = new FormGroup({
+      fio: new FormControl(null, [Validators.required]),
+      cemeteryId: new FormControl(null, [Validators.required]),
+    });
+
+    this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
+      const cemeteryList = this.store.selectSnapshot(CemeteryState.cemeteryList);
+      this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
+    });
+
+    this.searchForm.valueChanges.subscribe(value => {
+      if (isEmpty(value.fio) && isEmpty(value.cemeteryId)) {
+        this.filter = {};
+      } else {
+        const { fio, cemeteryId } = value;
+        this.filter = { fio, cemeteryId };
+      }
+      this.updateList();
+    });
+    this.updateList();
   }
 
   ngOnDestroy() {}
@@ -60,7 +78,7 @@ export class PersonComponent implements OnInit, OnDestroy {
     const person = this.personForm.value as PersonDto;
 
     this.personForm.value.cemeteryId;
-    this.store.dispatch(new AddPerson(person)).subscribe(() => this.updatePaginator());
+    this.store.dispatch(new AddPerson(person)).subscribe(() => this.updateList());
   }
 
   onSelect(id: string) {
@@ -78,11 +96,11 @@ export class PersonComponent implements OnInit, OnDestroy {
   }
 
   onRemove(id: string) {
-    this.store.dispatch(new UpdatePerson({ id, isRemoved: true })).subscribe(() => this.updatePaginator());
+    this.store.dispatch(new UpdatePerson({ id, isRemoved: true })).subscribe(() => this.updateList());
   }
 
   onRestore(id: string) {
-    this.store.dispatch(new UpdatePerson({ id, isRemoved: false })).subscribe(() => this.updatePaginator());
+    this.store.dispatch(new UpdatePerson({ id, isRemoved: false })).subscribe(() => this.updateList());
   }
 
   onUpdate() {
@@ -90,11 +108,8 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UpdatePerson(person)).subscribe(() => this.updateList());
   }
 
-  private updateList(pageIndex: number = this.pageIndex) {
-    this.paginatorOptions.index = pageIndex;
-    const { step } = this.paginatorOptions;
-
-    this.store.dispatch(new FetchAllPersons({ index: pageIndex, step })).subscribe(() => {
+  private updateList() {
+    this.store.dispatch(new FetchPersonList(this.filter)).subscribe(() => {
       this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList) || [];
 
       const items = this.personList.map<Table.Item>(item => ({
@@ -117,28 +132,9 @@ export class PersonComponent implements OnInit, OnDestroy {
     });
   }
 
-  onChangePage(pageIndex: number) {
-    this.pageIndex = pageIndex;
-    this.startIndex = pageIndex * this.step;
-    this.updateList(pageIndex);
-  }
-
   onUploadDocFile(file) {
-    console.log(file);
-    this.fileUploadService.postFile(file[0]).subscribe(res => {
-      console.log('UPLOAD', res);
-    });
+    this.fileUploadService.postFile(file[0]).subscribe(({ result, message }) => this.notifierService.notify(result, message));
   }
 
-  private updatePaginator() {
-    this.store.dispatch(new GetPersonsCount()).subscribe(data => {
-      this.paginatorOptions = {
-        index: 0,
-        step: this.step,
-        count: data.person.count,
-      };
 
-      this.updateList();
-    });
-  }
 }

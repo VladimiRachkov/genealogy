@@ -16,6 +16,7 @@ import { PersonComponent } from './person/person.component';
 import { CatalogComponent } from './catalog/catalog.component';
 import { MailComponent } from './mail/mail.component';
 import { SettingsComponent } from './settings/settings.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
     FormsModule,
     CKEditorModule,
     MaterialModule,
+    NgSelectModule
   ],
   declarations: [
     DashboardComponent,

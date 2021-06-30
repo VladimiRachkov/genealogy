@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { GetCemetery, AddCemetery, MarkAsRemovedCemetery, FetchCemeteryList, UpdateCemetery } from '../../../actions/cemetery.actions';
+import {
+  GetCemetery,
+  AddCemetery,
+  FetchCemeteryList,
+  UpdateCemetery,
+  RemoveCemetery,
+  RestoreCemetery,
+} from '../../../actions/cemetery.actions';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Cemetery, Table, CemeteryDto, CemeteryFilter } from '@models';
 import { CemeteryState } from '@states';
@@ -35,7 +42,11 @@ export class CemeteryComponent implements OnInit {
   }
 
   onRemove(id: string) {
-    this.store.dispatch(new MarkAsRemovedCemetery(id)).subscribe(() => this.updateList());
+    this.store.dispatch(new RemoveCemetery(id)).subscribe(() => this.updateList());
+  }
+
+  onRestore(id: string) {
+    this.store.dispatch(new RestoreCemetery(id)).subscribe(() => this.updateList());
   }
 
   onSelect(id: string) {
@@ -60,8 +71,13 @@ export class CemeteryComponent implements OnInit {
   private updateList() {
     this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
       this.cemeteryList = this.store.selectSnapshot<Array<Cemetery>>(CemeteryState.cemeteryList);
+      console.log('CEMETERY LIST', this.cemeteryList);
 
-      const items = this.cemeteryList.map<Table.Item>(item => ({ id: item.id, values: [item.name, item.location] }));
+      const items = this.cemeteryList.map<Table.Item>(item => ({
+        id: item.id,
+        values: [item.name, item.location],
+        isRemoved: item.isRemoved,
+      }));
 
       this.tableData = {
         fields: ['Название', 'Расположение'],

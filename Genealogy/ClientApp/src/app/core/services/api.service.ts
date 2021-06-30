@@ -20,4 +20,12 @@ export class ApiService {
   put<T>(controller: string, body: any) {
     return this.http.put<T>(`/api/${controller}`, { ...body });
   }
+
+  delete<T>(controller: string, id: string) {
+    return this.http.delete<T>(`/api/${controller}/${id}`);
+  }
+
+  restore<T>(controller: string, id: string) {
+    return this.http.post<T>(`/api/${controller}/${id}/restore`, null);
+  }
 }

@@ -1,12 +1,32 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
+    <form
+      class="form-inline md-form mr-auto mb-4"
+      [formGroup]="searchForm"
+      (ngSubmit)="onSearch()"
+    >
+      <input class="form-control mr-2" type="text" placeholder="Введите ФИО" aria-label="Name" formControlName="fio" required />
+
+      <ng-select
+        class="mr-2 custom"
+        [items]="cemeteries"
+        bindLabel="name"
+        bindValue="id"
+        id="cemetery"
+        aria-label="Cemetery"
+        formControlName="cemeteryId"
+        placeholder="Укажите место захоронения"
+      >
+      </ng-select>
+    </form>
+  </div>
+  <div class="col-md-6 col-lg-8">
     <lancet-table
       [data]="tableData"
       [selectedId]="person?.id"
       (change)="onSelect($event)"
       (remove)="onRemove($event)"
       (restore)="onRestore($event)"
-      [startIndex]="startIndex"
       [showActionButtons]="true"
     ></lancet-table>
     <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
@@ -15,7 +35,13 @@
     <form>
       <div class="form-group">
         <label for="docFile">Загрузить Word документ</label>
-        <input type="file" class="form-control-file" (change)="onUploadDocFile($event.target.files)" id="docFile" accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+        <input
+          type="file"
+          class="form-control-file"
+          (change)="onUploadDocFile($event.target.files)"
+          id="docFile"
+          accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        />
       </div>
     </form>
     <form [formGroup]="personForm" (ngSubmit)="onAdd()">

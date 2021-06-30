@@ -11,3 +11,4 @@ export * from './paginator';
 export * from './metatype';
 export * from './business-object';
 export * from './catalog';
+export * from './response';

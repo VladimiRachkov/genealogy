@@ -41,8 +41,9 @@ namespace Genealogy.Service.Concrete
             return result.ToString();
         }
 
-        public long AddFile(IFormFile uploadedFile)
+        public Response AddFile(IFormFile uploadedFile)
         {
+            int count = 0;
             Regex dateReg = new Regex(@"^\d{1,2}.\d{1,2}.\d{2,4}-\d{1,2}.\d{1,2}.\d{2,4}$", RegexOptions.IgnorePatternWhitespace);
             Regex nameReg = new Regex(@"[^0-9]$", RegexOptions.IgnorePatternWhitespace);
 
@@ -118,7 +119,6 @@ namespace Genealogy.Service.Concrete
                                     }
                                 }
 
-
                                 var person = new Person()
                                 {
                                     Lastname = names.ElementAtOrDefault(0),
@@ -131,20 +131,14 @@ namespace Genealogy.Service.Concrete
                                 };
 
                                 persons.Add(person);
+                                _unitOfWork.PersonRepository.Add(person);
                             }
-                        }
-                        var result = persons;
-
-                        foreach (var person in persons)
-                        {
-                            _unitOfWork.PersonRepository.Add(person);
                         }
 
                         _unitOfWork.Save();
+                        count = persons.Count();
                     }
                 }
-
-
             }
 
             catch (ApplicationException e)
@@ -153,7 +147,7 @@ namespace Genealogy.Service.Concrete
                 throw e;
             }
 
-            return 0;
+            return new Response() { Message = $"Добавлено {count} записей.", Result = "Success" };
         }
 
         private string formatDate(string src)

@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Genealogy.Service.Astract;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using Genealogy.Service.Helpers;
 using Genealogy.Models;
 
@@ -21,8 +19,7 @@ namespace Genealogy.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFile([FromForm] UploadModel uploadedFile)
         {
-            long result = 0;
-
+            Response result;
             try
             {
                 result = _genealogyService.AddFile(uploadedFile.File);
