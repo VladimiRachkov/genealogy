@@ -3,7 +3,6 @@
     <form
       class="form-inline md-form mr-auto mb-4"
       [formGroup]="searchForm"
-      (ngSubmit)="onSearch()"
     >
       <input class="form-control mr-2" type="text" placeholder="Введите ФИО" aria-label="Name" formControlName="fio" required />
 
@@ -29,7 +28,6 @@
       (restore)="onRestore($event)"
       [showActionButtons]="true"
     ></lancet-table>
-    <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
   </div>
   <div class="col-md-6 col-lg-4">
     <form>
