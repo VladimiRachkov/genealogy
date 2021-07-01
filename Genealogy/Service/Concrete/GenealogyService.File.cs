@@ -64,11 +64,12 @@ namespace Genealogy.Service.Concrete
                         {
                             rows.RemoveAt(0);
                         }
-
+                        var rowCount = 0;
                         var persons = new List<Person>();
 
                         foreach (var item in rows)
                         {
+                            rowCount++;
                             PersonGroup personGroup = null;
                             var personData = item.Split(' ').Select(x => x.Trim()).Where(x => x.Count() > 1).ToList();
 
@@ -129,6 +130,11 @@ namespace Genealogy.Service.Concrete
                                     Cemetery = cemetery,
                                     PersonGroup = personGroup
                                 };
+
+                                if (person.Lastname == null)
+                                {
+                                    return new Response() { Message = $"Ошибка в {rowCount} строке.", Result = "Danger" };
+                                }
 
                                 persons.Add(person);
                                 _unitOfWork.PersonRepository.Add(person);
