@@ -34,9 +34,9 @@ namespace Genealogy.Service.Concrete
                 .ThenBy(item => item.Firstname)
                 .ThenBy(item => item.Patronymic), "Cemetery,PersonGroup");
 
-            if (filter.Fio != null)
+            if (!String.IsNullOrEmpty(filter.Fio))
             {
-                var names = filter.Fio.Split(' ').ToList();
+                var names = filter.Fio.Split(' ').Take(2);
 
                 int[] scores = null;
                 switch (names.Count())
@@ -67,7 +67,7 @@ namespace Genealogy.Service.Concrete
                             hasLastname = true;
                             return 4;
                         }
-                        if (person.Patronymic != null && person.Patronymic.ToLower().Contains(str) && !hasPatronymic)
+                        if (person.Patronymic != null && person.Patronymic.ToLower().Contains(str) && !hasPatronymic && names.Count() == 3)
                         {
                             hasPatronymic = true;
                             return 1;

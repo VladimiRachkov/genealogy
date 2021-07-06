@@ -44,7 +44,7 @@ namespace Genealogy.Service.Concrete
         public Response AddFile(IFormFile uploadedFile)
         {
             int count = 0;
-            Regex dateReg = new Regex(@"^\d{1,2}.\d{1,2}.\d{2,4}-\d{1,2}.\d{1,2}.\d{2,4}$", RegexOptions.IgnorePatternWhitespace);
+            Regex dateReg = new Regex(@"^\d{0,2}\?{0,2}.\d{0,2}\?{0,2}.\d{0,4}\?{0,4}\d{0,3}-\d{0,2}\?{0,2}.\d{0,2}\?{0,2}.\d{0,4}\?{0,4}\d{0,3}$", RegexOptions.IgnorePatternWhitespace);
             Regex nameReg = new Regex(@"[^0-9]$", RegexOptions.IgnorePatternWhitespace);
 
             try

@@ -8,10 +8,9 @@ using System.Linq;
 using Newtonsoft.Json;
 using Yandex.Checkout.V3;
 using System;
-using Genealogy.Repository.Concrete;
-using Genealogy.Service.Concrete;
 using Genealogy.Service.Astract;
 using Genealogy.Repository.Abstract;
+using Microsoft.Extensions.Configuration;
 
 public class PurchaseManageService : BackgroundService
 {
@@ -20,11 +19,10 @@ public class PurchaseManageService : BackgroundService
     private readonly GenealogyContext _genealogyContext;
     private readonly IServiceScope _scope;
     private readonly IGenealogyService _service;
-    private Client client = new Yandex.Checkout.V3.Client(shopId: "739084", secretKey: "test_5LLiubI6pAXxCt-13sfn9WymESZgeE9Z30BrZIB3BAQ");
-
+    private readonly IConfiguration _configuration;
     private readonly int timeout = 10;
 
-    public PurchaseManageService(ILogger<PurchaseManageService> logger, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory)
+    public PurchaseManageService(ILogger<PurchaseManageService> logger, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory, IConfiguration configuration)
     {
         _logger = logger;
         _serviceScopeFactory = scopeFactory;
@@ -32,21 +30,24 @@ public class PurchaseManageService : BackgroundService
         _genealogyContext = _scope.ServiceProvider.GetRequiredService<GenealogyContext>();
         _scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
         _service = _scope.ServiceProvider.GetRequiredService<IGenealogyService>();
+        _configuration = configuration;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-
-        var a = _service.GetCemeteryList();
-
         stoppingToken.Register(() =>
-            _logger.LogDebug($" PurchaseManageService background task is stopping."));
+            _logger.LogDebug($"PurchaseManageService background task is stopping."));
 
         try
         {
+            var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
+            var shopId = settings.GetValue<string>("shopId");
+            var secretKey = settings.GetValue<string>("secretKey");
+
+            var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
+
             while (!stoppingToken.IsCancellationRequested)
             {
-
                 AsyncClient asyncClient = client.MakeAsync();
                 _logger.LogDebug($"PurchaseManageService task doing background work.");
 
@@ -55,10 +56,9 @@ public class PurchaseManageService : BackgroundService
                     MetatypeId = MetatypeData.Purchase.Id
                 };
 
-                var purchases = _genealogyContext.BusinessObjects.Where(bo => bo.MetatypeId == MetatypeData.Purchase.Id).ToList();
-                var list = purchases;
+                var purchases = _service.GetBusinessObjects(filter).ToList();
 
-                foreach (var purchase in list)
+                foreach (var purchase in purchases)
                 {
                     var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
@@ -110,7 +110,7 @@ public class PurchaseManageService : BackgroundService
         catch (ApplicationException e)
         {
             _logger.LogError(e.ToString());
-            throw e;
+            //throw e;
         }
     }
 
