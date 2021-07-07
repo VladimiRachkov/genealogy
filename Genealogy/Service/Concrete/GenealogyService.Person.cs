@@ -47,14 +47,15 @@ namespace Genealogy.Service.Concrete
                     case 2:
                         scores = new int[5] { 3, 5, 6, 7, 8 };
                         break;
-                    case 3:
-                        scores = new int[1] { 7 };
-                        break;
+                    // case 3:
+                    //     scores = new int[1] { 7 };
+                    //     break;
                 }
 
                 persons = persons.Select(person =>
                 {
-                    bool hasFirstname = false, hasLastname = false, hasPatronymic = false;
+                    bool hasFirstname = false, hasLastname = false;
+                    //bool hasPatronymic = false;
                     var score = names.Select(item => item.ToLower()).Select(str =>
                     {
                         if (person.Firstname != null && person.Firstname.ToLower().Contains(str) && !hasFirstname)
@@ -67,11 +68,11 @@ namespace Genealogy.Service.Concrete
                             hasLastname = true;
                             return 4;
                         }
-                        if (person.Patronymic != null && person.Patronymic.ToLower().Contains(str) && !hasPatronymic && names.Count() == 3)
-                        {
-                            hasPatronymic = true;
-                            return 1;
-                        }
+                        // if (person.Patronymic != null && person.Patronymic.ToLower().Contains(str) && !hasPatronymic && names.Count() == 3)
+                        // {
+                        //     hasPatronymic = true;
+                        //     return 1;
+                        // }
                         return 0;
                     }).Sum();
                     return Tuple.Create(person, score);

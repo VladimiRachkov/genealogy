@@ -58,7 +58,15 @@ namespace Genealogy.Service.Concrete
                         var rows = body.ChildElements.Where(item => !String.IsNullOrEmpty(item.InnerText.Trim())).Select(item => item.InnerText.Trim()).ToList();
                         var locationName = rows.FirstOrDefault();
 
-                        var cemetery = addCemetery(locationName);
+                        var cemetery = new Cemetery()
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = locationName,
+                            Location = null,
+                            isRemoved = false
+                        };
+
+                        _unitOfWork.CemeteryRepository.Add(cemetery);
 
                         if (!String.IsNullOrEmpty(locationName))
                         {
