@@ -40,15 +40,9 @@ public class PurchaseManageService : BackgroundService
 
         try
         {
-            var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
-            var shopId = settings.GetValue<string>("shopId");
-            var secretKey = settings.GetValue<string>("secretKey");
-
-            var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
-
             while (!stoppingToken.IsCancellationRequested)
             {
-                AsyncClient asyncClient = client.MakeAsync();
+
                 _logger.LogDebug($"PurchaseManageService task doing background work.");
 
                 BusinessObjectFilter filter = new BusinessObjectFilter()
@@ -67,6 +61,13 @@ public class PurchaseManageService : BackgroundService
                         continue;
                     }
 
+                    var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
+                    var shopId = settings.GetValue<string>("shopId");
+                    var secretKey = settings.GetValue<string>("secretKey");
+
+                    var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
+                    var asyncClient = client.MakeAsync();
+                    
                     var response = await asyncClient.GetPaymentAsync(purchaseProps.paymentId);
 
                     switch (purchaseProps.status)

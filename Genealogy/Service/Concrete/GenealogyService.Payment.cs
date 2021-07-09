@@ -9,22 +9,27 @@ using Genealogy.Data;
 using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
-        private Client client = new Yandex.Checkout.V3.Client(shopId: "739084", secretKey: "test_5LLiubI6pAXxCt-13sfn9WymESZgeE9Z30BrZIB3BAQ");
         public async Task<string> DoPayment(PaymentInDto payment)
         {
             string result = null;
             NewPayment newPayment = null;
             BusinessObject purchase = null;
 
-            AsyncClient asyncClient = client.MakeAsync();
-
             try
             {
+                var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
+                var shopId = settings.GetValue<string>("shopId");
+                var secretKey = settings.GetValue<string>("secretKey");
+
+                var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
+                AsyncClient asyncClient = client.MakeAsync();
+                
                 var product = _unitOfWork.BusinessObjectRepository.GetByID(payment.ProductId);
                 var productProps = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
 
