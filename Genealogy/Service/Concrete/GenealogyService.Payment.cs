@@ -48,6 +48,7 @@ namespace Genealogy.Service.Concrete
                     Amount = new Amount { Value = productProps.price, Currency = "RUB" },
                     Description = $"Пользователь {user.LastName} {user.FirstName} ({user.Email}) оплатил {product.Title}",
                     Metadata = metadata,
+                    Capture = true,
                     Confirmation = new Confirmation
                     {
                         Type = ConfirmationType.Redirect,
