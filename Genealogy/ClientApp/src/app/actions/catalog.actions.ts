@@ -29,3 +29,14 @@ export class FetchPurchaseList {
   static readonly type = '[Catalog] Fetch Purchase List';
   constructor(readonly payload: BusinessObjectFilter) {}
 }
+
+export class ActivatePurchase {
+  static readonly type = '[Catalog] Activate Purchase';
+  constructor(readonly payload: BusinessObjectFilter) {}
+}
+
+export class RemovePurchase {
+  static readonly type = '[Catalog] Remove Purchase';
+  constructor(readonly payload: string) {}
+}
+

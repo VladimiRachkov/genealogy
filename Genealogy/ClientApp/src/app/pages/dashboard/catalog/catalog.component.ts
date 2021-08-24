@@ -1,4 +1,13 @@
-import { AddCatalogItem, FetchCatalogItem, FetchCatalogList, FetchPurchaseList, GetCatalogItemsCount, UpdateCatalogItem } from '@actions';
+import {
+  ActivatePurchase,
+  AddCatalogItem,
+  FetchCatalogItem,
+  FetchCatalogList,
+  FetchPurchaseList,
+  GetCatalogItemsCount,
+  RemovePurchase,
+  UpdateCatalogItem,
+} from '@actions';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -144,6 +153,15 @@ export class CatalogComponent implements OnInit, OnDestroy {
 
   onClickPurchaseButton() {
     this.fetchPurchaseList().subscribe(() => this.purchaseModal.open());
+  }
+
+  onActivatePurchase(id: string) {
+    const params: BusinessObjectFilter = { id };
+    this.store.dispatch(new ActivatePurchase(params));
+  }
+
+  onRemovePurchase(id: string) {
+    this.store.dispatch(new RemovePurchase(id));
   }
 
   private fetchPurchaseList(): Observable<void> {

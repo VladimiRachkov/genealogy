@@ -1,11 +1,20 @@
-import { AddCatalogItem, FetchCatalogItem, FetchCatalogList, FetchPurchaseList, GetCatalogItemsCount, UpdateCatalogItem } from '@actions';
+import {
+  ActivatePurchase,
+  AddCatalogItem,
+  FetchCatalogItem,
+  FetchCatalogList,
+  FetchPurchaseList,
+  GetCatalogItemsCount,
+  UpdateCatalogItem,
+} from '@actions';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BusinessObject, BusinessObjectInDto, BusinessObjectOutDto } from '@models';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { BusinessObjectService } from '@repository';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { first } from 'lodash';
+import { ApiService } from '@core';
 
 export interface CatalogStateModel {
   item: BusinessObjectInDto;
@@ -25,7 +34,7 @@ export interface CatalogStateModel {
 })
 @Injectable()
 export class CatalogState {
-  constructor(private boService: BusinessObjectService) {}
+  constructor(private boService: BusinessObjectService, private apiService: ApiService) {}
 
   @Selector()
   static list({ list }: CatalogStateModel): BusinessObject[] {
@@ -81,5 +90,16 @@ export class CatalogState {
   fetchPurchaseList(ctx: StateContext<CatalogStateModel>, { payload: filter }) {
     const params: HttpParams = filter;
     return this.boService.FetchBusinessObjectList(params).pipe(tap(purchaseList => ctx.patchState({ purchaseList })));
+  }
+
+  @Action(ActivatePurchase)
+  activatePurchase(ctx: StateContext<CatalogStateModel>, { payload: filter }) {
+    const params: HttpParams = filter;
+    return this.apiService.post('purchase', filter);
+  }
+
+  @Action(ActivatePurchase)
+  removePurchase(ctx: StateContext<CatalogStateModel>, { payload: id }) {
+    return this.apiService.delete('purchase', id);
   }
 }

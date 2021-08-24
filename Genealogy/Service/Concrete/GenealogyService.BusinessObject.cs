@@ -138,11 +138,11 @@ namespace Genealogy.Service.Concrete
             return true;
         }
 
-        private BusinessObject createBusinessObject(BusinessObject bo)
+        private BusinessObject createBusinessObject(BusinessObject bo, Guid? userId = null)
         {
             bo.Id = Guid.NewGuid();
             bo.StartDate = DateTime.Now;
-            bo.UserId = GetCurrentUserId();
+            bo.UserId = userId ?? GetCurrentUserId();
 
             if (bo.Metatype == null)
             {
@@ -186,6 +186,19 @@ namespace Genealogy.Service.Concrete
             var result = _unitOfWork.BusinessObjectRepository.GetByID(bo.Id);
 
             return result;
+        }
+
+        public BusinessObjectOutDto RemoveBusinessObject(Guid id)
+        {
+            if (id != null)
+            {
+                var bo = _unitOfWork.BusinessObjectRepository.GetByID(id);
+                _unitOfWork.BusinessObjectRepository.Delete(bo);
+                _unitOfWork.Save();
+                return _mapper.Map<BusinessObject, BusinessObjectOutDto>(bo);
+            }
+
+            return null;
         }
 
 

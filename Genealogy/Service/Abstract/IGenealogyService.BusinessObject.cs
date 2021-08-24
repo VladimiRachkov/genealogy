@@ -12,5 +12,6 @@ namespace Genealogy.Service.Astract
         BusinessObjectOutDto UpdateBusinessObjectDto(BusinessObjectInDto boDto);
         BusinessObject UpdateBusinessObject(BusinessObject changedBO);
         BusinessObjectsCountOutDto GetBusinessObjectsCount(BusinessObjectFilter filter);
+        BusinessObjectOutDto RemoveBusinessObject(Guid id);
     }
 }

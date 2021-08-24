@@ -4,6 +4,7 @@ using Genealogy.Models;
 using System.Collections.Generic;
 using Genealogy.Service.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace Genealogy.Controllers
 {
@@ -94,6 +95,23 @@ namespace Genealogy.Controllers
             try
             {
                 result = _genealogyService.GetBusinessObjectsCount(filter);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete("{id:Guid}")]
+        [Authorize(Roles = "Администратор")]
+        public IActionResult RemoveBusinessObject(Guid id)
+        {
+            BusinessObjectOutDto result = null;
+
+            try
+            {
+                result = _genealogyService.RemoveBusinessObject(id);
             }
             catch (AppException ex)
             {

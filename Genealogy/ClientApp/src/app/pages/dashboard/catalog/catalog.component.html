@@ -80,5 +80,11 @@
 </div>
 
 <app-modal size="lg" header="Покупки пользователей">
-  <lancet-table [data]="purchaseTableData$ | async" [startIndex]="startIndex"></lancet-table>
+  <lancet-table
+    [data]="purchaseTableData$ | async"
+    [startIndex]="startIndex"
+    (change)="onActivatePurchase($event)"
+    (remove)="onRemovePurchase($event)"
+    showActionButtons="true"
+  ></lancet-table>
 </app-modal>

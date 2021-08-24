@@ -126,20 +126,28 @@ namespace Genealogy.Service.Concrete
 
         private BusinessObject confirmPurchase(Guid purchaseId)
         {
-            var purchase = _unitOfWork.BusinessObjectRepository.GetByID((purchaseId));
-            BusinessObject result = null;
-
-            if (purchase != null)
+            try
             {
-                var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
+                var purchase = _unitOfWork.BusinessObjectRepository.GetByID((purchaseId));
+                BusinessObject result = null;
 
-                purchaseProps.status = PurchaseStatus.Succeeded;
+                if (purchase != null)
+                {
+                    var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
-                purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+                    purchaseProps.status = PurchaseStatus.Succeeded;
 
-                result = UpdateBusinessObject(purchase);
+                    purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+
+                    result = UpdateBusinessObject(purchase);
+                }
+                return result;
             }
-            return result;
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
         }
 
         public void CheckPayments()
