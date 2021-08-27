@@ -21,6 +21,7 @@ import { Pick } from 'app/helpers/json-parse';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { ModalComponent } from '@shared';
 import { DatePipe } from '@angular/common';
+import { isNil} from 'lodash';
 
 const metatypeId = METATYPE_ID.PRODUCT;
 
@@ -79,12 +80,15 @@ export class CatalogComponent implements OnInit, OnDestroy {
       map<BusinessObject[], Table.Item[]>(list =>
         list.map(({ id, title, data, isRemoved, startDate }) => {
           const props = this.parsePurchaseDataJSON(data);
+          if(props.status === 'Succeeded') {
+            return null;
+          }
 
           const date = this.datePipe.transform(startDate.toString(), 'dd.MM.yyyy');
           const time = this.datePipe.transform(startDate.toString(), 'HH:mm');
 
           return { id, values: [title, props.username, props.email, date, time], isRemoved, status: props.status };
-        })
+        }).filter(item => !isNil(item))
       ),
       map<Table.Item[], Table.Data>(items => ({
         fields: ['Название', 'Покупатель', 'Почта', 'Дата', 'Время'],

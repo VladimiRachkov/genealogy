@@ -56,8 +56,12 @@ public class PurchaseManageService : BackgroundService
                 {
                     var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
-                    if (purchaseProps.status == PurchaseStatus.Succeeded)
-                    {
+                    if (purchaseProps.status == PurchaseStatus.Succeeded) {
+                        continue;
+                    } 
+
+                    if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty || DateTime.Now > purchase.StartDate.AddHours(1)) {
+                        //_service.RemoveBusinessObject(purchase.Id);
                         continue;
                     }
 
@@ -67,7 +71,7 @@ public class PurchaseManageService : BackgroundService
 
                     var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
                     var asyncClient = client.MakeAsync();
-                    
+
                     var response = await asyncClient.GetPaymentAsync(purchaseProps.paymentId);
 
                     switch (purchaseProps.status)
@@ -126,8 +130,9 @@ public class PurchaseManageService : BackgroundService
         catch (ApplicationException e)
         {
             _logger.LogError($"PurchaseManageService removing has error. Reason: {e.ToString()}");
-            throw e;
+            //throw e;
         }
+        return 0;
     }
     private async Task<int> updatePurchase(BusinessObject purchase, string reason)
     {
@@ -140,8 +145,9 @@ public class PurchaseManageService : BackgroundService
         catch (ApplicationException e)
         {
             _logger.LogError($"PurchaseManageService updating has error. Reason: {e.ToString()}");
-            throw e;
+            //throw e;
         }
+        return 0;
     }
 
     private async Task<int> productAction(Guid productId, Guid userId)
@@ -179,7 +185,7 @@ public class PurchaseManageService : BackgroundService
             catch (ApplicationException e)
             {
                 _logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
-                throw e;
+                //throw e;
             }
         }
         return 0;

@@ -77,7 +77,7 @@ namespace Genealogy.Service.Concrete
             }
             catch (AppException ex)
             {
-                throw ex;
+                //throw ex;
             }
 
             return result;
