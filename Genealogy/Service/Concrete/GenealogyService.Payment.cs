@@ -46,7 +46,7 @@ namespace Genealogy.Service.Concrete
                 newPayment = new NewPayment
                 {
                     Amount = new Amount { Value = productProps.price, Currency = "RUB" },
-                    Description = $"Пользователь {user.LastName} {user.FirstName} ({user.Email}) оплатил {product.Title}",
+                    Description = $"({user.Email}) оплатил {product.Title}",
                     Metadata = metadata,
                     Capture = true,
                     Confirmation = new Confirmation
