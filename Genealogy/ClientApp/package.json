@@ -76,7 +76,7 @@
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.7.0",
     "modern-css-reset": "^1.4.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "protractor": "^5.4.4",
     "ts-loader": "^5.2.0",
     "ts-node": "~7.0.0",
