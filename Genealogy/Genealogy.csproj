@@ -27,7 +27,7 @@
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
-    <PackageReference Include="Yandex.Checkout.V3" Version="1.0.1" />
+    <PackageReference Include="Yandex.Checkout.V3" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
