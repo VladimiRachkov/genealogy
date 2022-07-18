@@ -38,42 +38,37 @@ public class PurchaseManageService : BackgroundService
         stoppingToken.Register(() =>
             _logger.LogDebug($"PurchaseManageService background task is stopping."));
 
-        try
+        while (!stoppingToken.IsCancellationRequested)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            _logger.LogDebug($"PurchaseManageService task doing background work.");
+
+            BusinessObjectFilter filter = new BusinessObjectFilter()
             {
+                MetatypeId = MetatypeData.Purchase.Id
+            };
 
-                _logger.LogDebug($"PurchaseManageService task doing background work.");
+            var purchases = _service.GetBusinessObjects(filter).ToList();
+            foreach (var purchase in purchases)
+            {
+                var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
-                BusinessObjectFilter filter = new BusinessObjectFilter()
-                {
-                    MetatypeId = MetatypeData.Purchase.Id
-                };
+                if (purchaseProps.status == PurchaseStatus.Succeeded) {
+                    continue;
+                } 
 
-                var purchases = _service.GetBusinessObjects(filter).ToList();
+                if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty) {// || DateTime.Now > purchase.StartDate.AddHours(1)) {
+                    //_service.RemoveBusinessObject(purchase.Id);
+                    continue;
+                }
 
-                foreach (var purchase in purchases)
-                {
-                    var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
+                var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
+                var shopId = settings.GetValue<string>("shopId");
+                var secretKey = settings.GetValue<string>("secretKey");
+                var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
+                var asyncClient = client.MakeAsync();
 
-                    if (purchaseProps.status == PurchaseStatus.Succeeded) {
-                        continue;
-                    } 
-
-                    if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty) {// || DateTime.Now > purchase.StartDate.AddHours(1)) {
-                        //_service.RemoveBusinessObject(purchase.Id);
-                        continue;
-                    }
-
-                    var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
-                    var shopId = settings.GetValue<string>("shopId");
-                    var secretKey = settings.GetValue<string>("secretKey");
-
-                    var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
-                    var asyncClient = client.MakeAsync();
-
+                try {
                     var response = await asyncClient.GetPaymentAsync(purchaseProps.paymentId);
-
                     switch (purchaseProps.status)
                     {
                         case PurchaseStatus.Pending:
@@ -93,30 +88,27 @@ public class PurchaseManageService : BackgroundService
                         case PaymentStatus.Succeeded:
                             purchaseProps.status = PurchaseStatus.Succeeded;
                             purchase.Data = JsonConvert.SerializeObject(purchaseProps);
-
                             await updatePurchase(purchase, "Payment successed.");
                             await productAction(Guid.Parse(purchaseProps.productId), purchase.UserId);
-
                             break;
 
                         case PaymentStatus.Canceled:
                             await removePurchase(purchase, "Canceled.");
                             break;
                     }
+                }
+                catch (ApplicationException e)
+                {
+                    _logger.LogError(e.ToString());
+                    //throw e;
+                }
 
-                    _logger.LogDebug($"{purchase.Id} {purchase.Title}");
-                };
+                _logger.LogDebug($"{purchase.Id} {purchase.Title}");
+            };
 
-                await Task.Delay(60000, stoppingToken);
-            }
-
-            _logger.LogDebug($"PurchaseManageService background task is stopping.");
+             await Task.Delay(60000, stoppingToken);
         }
-        catch (ApplicationException e)
-        {
-            _logger.LogError(e.ToString());
-            //throw e;
-        }
+        _logger.LogDebug($"PurchaseManageService background task is stopping.");
     }
 
     private async Task<int> removePurchase(BusinessObject purchase, string reason)
@@ -158,7 +150,12 @@ public class PurchaseManageService : BackgroundService
         if (!String.IsNullOrEmpty(bookProps.message))
         {
             var user = _service.GetUserById(userId);
-            await _service.SendEmailToUser(product.Title, user.Email, bookProps.message);
+            try {
+                await _service.SendEmailToUser(product.Title, user.Email, bookProps.message);
+            }
+            catch(ApplicationException e) {
+                _logger.LogError(e.ToString());
+             }
         }
 
         if (productId == ProductData.Subscribe.Id)
