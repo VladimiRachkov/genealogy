@@ -17,7 +17,7 @@ namespace Genealogy.Data
         {
             private static Guid _id = new Guid("b0263094-e3b2-499d-87b5-425446e71ed6");
             /// <summary>
-            /// Метатип Подписка
+            /// Метатип Книга
             /// </summary>
             public static Guid Id { get { return _id; } }
         }

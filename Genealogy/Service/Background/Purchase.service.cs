@@ -50,13 +50,15 @@ public class PurchaseManageService : BackgroundService
             var purchases = _service.GetBusinessObjects(filter).ToList();
             foreach (var purchase in purchases)
             {
+
+            try {
                 var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
                 if (purchaseProps.status == PurchaseStatus.Succeeded) {
                     continue;
                 } 
 
-                if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty) {// || DateTime.Now > purchase.StartDate.AddHours(1)) {
+                if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty || DateTime.Now > purchase.StartDate.AddHours(1)) {
                     //_service.RemoveBusinessObject(purchase.Id);
                     continue;
                 }
@@ -67,7 +69,7 @@ public class PurchaseManageService : BackgroundService
                 var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
                 var asyncClient = client.MakeAsync();
 
-                try {
+
                     var response = await asyncClient.GetPaymentAsync(purchaseProps.paymentId);
                     switch (purchaseProps.status)
                     {
@@ -106,7 +108,7 @@ public class PurchaseManageService : BackgroundService
                 _logger.LogDebug($"{purchase.Id} {purchase.Title}");
             };
 
-             await Task.Delay(60000, stoppingToken);
+            await Task.Delay(60000, stoppingToken);
         }
         _logger.LogDebug($"PurchaseManageService background task is stopping.");
     }
