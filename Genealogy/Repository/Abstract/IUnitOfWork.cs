@@ -14,6 +14,7 @@ namespace Genealogy.Repository.Abstract
         PersonGroupRepository PersonGroupRepository { get; }
         BusinessObjectRepository BusinessObjectRepository { get; }
         MetatypeRepository MetatypeRepository { get; }
+        CountyRepository CountyRepository { get; }
         void Save();
     }
 }

@@ -124,5 +124,22 @@ namespace Genealogy.Service.Concrete
             }
             return null;
         }
+
+        private IEnumerable<Cemetery> getCemeteriesByCountyId(Guid countyId)
+        {
+            return _unitOfWork.CemeteryRepository.Get(x => (countyId != Guid.Empty ? x.County.Id == countyId : true));
+        }
+
+        private void updateCemeteries(IEnumerable<Cemetery> cemeteries)
+        {
+            cemeteries.ToList().ForEach(cemetery => _unitOfWork.CemeteryRepository.Update(cemetery));
+            _unitOfWork.Save();
+        }
+
+        private void removeCemeteriesByCountyId(Guid countyId)
+        {
+            var cemeteries = getCemeteriesByCountyId(countyId);
+            cemeteries.ToList().ForEach(cemetery => removeCemetery(cemetery));
+        }
     }
 }

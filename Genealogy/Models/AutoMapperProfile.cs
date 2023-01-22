@@ -37,8 +37,8 @@ namespace Genealogy.Models
             CreateMap<PersonGroup, PersonGroupDto>();
             CreateMap<PersonGroupDto, PersonGroup>();
 
-
-
+            CreateMap<County, CountyDto>();
+            CreateMap<CountyDto, County>();
         }
     }
 }

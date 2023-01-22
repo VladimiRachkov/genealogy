@@ -3,8 +3,8 @@ import { Store, Select } from '@ngxs/store';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Table, Person, Cemetery, PersonDto, PersonFilter, Paginator } from '@models';
-import { CemeteryState, PersonState } from '@states';
-import { AddPerson, UpdatePerson, GetPersonsCount, FetchPerson, FetchAllPersons, FetchCemeteryList, FetchPersonList } from '@actions';
+import { CemeteryState, CountyState, PersonState } from '@states';
+import { AddPerson, UpdatePerson, FetchPerson, FetchCemeteryList, FetchPersonList, FetchCountyList } from '@actions';
 import { FileUploadService } from 'app/core/services/file-upload.service';
 import { NotifierService } from 'angular-notifier';
 import { isEmpty } from 'lodash';
@@ -22,6 +22,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   fileForm: FormGroup;
   searchForm: FormGroup;
   cemeteries: Array<{ id: string; name: string }>;
+  counties: Array<{ id: string; name: string }>;
   filter: PersonFilter = {};
 
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
@@ -51,9 +52,14 @@ export class PersonComponent implements OnInit, OnDestroy {
       cemeteryId: new FormControl(null, [Validators.required]),
     });
 
-    this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
-      const cemeteryList = this.store.selectSnapshot(CemeteryState.cemeteryList);
-      this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
+    // this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
+    //   const cemeteryList = this.store.selectSnapshot(CemeteryState.cemeteryList);
+    //   this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
+    // });
+
+    this.store.dispatch(new FetchCountyList()).subscribe(() => {
+      const countyList = this.store.selectSnapshot(CountyState.countyList);
+      this.counties = countyList.map(({ id, name }) => ({ id, name }));
     });
 
     this.searchForm.valueChanges.subscribe(value => {

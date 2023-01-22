@@ -25,6 +25,9 @@ namespace Genealogy.Repository.Concrete
         private BusinessObjectRepository businessObjectRepository;
         public MetatypeRepository MetatypeRepository => metatypeRepository ?? new MetatypeRepository(_genealogyContext);
         private MetatypeRepository metatypeRepository;
+        public CountyRepository CountyRepository => countyRepository ?? new CountyRepository(_genealogyContext);
+        private CountyRepository countyRepository;
+
 
         public UnitOfWork(GenealogyContext genealogyContext)
         {

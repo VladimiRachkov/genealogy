@@ -30,18 +30,18 @@ namespace Genealogy.Migrations
                 table: "Cemeteries",
                 column: "CountyId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_BusinessObjects_UserId",
-                table: "BusinessObjects",
-                column: "UserId");
+            // migrationBuilder.CreateIndex(
+            //     name: "IX_BusinessObjects_UserId",
+            //     table: "BusinessObjects",
+            //     column: "UserId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_BusinessObjects_Users_UserId",
-                table: "BusinessObjects",
-                column: "UserId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            // migrationBuilder.AddForeignKey(
+            //     name: "FK_BusinessObjects_Users_UserId",
+            //     table: "BusinessObjects",
+            //     column: "UserId",
+            //     principalTable: "Users",
+            //     principalColumn: "Id",
+            //     onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Cemeteries_County_CountyId",
@@ -54,9 +54,9 @@ namespace Genealogy.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_BusinessObjects_Users_UserId",
-                table: "BusinessObjects");
+            // migrationBuilder.DropForeignKey(
+            //     name: "FK_BusinessObjects_Users_UserId",
+            //     table: "BusinessObjects");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Cemeteries_County_CountyId",
@@ -69,9 +69,9 @@ namespace Genealogy.Migrations
                 name: "IX_Cemeteries_CountyId",
                 table: "Cemeteries");
 
-            migrationBuilder.DropIndex(
-                name: "IX_BusinessObjects_UserId",
-                table: "BusinessObjects");
+            // migrationBuilder.DropIndex(
+            //     name: "IX_BusinessObjects_UserId",
+            //     table: "BusinessObjects");
 
             migrationBuilder.DropColumn(
                 name: "CountyId",
