@@ -62,7 +62,6 @@ namespace Genealogy.Service.Concrete
                         {
                             Id = Guid.NewGuid(),
                             Name = locationName,
-                            Location = null,
                             isRemoved = false
                         };
 

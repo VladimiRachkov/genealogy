@@ -22,12 +22,14 @@
           formControlName="name"
         />
       </div>
-      <div class="form-group">
-        <label for="location">Расположение</label>
-        <input type="text" class="form-control" id="location" placeholder="Укажите расположение" formControlName="location" />
+      <div class="form-group" *ngIf="countyList$ | async as countyList">
+        <label for="finishDate">Уезд</label>
+        <select class="form-control" formControlName="countyId">
+          <option *ngFor="let item of countyList" [value]="item.id">{{ item.name }}</option>
+        </select>
       </div>
       <input type="hidden" formControlName="id" />
-      <div class="btn-group" role="group" aria-label="Basic example">
+      <div class="btn-group" role="group" aria-label="cemeteryForm">
         <button type="submit" class="btn btn-outline-primary" [disabled]="cemeteryForm.invalid || cemetery">Добавить</button>
         <button type="button" class="btn btn-outline-primary" [disabled]="cemetery === null" (click)="onUpdate()">Изменить</button>
         <button type="reset" class="btn btn-outline-primary" (click)="onReset()">Очистить</button>

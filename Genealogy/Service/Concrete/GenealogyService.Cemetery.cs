@@ -31,14 +31,14 @@ namespace Genealogy.Service.Concrete
             return null;
         }
 
-        protected Cemetery addCemetery(string name)
+        protected Cemetery addCemetery(string name, County county)
         {
             var id = Guid.NewGuid();
             var cemetery = new Cemetery()
             {
                 Id = id,
                 Name = name,
-                Location = null,
+                County = county,
                 isRemoved = false
             };
 

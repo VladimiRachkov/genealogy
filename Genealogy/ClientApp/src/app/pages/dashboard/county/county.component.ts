@@ -31,6 +31,7 @@ export class CountyComponent implements OnInit {
     this.countyForm = new FormGroup({
       id: new FormControl(null),
       name: new FormControl(null, [Validators.required]),
+      coords: new FormControl(null)
     });
     this.county = null;
   }
@@ -52,9 +53,9 @@ export class CountyComponent implements OnInit {
     const filter: CountyFilter = { id };
     this.store.dispatch(new GetCounty(filter)).subscribe(() => {
       const county = this.store.selectSnapshot<County>(CountyState.county);
-      const { id, name } = county;
+      const { id, name, coords } = county;
       this.county = county;
-      this.countyForm.setValue({ id, name });
+      this.countyForm.setValue({ id, name, coords });
     });
   }
 
@@ -70,16 +71,15 @@ export class CountyComponent implements OnInit {
   private updateList() {
     this.store.dispatch(new FetchCountyList()).subscribe(() => {
       this.countyList = this.store.selectSnapshot<Array<County>>(CountyState.countyList);
-      console.log('COUNTY LIST', this.countyList);
 
       const items = this.countyList.map<Table.Item>(item => ({
         id: item.id,
-        values: [item.name],
+        values: [item.name, item.coords],
         isRemoved: item.isRemoved,
       }));
 
       this.tableData = {
-        fields: ['Название'],
+        fields: ['Название', 'Координаты'],
         items,
       };
       this.reset();
