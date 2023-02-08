@@ -13,19 +13,22 @@ namespace Genealogy.Service.Concrete
         public List<CemeteryDto> GetCemetery(CemeteryFilter filter)
         {
             return _unitOfWork.CemeteryRepository.Get(x =>
-            (filter.Id != Guid.Empty ? x.Id == filter.Id : true)).Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
+            filter.Id != Guid.Empty ? x.Id == filter.Id : true, null, "County").Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
         }
+
         public CemeteryDto AddCemetery(CemeteryDto newCemetery)
         {
             if (newCemetery != null)
             {
                 var cemetery = _mapper.Map<Cemetery>(newCemetery);
-                var id = Guid.NewGuid();
-                cemetery.Id = id;
+
+                cemetery.Id = Guid.NewGuid();
+                cemetery.County = _unitOfWork.CountyRepository.GetByID(newCemetery.CountyId);
+
                 _unitOfWork.CemeteryRepository.Add(cemetery);
                 _unitOfWork.Save();
 
-                var result = _unitOfWork.CemeteryRepository.GetByID(id);
+                var result = _unitOfWork.CemeteryRepository.GetByID(cemetery.Id);
                 return _mapper.Map<CemeteryDto>(result);
             }
             return null;
@@ -51,6 +54,7 @@ namespace Genealogy.Service.Concrete
 
         public List<CemeteryDto> GetCemeteryList()
         {
+            var test = _unitOfWork.CemeteryRepository.Get();
             return _unitOfWork.CemeteryRepository.Get().Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
         }
 

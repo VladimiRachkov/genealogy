@@ -8,5 +8,6 @@ namespace Genealogy.Models
         public string Name { get; set; }
         public County County { get; set; }
         public bool? isRemoved { get; set; }
+        public Guid CountyId { get; set; }
     }
 }

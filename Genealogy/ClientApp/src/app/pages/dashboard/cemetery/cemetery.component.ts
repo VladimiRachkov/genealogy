@@ -34,14 +34,16 @@ export class CemeteryComponent implements OnInit {
     this.updateList();
     this.cemeteryForm = new FormGroup({
       id: new FormControl(null),
-      name: new FormControl(null, [Validators.required]),
-      county: new FormControl(null, [Validators.required]),
+      name: new FormControl(null),
+      countyId: new FormControl(null, [Validators.required]),
     });
     this.cemetery = null;
   }
 
+
   onAdd() {
     const cemetery = this.cemeteryForm.value as CemeteryDto;
+    console.log(cemetery)
     this.store.dispatch(new AddCemetery(cemetery)).subscribe(() => this.updateList());
   }
 
@@ -59,7 +61,7 @@ export class CemeteryComponent implements OnInit {
       const cemetery = this.store.selectSnapshot<Cemetery>(CemeteryState.cemetery);
       const { id, name, county } = cemetery;
       this.cemetery = cemetery;
-      this.cemeteryForm.setValue({ id, name, county });
+      this.cemeteryForm.setValue({ id, name, countyId: county.id });
     });
   }
 

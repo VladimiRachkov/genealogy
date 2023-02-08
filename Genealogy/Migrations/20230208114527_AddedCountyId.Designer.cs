@@ -3,15 +3,17 @@ using System;
 using Genealogy.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Genealogy.Migrations
 {
     [DbContext(typeof(GenealogyContext))]
-    partial class GenealogyContextModelSnapshot : ModelSnapshot
+    [Migration("20230208114527_AddedCountyId")]
+    partial class AddedCountyId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,7 +70,7 @@ namespace Genealogy.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("CountyId");
+                    b.Property<Guid?>("CountyId");
 
                     b.Property<string>("Name");
 
@@ -276,8 +278,7 @@ namespace Genealogy.Migrations
                 {
                     b.HasOne("Genealogy.Models.County", "County")
                         .WithMany()
-                        .HasForeignKey("CountyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CountyId");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Person", b =>
