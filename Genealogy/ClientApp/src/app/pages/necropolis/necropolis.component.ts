@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Paginator, Person, PersonFilter, Table } from '@models';
-import { ClearPersonList, FetchActiveSubscribe, FetchCemeteryList, FetchPersonList } from '@actions';
-import { CemeteryState, MainState, PersonState } from '@states';
+import { ClearPersonList, FetchActiveSubscribe, FetchCemeteryList, FetchCountyList, FetchPersonList } from '@actions';
+import { CemeteryState, CountyState, MainState, PersonState } from '@states';
 import { isNil, isEmpty, difference } from 'lodash';
 import { NotifierService } from 'angular-notifier';
 import { NOTIFICATIONS } from '@enums';
@@ -30,7 +30,7 @@ export class NecropolisComponent implements OnInit {
     count: 0,
   };
 
-  cemeteries: Array<{ id: string; name: string }>;
+  counties: Array<{ id: string; name: string }>;
 
   constructor(private store: Store, private notifierService: NotifierService) {}
 
@@ -39,13 +39,13 @@ export class NecropolisComponent implements OnInit {
 
     this.searchForm = new FormGroup({
       fio: new FormControl(null, [Validators.required]),
-      cemeteryId: new FormControl(null, [Validators.required]),
+      countyId: new FormControl(null, [Validators.required]),
     });
 
     if (this.hasAuth) {
-      this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
-        const cemeteryList = this.store.selectSnapshot(CemeteryState.cemeteryList);
-        this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
+      this.store.dispatch(new FetchCountyList()).subscribe(() => {
+        const countyList = this.store.selectSnapshot(CountyState.countyList);
+        this.counties = countyList.map(({ id, name }) => ({ id, name }));
       });
 
       this.store.dispatch(new FetchActiveSubscribe()).subscribe(() => {
@@ -65,11 +65,11 @@ export class NecropolisComponent implements OnInit {
   }
 
   private search() {
-    const { fio, cemeteryId } = this.searchForm.value;
+    const { fio, countyId } = this.searchForm.value;
 
-    if (!isEmpty(fio) && !isNil(cemeteryId)) {
+    if (!isEmpty(fio) && !isNil(countyId)) {
       const { index, step } = this.paginatorOptions;
-      const filter: PersonFilter = { fio: fio.toLowerCase(), cemeteryId, index, step };
+      const filter: PersonFilter = { fio: fio.toLowerCase(), countyId, index, step };
 
       this.store.dispatch(new FetchPersonList(filter)).subscribe(() => {
         this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList);

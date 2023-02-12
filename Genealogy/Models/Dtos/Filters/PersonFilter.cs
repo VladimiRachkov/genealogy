@@ -8,5 +8,6 @@ namespace Genealogy.Models
         public string Lastname { get; set; }
         public string Fio { get; set; }
         public Guid CemeteryId { get; set; }
+        public Guid CountyId { get; set; }
     }
 }
