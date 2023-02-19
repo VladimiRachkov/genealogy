@@ -2,12 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Table, Person, Cemetery, PersonDto, PersonFilter, Paginator } from '@models';
+import { Table, Person, Cemetery, PersonDto, PersonFilter, Paginator, CemeteryFilter } from '@models';
 import { CemeteryState, CountyState, PersonState } from '@states';
-import { AddPerson, UpdatePerson, FetchPerson, FetchCemeteryList, FetchPersonList, FetchCountyList } from '@actions';
+import { AddPerson, UpdatePerson, FetchPerson, FetchCemeteryList, FetchPersonList, FetchCountyList, GetCemeteries } from '@actions';
 import { FileUploadService } from 'app/core/services/file-upload.service';
 import { NotifierService } from 'angular-notifier';
 import { isEmpty } from 'lodash';
+import { count } from 'console';
 
 @Component({
   selector: 'dashboard-person',
@@ -24,6 +25,8 @@ export class PersonComponent implements OnInit, OnDestroy {
   cemeteries: Array<{ id: string; name: string }>;
   counties: Array<{ id: string; name: string }>;
   filter: PersonFilter = {};
+
+  selectedCountyId: string?
 
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
 
@@ -49,13 +52,9 @@ export class PersonComponent implements OnInit, OnDestroy {
 
     this.searchForm = new FormGroup({
       fio: new FormControl(null, [Validators.required]),
+      countyId: new FormControl(null, [Validators.required]),
       cemeteryId: new FormControl(null, [Validators.required]),
     });
-
-    // this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
-    //   const cemeteryList = this.store.selectSnapshot(CemeteryState.cemeteryList);
-    //   this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
-    // });
 
     this.store.dispatch(new FetchCountyList()).subscribe(() => {
       const countyList = this.store.selectSnapshot(CountyState.countyList);
@@ -140,6 +139,19 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   onUploadDocFile(file) {
     this.fileUploadService.postFile(file[0]).subscribe(({ result, message }) => this.notifierService.notify(result, message));
+  }
+
+  onChangeCounty() {
+    this.selectedCountyId = this.searchForm.value['countyId'];
+    this.getCemeteries()
+  }
+
+  private getCemeteries() {
+    const filter: CemeteryFilter = { countyId: this.selectedCountyId }
+    this.store.dispatch(new GetCemeteries(filter)).subscribe(() => {
+      const cemeteryList = this.store.selectSnapshot(CemeteryState.cemeteryList);
+      this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
+    });
   }
 
 
