@@ -1,1 +1,4 @@
-<app-table-row *ngFor="let item of data.items; let itemIndex = index" [item]="item" class="card p-2 m-2 noselect" ></app-table-row>
+<div class="mt-4 text-center">
+    <h5>Результаты поиска:</h5>
+</div>
+<app-table-row *ngFor="let item of data.items; let itemIndex = index" [item]="item" class="noselect" ></app-table-row>

@@ -17,6 +17,7 @@ import { CatalogComponent } from './catalog/catalog.component';
 import { MailComponent } from './mail/mail.component';
 import { SettingsComponent } from './settings/settings.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CountyComponent } from './county/county.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,7 @@ const routes: Routes = [
   declarations: [
     DashboardComponent,
     CemeteryComponent,
+    CountyComponent,
     PersonComponent,
     PagesComponent,
     EditorComponent,

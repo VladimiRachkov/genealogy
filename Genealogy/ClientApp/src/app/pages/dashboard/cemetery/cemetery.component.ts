@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import {
   GetCemetery,
   AddCemetery,
@@ -9,8 +9,10 @@ import {
   RestoreCemetery,
 } from '../../../actions/cemetery.actions';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Cemetery, Table, CemeteryDto, CemeteryFilter } from '@models';
-import { CemeteryState } from '@states';
+import { Cemetery, Table, CemeteryDto, CemeteryFilter, County } from '@models';
+import { CemeteryState, CountyState } from '@states';
+import { FetchCountyList } from '@actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'dashboard-cemetery',
@@ -24,17 +26,20 @@ export class CemeteryComponent implements OnInit {
   cemetery: Cemetery;
   tableData: Table.Data;
 
+  @Select(CountyState.countyList) countyList$: Observable<Array<County>>;
+
   constructor(private store: Store) {}
 
   ngOnInit() {
     this.updateList();
     this.cemeteryForm = new FormGroup({
       id: new FormControl(null),
-      name: new FormControl(null, [Validators.required]),
-      location: new FormControl(null, [Validators.required]),
+      name: new FormControl(null),
+      countyId: new FormControl(null, [Validators.required]),
     });
     this.cemetery = null;
   }
+
 
   onAdd() {
     const cemetery = this.cemeteryForm.value as CemeteryDto;
@@ -53,9 +58,9 @@ export class CemeteryComponent implements OnInit {
     const filter: CemeteryFilter = { id };
     this.store.dispatch(new GetCemetery(filter)).subscribe(() => {
       const cemetery = this.store.selectSnapshot<Cemetery>(CemeteryState.cemetery);
-      const { id, name, location } = cemetery;
+      const { id, name, county } = cemetery;
       this.cemetery = cemetery;
-      this.cemeteryForm.setValue({ id, name, location });
+      this.cemeteryForm.setValue({ id, name, countyId: county.id });
     });
   }
 
@@ -71,16 +76,15 @@ export class CemeteryComponent implements OnInit {
   private updateList() {
     this.store.dispatch(new FetchCemeteryList()).subscribe(() => {
       this.cemeteryList = this.store.selectSnapshot<Array<Cemetery>>(CemeteryState.cemeteryList);
-      console.log('CEMETERY LIST', this.cemeteryList);
 
       const items = this.cemeteryList.map<Table.Item>(item => ({
         id: item.id,
-        values: [item.name, item.location],
+        values: [item.name, item.county.name],
         isRemoved: item.isRemoved,
       }));
 
       this.tableData = {
-        fields: ['Название', 'Расположение'],
+        fields: ['Название', 'Уезд'],
         items,
       };
       this.reset();

@@ -8,13 +8,27 @@
 
       <ng-select
         class="mr-2 custom"
+        [items]="counties"
+        bindLabel="name"
+        bindValue="id"
+        id="county"
+        aria-label="County"
+        formControlName="countyId"
+        placeholder="Выбрать уезд"
+        (change)="onChangeCounty()"
+      >
+      </ng-select>
+
+      <ng-select
+        *ngIf="selectedCountyId != null"
+        class="mr-2 custom"
         [items]="cemeteries"
         bindLabel="name"
         bindValue="id"
         id="cemetery"
         aria-label="Cemetery"
         formControlName="cemeteryId"
-        placeholder="Укажите место захоронения"
+        placeholder="Выбрать место захоронения"
       >
       </ng-select>
     </form>

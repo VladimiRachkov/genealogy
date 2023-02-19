@@ -5,4 +5,5 @@ export interface PersonFilter extends PaginatorOutDto {
   lastname?: string;
   fio?: string;
   cemeteryId?: string;
+  countyId?: string;
 }

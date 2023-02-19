@@ -6,6 +6,7 @@ namespace Genealogy.Models
     {
         public Guid Id { get; set; }
         public bool isRemoved { get; set; }
+        public Guid CountyId { get; set; }
 
     }
 }

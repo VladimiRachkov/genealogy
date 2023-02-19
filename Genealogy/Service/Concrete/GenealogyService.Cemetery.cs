@@ -12,33 +12,39 @@ namespace Genealogy.Service.Concrete
     {
         public List<CemeteryDto> GetCemetery(CemeteryFilter filter)
         {
-            return _unitOfWork.CemeteryRepository.Get(x =>
-            (filter.Id != Guid.Empty ? x.Id == filter.Id : true)).Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
+            return _unitOfWork.CemeteryRepository
+                .Get(x => (filter.Id != Guid.Empty ? x.Id == filter.Id : true &&
+                           filter.CountyId != Guid.Empty ? x.CountyId == filter.CountyId : true),
+                           null, "County")
+                .Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
         }
+
         public CemeteryDto AddCemetery(CemeteryDto newCemetery)
         {
             if (newCemetery != null)
             {
                 var cemetery = _mapper.Map<Cemetery>(newCemetery);
-                var id = Guid.NewGuid();
-                cemetery.Id = id;
+
+                cemetery.Id = Guid.NewGuid();
+                cemetery.County = _unitOfWork.CountyRepository.GetByID(newCemetery.CountyId);
+
                 _unitOfWork.CemeteryRepository.Add(cemetery);
                 _unitOfWork.Save();
 
-                var result = _unitOfWork.CemeteryRepository.GetByID(id);
+                var result = _unitOfWork.CemeteryRepository.GetByID(cemetery.Id);
                 return _mapper.Map<CemeteryDto>(result);
             }
             return null;
         }
 
-        protected Cemetery addCemetery(string name)
+        protected Cemetery addCemetery(string name, County county)
         {
             var id = Guid.NewGuid();
             var cemetery = new Cemetery()
             {
                 Id = id,
                 Name = name,
-                Location = null,
+                County = county,
                 isRemoved = false
             };
 
@@ -51,6 +57,7 @@ namespace Genealogy.Service.Concrete
 
         public List<CemeteryDto> GetCemeteryList()
         {
+            var test = _unitOfWork.CemeteryRepository.Get();
             return _unitOfWork.CemeteryRepository.Get().Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
         }
 
@@ -123,6 +130,23 @@ namespace Genealogy.Service.Concrete
                 return _mapper.Map<CemeteryDto>(cemetery);
             }
             return null;
+        }
+
+        private IEnumerable<Cemetery> getCemeteriesByCountyId(Guid countyId)
+        {
+            return _unitOfWork.CemeteryRepository.Get(x => (countyId != Guid.Empty ? x.County.Id == countyId : true));
+        }
+
+        private void updateCemeteries(IEnumerable<Cemetery> cemeteries)
+        {
+            cemeteries.ToList().ForEach(cemetery => _unitOfWork.CemeteryRepository.Update(cemetery));
+            _unitOfWork.Save();
+        }
+
+        private void removeCemeteriesByCountyId(Guid countyId)
+        {
+            var cemeteries = getCemeteriesByCountyId(countyId);
+            cemeteries.ToList().ForEach(cemetery => removeCemetery(cemetery));
         }
     }
 }

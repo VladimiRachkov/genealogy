@@ -9,7 +9,7 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { PersonState, CemeteryState, PageState, MainState, UserState, MetatypeState, CatalogState, SettingState } from '@states';
+import { PersonState, CemeteryState, PageState, MainState, UserState, MetatypeState, CatalogState, SettingState, CountyState } from '@states';
 import { SharedModule } from '@shared';
 import { NotifierModule } from 'angular-notifier';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -26,7 +26,7 @@ import { MailState } from './states/mail.state';
     ComponentModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([MainState, PersonState, CemeteryState, PageState, LinkState, UserState, MetatypeState, CatalogState, MailState, SettingState], {
+    NgxsModule.forRoot([MainState, PersonState, CemeteryState, PageState, LinkState, UserState, MetatypeState, CatalogState, MailState, SettingState, CountyState], {
       developmentMode: !environment.production,
     }),
     NgxsResetPluginModule.forRoot(),

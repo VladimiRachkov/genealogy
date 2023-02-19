@@ -28,7 +28,8 @@ namespace Genealogy.Service.Concrete
             x =>
                 (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
                 (filter.Lastname != null ? x.Lastname == filter.Lastname : true) &&
-                (filter.CemeteryId != Guid.Empty ? x.Cemetery.Id == filter.CemeteryId : true),
+                (filter.CemeteryId != Guid.Empty ? x.Cemetery.Id == filter.CemeteryId : true) &&
+                (filter.CountyId != Guid.Empty ? x.Cemetery.CountyId == filter.CountyId : true),
             x =>
                 x.OrderBy(item => item.Lastname)
                 .ThenBy(item => item.Firstname)

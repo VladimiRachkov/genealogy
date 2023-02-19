@@ -58,6 +58,8 @@ namespace Genealogy.Migrations
 
                     b.HasIndex("MetatypeId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("BusinessObjects");
                 });
 
@@ -66,7 +68,7 @@ namespace Genealogy.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Location");
+                    b.Property<Guid>("CountyId");
 
                     b.Property<string>("Name");
 
@@ -74,7 +76,25 @@ namespace Genealogy.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CountyId");
+
                     b.ToTable("Cemeteries");
+                });
+
+            modelBuilder.Entity("Genealogy.Models.County", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Coords");
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("isRemoved");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("County");
                 });
 
             modelBuilder.Entity("Genealogy.Models.Link", b =>
@@ -245,6 +265,19 @@ namespace Genealogy.Migrations
                         .WithMany()
                         .HasForeignKey("MetatypeId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Genealogy.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Genealogy.Models.Cemetery", b =>
+                {
+                    b.HasOne("Genealogy.Models.County", "County")
+                        .WithMany()
+                        .HasForeignKey("CountyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Genealogy.Models.Person", b =>
@@ -254,7 +287,7 @@ namespace Genealogy.Migrations
                         .HasForeignKey("CemeteryId");
 
                     b.HasOne("Genealogy.Models.PersonGroup", "PersonGroup")
-                        .WithMany("Persons")
+                        .WithMany()
                         .HasForeignKey("PersonGroupId");
                 });
 

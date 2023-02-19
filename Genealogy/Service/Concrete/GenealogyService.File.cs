@@ -56,22 +56,43 @@ namespace Genealogy.Service.Concrete
                         DocumentFormat.OpenXml.Wordprocessing.Body body = wordDoc.MainDocumentPart.Document.Body;
 
                         var rows = body.ChildElements.Where(item => !String.IsNullOrEmpty(item.InnerText.Trim())).Select(item => item.InnerText.Trim()).ToList();
-                        var locationName = rows.FirstOrDefault();
+
+                        // Получение названия уезда и обработка
+                        var countyName = rows.FirstOrDefault();
+                        //if (countyName == null) {
+
+                        //};
+
+                        if (!String.IsNullOrEmpty(countyName))
+                        {
+                            rows.RemoveAt(0);
+                        }
+
+                        // Ищем существующий уезд
+                        var county = _unitOfWork.CountyRepository.Get(x => (x.Name == countyName)).FirstOrDefault();
+                        if (county == null) {
+                            // Если нет, то добавляем новый
+                            county = addCounty(countyName);
+                        }
+
+                        // Получение название кладбища и обработка
+                        var cemeteryName = rows.FirstOrDefault();
 
                         var cemetery = new Cemetery()
                         {
                             Id = Guid.NewGuid(),
-                            Name = locationName,
-                            Location = null,
+                            Name = cemeteryName,
+                            CountyId = county.Id,
                             isRemoved = false
                         };
 
                         _unitOfWork.CemeteryRepository.Add(cemetery);
 
-                        if (!String.IsNullOrEmpty(locationName))
+                        if (!String.IsNullOrEmpty(cemeteryName))
                         {
                             rows.RemoveAt(0);
                         }
+
                         var rowCount = 0;
                         var persons = new List<Person>();
 

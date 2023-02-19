@@ -1,0 +1,44 @@
+<div class="row pt-2">
+  <div class="col-md-6 col-lg-8">
+    <lancet-table
+      [data]="tableData"
+      [selectedId]="county?.id"
+      (change)="onSelect($event)"
+      (remove)="onRemove($event)"
+      (restore)="onRestore($event)"
+      [showActionButtons]="true"
+    ></lancet-table>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <form [formGroup]="countyForm" (ngSubmit)="onAdd()">
+      <div class="form-group">
+        <label for="name">Название</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          aria-describedby="name"
+          placeholder="Введите название"
+          formControlName="name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="name">Координаты</label>
+        <input
+          type="text"
+          class="form-control"
+          id="coords"
+          aria-describedby="coords"
+          placeholder="Укажите координаты"
+          formControlName="coords"
+        />
+      </div>
+      <input type="hidden" formControlName="id" />
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="countyForm.invalid || county">Добавить</button>
+        <button type="button" class="btn btn-outline-primary" [disabled]="county === null" (click)="onUpdate()">Изменить</button>
+        <button type="reset" class="btn btn-outline-primary" (click)="onReset()">Очистить</button>
+      </div>
+    </form>
+  </div>
+</div>
