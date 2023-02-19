@@ -43,7 +43,6 @@ export class CemeteryComponent implements OnInit {
 
   onAdd() {
     const cemetery = this.cemeteryForm.value as CemeteryDto;
-    console.log(cemetery)
     this.store.dispatch(new AddCemetery(cemetery)).subscribe(() => this.updateList());
   }
 

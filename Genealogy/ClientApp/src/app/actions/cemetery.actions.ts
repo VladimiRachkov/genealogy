@@ -9,6 +9,11 @@ export class GetCemetery {
   constructor(readonly payload: CemeteryFilter) {}
 }
 
+export class GetCemeteries {
+  static readonly type = '[Cemetery] Get Cemeteries';
+  constructor(readonly payload: CemeteryFilter) {}
+}
+
 export class AddCemetery {
   static readonly type = '[Cemetery] Add Cemetery';
   constructor(readonly payload: CemeteryDto) {}

@@ -12,8 +12,11 @@ namespace Genealogy.Service.Concrete
     {
         public List<CemeteryDto> GetCemetery(CemeteryFilter filter)
         {
-            return _unitOfWork.CemeteryRepository.Get(x =>
-            filter.Id != Guid.Empty ? x.Id == filter.Id : true, null, "County").Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
+            return _unitOfWork.CemeteryRepository
+                .Get(x => (filter.Id != Guid.Empty ? x.Id == filter.Id : true &&
+                           filter.CountyId != Guid.Empty ? x.CountyId == filter.CountyId : true),
+                           null, "County")
+                .Select(i => _mapper.Map<CemeteryDto>(i)).ToList();
         }
 
         public CemeteryDto AddCemetery(CemeteryDto newCemetery)

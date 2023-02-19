@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GetCemetery, AddCemetery, FetchCemeteryList, UpdateCemetery, RemoveCemetery, RestoreCemetery } from '../actions/cemetery.actions';
+import { GetCemetery, AddCemetery, FetchCemeteryList, UpdateCemetery, RemoveCemetery, RestoreCemetery, GetCemeteries } from '../actions/cemetery.actions';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -41,6 +41,14 @@ export class CemeteryState {
     return this.apiService
       .get<Array<CemeteryDto>>('cemetery', params)
       .pipe(tap(cemeteryList => ctx.patchState({ cemetery: cemeteryList[0] })));
+  }
+
+  @Action(GetCemeteries)
+  getCemeteries(ctx: StateContext<CemeteryStateModel>, { payload: filter }): Observable<Array<CemeteryDto>> {
+    const params: HttpParams = filter;
+    return this.apiService
+      .get<Array<CemeteryDto>>('cemetery', params)
+      .pipe(tap(cemeteryList => ctx.patchState({ cemeteryList: cemeteryList })));
   }
 
   @Action(AddCemetery)
