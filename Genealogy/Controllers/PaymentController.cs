@@ -5,6 +5,7 @@ using Genealogy.Models;
 using Genealogy.Service.Helpers;
 using Yandex.Checkout.V3;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace Genealogy.Controllers
 {
@@ -44,7 +45,7 @@ namespace Genealogy.Controllers
                 //Payment payment = message?.Object;
 
 
-                result = _genealogyService.ConfirmPurchase(payment);
+                result = _genealogyService.ConfirmPurchaseByPayment(payment);
 
             }
             catch (AppException ex)

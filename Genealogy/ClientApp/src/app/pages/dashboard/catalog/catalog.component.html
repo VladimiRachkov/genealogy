@@ -12,11 +12,19 @@
     ></lancet-table>
     <lancet-paginator [options]="paginatorOptions" (changePage)="onChangePage($event)"></lancet-paginator>
   </div>
-  <div class="col-md-6 col-lg-4">
-    <button class="btn btn-outline-success btn-block" (click)="onClickPurchaseButton()">
-      <fa-icon icon="shopping-cart"></fa-icon>
-      Покупки пользователей
-    </button>
+    <div class="col-md-6 col-lg-4">
+        <div class="mt-4">
+          Покупки пользователей
+        </div>
+        <hr>
+      <button class="btn btn-outline-danger btn-block" (click)="onClickUnprocessedPurchaseButton()">
+        <fa-icon icon="shopping-cart"></fa-icon>
+        Необработанные
+      </button>
+      <button class="btn btn-outline-success btn-block" (click)="onClickPurchaseButton()">
+        <fa-icon icon="shopping-cart"></fa-icon>
+        Обработанные
+      </button>
     <hr />
     <form [formGroup]="catalogForm" (ngSubmit)="onAdd()">
       <div class="form-group">
@@ -79,7 +87,7 @@
   </div>
 </div>
 
-<app-modal size="lg" header="Покупки пользователей">
+<app-modal size="xl" header="Покупки пользователей">
   <lancet-table
     [data]="purchaseTableData$ | async"
     [startIndex]="startIndex"

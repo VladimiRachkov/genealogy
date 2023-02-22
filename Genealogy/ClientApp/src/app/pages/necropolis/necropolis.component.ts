@@ -50,8 +50,7 @@ export class NecropolisComponent implements OnInit {
 
     if (this.hasAuth) {
       this.store.dispatch(new FetchActiveSubscribe()).pipe(
-        tap(() => this.hasSubscription = true),
-        //tap(() => this.hasSubscription = this.store.selectSnapshot(MainState.hasSubscription)),
+        tap(() => this.hasSubscription = this.store.selectSnapshot(MainState.hasSubscription)),
         switchMap(() =>
           iif(
             () => this.hasSubscription,

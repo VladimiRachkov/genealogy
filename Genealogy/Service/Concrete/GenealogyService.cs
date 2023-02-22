@@ -18,7 +18,7 @@ namespace Genealogy.Service.Concrete
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHostingEnvironment _appEnvironment;
 
-        public GenealogyService(IUnitOfWork unitOfWork, IConfiguration configuration, IMapper mapper, ILogger<IGenealogyService> logger, IHttpContextAccessor httpContextAccessor, IHostingEnvironment appEnvironment)
+        public GenealogyService(IUnitOfWork unitOfWork, IConfiguration configuration, IMapper mapper, ILogger<GenealogyService> logger, IHttpContextAccessor httpContextAccessor, IHostingEnvironment appEnvironment)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Genealogy.Models;
 using System.Threading.Tasks;
 using Genealogy.Service.Helpers;
+using System;
 
 namespace Genealogy.Controllers
 {
@@ -30,6 +31,23 @@ namespace Genealogy.Controllers
             try
             {
                 result = _genealogyService.ActivatePurchase(filter.Id.Value);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete("{id:Guid}")]
+        [Authorize(Roles = "Администратор")]
+        public IActionResult RemovePurchase(Guid id)
+        {
+            BusinessObjectOutDto result = null;
+
+            try
+            {
+                result = _genealogyService.RemoveBusinessObject(id);
             }
             catch (AppException ex)
             {

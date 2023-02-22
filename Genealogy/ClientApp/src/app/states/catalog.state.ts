@@ -5,6 +5,7 @@ import {
   FetchCatalogList,
   FetchPurchaseList,
   GetCatalogItemsCount,
+  RemovePurchase,
   UpdateCatalogItem,
 } from '@actions';
 import { HttpParams } from '@angular/common/http';
@@ -98,7 +99,7 @@ export class CatalogState {
     return this.apiService.post('purchase', filter);
   }
 
-  @Action(ActivatePurchase)
+  @Action(RemovePurchase)
   removePurchase(ctx: StateContext<CatalogStateModel>, { payload: id }) {
     return this.apiService.delete('purchase', id);
   }

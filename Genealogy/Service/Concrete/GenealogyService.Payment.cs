@@ -83,7 +83,7 @@ namespace Genealogy.Service.Concrete
             return result;
         }
 
-        public BusinessObjectOutDto ConfirmPurchase(Payment payment)
+        public BusinessObjectOutDto ConfirmPurchaseByPayment(Payment payment)
         {
             Guid purchaseId;
             BusinessObjectOutDto result = null;
@@ -98,7 +98,7 @@ namespace Genealogy.Service.Concrete
                     payment.Metadata.TryGetValue("purchaseId", out value);
                     purchaseId = Guid.Parse(value);
 
-                    var confirmedPurchase = confirmPurchase(purchaseId);
+                    var confirmedPurchase = СonfirmPurchase(purchaseId);
 
                     result = _mapper.Map<BusinessObjectOutDto>(confirmedPurchase);
                 }
@@ -124,7 +124,7 @@ namespace Genealogy.Service.Concrete
             return result;
         }
 
-        private BusinessObject confirmPurchase(Guid purchaseId)
+        public BusinessObject СonfirmPurchase(Guid purchaseId)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace Genealogy.Service.Concrete
                     var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
                     purchaseProps.status = PurchaseStatus.Succeeded;
-
+                    purchase.IsRemoved = true;
                     purchase.Data = JsonConvert.SerializeObject(purchaseProps);
 
                     result = UpdateBusinessObject(purchase);

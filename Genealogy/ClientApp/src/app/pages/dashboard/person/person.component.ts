@@ -26,7 +26,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   counties: Array<{ id: string; name: string }>;
   filter: PersonFilter = {};
 
-  selectedCountyId: string?
+  selectedCountyId?: string
 
   @Select(CemeteryState.cemeteryList) cemeteryList$: Observable<Array<Cemetery>>;
 
@@ -153,6 +153,4 @@ export class PersonComponent implements OnInit, OnDestroy {
       this.cemeteries = cemeteryList.map(({ id, name }) => ({ id, name }));
     });
   }
-
-
 }

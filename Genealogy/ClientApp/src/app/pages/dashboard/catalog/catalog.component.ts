@@ -16,7 +16,7 @@ import { Select, Store } from '@ngxs/store';
 import { CatalogState } from '@states';
 import { METATYPE_ID } from 'app/enums/metatype';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Pick } from 'app/helpers/json-parse';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { ModalComponent } from '@shared';
@@ -58,6 +58,8 @@ export class CatalogComponent implements OnInit, OnDestroy {
   pageIndex: number = 0;
   startIndex: number = 0;
 
+  showUnprocessedPurchases: boolean = false;
+
   constructor(private store: Store, private datePipe: DatePipe) {}
 
   ngOnInit() {
@@ -80,9 +82,6 @@ export class CatalogComponent implements OnInit, OnDestroy {
       map<BusinessObject[], Table.Item[]>(list =>
         list.map(({ id, title, data, isRemoved, startDate }) => {
           const props = this.parsePurchaseDataJSON(data);
-          if(props.status === 'Succeeded') {
-            return null;
-          }
 
           const date = this.datePipe.transform(startDate.toString(), 'dd.MM.yyyy');
           const time = this.datePipe.transform(startDate.toString(), 'HH:mm');
@@ -92,7 +91,7 @@ export class CatalogComponent implements OnInit, OnDestroy {
       ),
       map<Table.Item[], Table.Data>(items => ({
         fields: ['Название', 'Покупатель', 'Почта', 'Дата', 'Время'],
-        items,
+        items
       }))
     );
 
@@ -156,20 +155,34 @@ export class CatalogComponent implements OnInit, OnDestroy {
   }
 
   onClickPurchaseButton() {
-    this.fetchPurchaseList().subscribe(() => this.purchaseModal.open());
+    this.showUnprocessedPurchases = false;
+    this.showPurchases();
+  }
+
+  onClickUnprocessedPurchaseButton() {
+    this.showUnprocessedPurchases = true;
+    this.showPurchases();
+  }
+
+  private showPurchases() {
+    const isRemoved = !this.showUnprocessedPurchases
+    this.fetchPurchaseList(isRemoved).subscribe(() => this.purchaseModal.open());
   }
 
   onActivatePurchase(id: string) {
+    const isRemoved = !this.showUnprocessedPurchases;
     const params: BusinessObjectFilter = { id };
-    this.store.dispatch(new ActivatePurchase(params));
+    this.store.dispatch(new ActivatePurchase(params)).pipe(switchMap(() => this.fetchPurchaseList(isRemoved))).subscribe();
   }
 
   onRemovePurchase(id: string) {
-    this.store.dispatch(new RemovePurchase(id));
+    const isRemoved = !this.showUnprocessedPurchases
+    this.store.dispatch(new RemovePurchase(id)).pipe(switchMap(() => this.fetchPurchaseList(isRemoved))).subscribe();
   }
 
-  private fetchPurchaseList(): Observable<void> {
-    const params: BusinessObjectFilter = { metatypeId: METATYPE_ID.PURCHASE };
+  private fetchPurchaseList(isRemoved: boolean): Observable<void> {
+    console.log(isRemoved)
+    const params: BusinessObjectFilter = { metatypeId: METATYPE_ID.PURCHASE, isRemoved: isRemoved };
     return this.store.dispatch(new FetchPurchaseList(params));
   }
 

@@ -12,15 +12,22 @@ namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
-        public bool ProductAction(Guid productId, Guid userId)
+        public async Task<bool> ProductAction(Guid productId, Guid userId)
         {
             var product = GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
             var bookProps = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
 
             if (!String.IsNullOrEmpty(bookProps.message))
             {
-                var user = GetUserById(userId);
-                //SendEmailToUser(product.Title, user.Email, bookProps.message);
+                try {
+                    var user = GetUserById(userId);
+                    await SendEmailToUser(product.Title, user.Email, bookProps.message);
+                    return true;
+                }
+                catch(ApplicationException e) {
+                    Console.WriteLine(e.ToString());
+                    //_logger.LogError();
+                }
             }
 
             if (productId == ProductData.Subscribe.Id)
@@ -46,8 +53,8 @@ namespace Genealogy.Service.Concrete
                 }
                 catch (ApplicationException e)
                 {
+                    Console.WriteLine(e.ToString());
                     //_logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
-                    //throw e;
                 }
             }
             return false;
@@ -60,12 +67,21 @@ namespace Genealogy.Service.Concrete
             var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
             var productId = Guid.Parse(purchaseProps.productId);
 
-            if (ProductAction(productId, purchase.UserId) && purchase != null)
+            if ( purchase != null)
             {
-                purchaseProps.status = PurchaseStatus.Succeeded;
-                purchase.Data = JsonConvert.SerializeObject(purchaseProps);
-                result = UpdateBusinessObject(purchase);
-
+                try {
+                    await ProductAction(productId, purchase.UserId);
+                    // purchaseProps.status = PurchaseStatus.Succeeded;
+                    // purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+                    // purchase.IsRemoved = true;
+                    // result = UpdateBusinessObject(purchase);
+                    СonfirmPurchase(purchase.Id);
+                }
+                catch (ApplicationException e)
+                {
+                    Console.WriteLine(e.ToString());
+                    //_logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
+                }
             }
 
             return result;
