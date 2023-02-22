@@ -6,7 +6,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-12" [innerHTML]="page?.content"></div>
+    <div class="col-9" [innerHTML]="page?.content"></div>
+    <div class="col-3">
+      <img src="./../../../assets/pic.jpeg" alt="Фотография">
+    </div>
   </div>
   <div class="col-12 text-center pb-4">
     <button class="btn btn-outline-secondary text-uppercase" (click)="onOrderButtonClick()">Заказать генеалогическое исследование</button>
