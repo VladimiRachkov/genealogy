@@ -90,6 +90,7 @@ public class PurchaseManageService : BackgroundService
                         case PaymentStatus.Succeeded:
                             purchaseProps.status = PurchaseStatus.Succeeded;
                             purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+                            purchase.IsRemoved = true;
                             await updatePurchase(purchase, "Payment successed.");
                             await productAction(Guid.Parse(purchaseProps.productId), purchase.UserId);
                             break;
@@ -156,7 +157,7 @@ public class PurchaseManageService : BackgroundService
                 await _service.SendEmailToUser(product.Title, user.Email, bookProps.message);
             }
             catch(ApplicationException e) {
-                _logger.LogError(e.ToString());
+                _logger.LogError(e.ToString()); 
              }
         }
 

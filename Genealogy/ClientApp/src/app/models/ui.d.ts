@@ -10,5 +10,11 @@ export declare namespace Table {
     isRemoved?: boolean;
     status?: string;
     childs?: Item[];
+    action?: Action;
+  }
+
+  export interface Action {
+    func: () => boolean,
+    text: string
   }
 }
