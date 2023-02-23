@@ -30,7 +30,7 @@ namespace Genealogy.Service.Concrete
                 (filter.Name != null ? x.Name == filter.Name : true) &&
                 (filter.MetatypeId != null ? x.Metatype.Id == filter.MetatypeId : true) &&
                 (filter.UserId != null ? x.UserId == filter.UserId : true) &&
-                (filter.MetatypeId == MetatypeData.Purchase.Id ? x.IsRemoved == filter.IsRemoved : true),
+                (filter.IsRemoved != null ? x.IsRemoved == filter.IsRemoved : true),
             x =>
                 x.OrderBy(item => item.Name).ThenBy(item => item.Id), "Metatype");
 
