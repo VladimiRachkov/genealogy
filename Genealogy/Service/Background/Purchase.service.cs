@@ -44,31 +44,32 @@ public class PurchaseManageService : BackgroundService
 
             BusinessObjectFilter filter = new BusinessObjectFilter()
             {
-                MetatypeId = MetatypeData.Purchase.Id
+                MetatypeId = MetatypeData.Purchase.Id,
+                IsRemoved = false
             };
 
-            var purchases = _service.GetBusinessObjects(filter).ToList();
-            foreach (var purchase in purchases)
-            {
-
             try {
-                var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
+                var purchases = _service.GetBusinessObjects(filter).ToList();
+                foreach (var purchase in purchases)
+                {
+                    _logger.LogDebug($"{purchase.Id} {purchase.Title}");
 
-                if (purchaseProps.status == PurchaseStatus.Succeeded) {
-                    continue;
-                } 
+                    var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
 
-                if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty || DateTime.Now > purchase.StartDate.AddHours(1)) {
-                    //_service.RemoveBusinessObject(purchase.Id);
-                    continue;
-                }
+                    if (purchaseProps.status == PurchaseStatus.Succeeded) {
+                        continue;
+                    } 
 
-                var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
-                var shopId = settings.GetValue<string>("shopId");
-                var secretKey = settings.GetValue<string>("secretKey");
-                var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
-                var asyncClient = client.MakeAsync();
+                    if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty || DateTime.Now > purchase.StartDate.AddHours(1)) {
+                        _service.RemoveBusinessObject(purchase.Id);
+                        continue;
+                    }
 
+                    var settings = _configuration.GetSection("AppSettings").GetSection("Yookassa");
+                    var shopId = settings.GetValue<string>("shopId");
+                    var secretKey = settings.GetValue<string>("secretKey");
+                    var client = new Yandex.Checkout.V3.Client(shopId, secretKey);
+                    var asyncClient = client.MakeAsync();
 
                     var response = await asyncClient.GetPaymentAsync(purchaseProps.paymentId);
                     switch (purchaseProps.status)
@@ -100,14 +101,12 @@ public class PurchaseManageService : BackgroundService
                             break;
                     }
                 }
-                catch (ApplicationException e)
-                {
-                    _logger.LogError(e.ToString());
-                    //throw e;
-                }
-
-                _logger.LogDebug($"{purchase.Id} {purchase.Title}");
-            };
+            }
+            catch (ApplicationException e)
+            {
+                _logger.LogError(e.ToString());
+                //throw e;
+            }
 
             await Task.Delay(60000, stoppingToken);
         }
@@ -147,47 +146,40 @@ public class PurchaseManageService : BackgroundService
 
     private async Task<int> productAction(Guid productId, Guid userId)
     {
-        var product = _service.GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
-        var bookProps = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
+        try {
+            var product = _service.GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
+            var bookProps = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
 
-        if (!String.IsNullOrEmpty(bookProps.message))
-        {
-            var user = _service.GetUserById(userId);
-            try {
+            if (!String.IsNullOrEmpty(bookProps.message))
+            {
+                var user = _service.GetUserById(userId);
                 await _service.SendEmailToUser(product.Title, user.Email, bookProps.message);
             }
-            catch(ApplicationException e) {
-                _logger.LogError(e.ToString()); 
-             }
+
+            if (productId == ProductData.Subscribe.Id)
+            {
+                var subscribeMetatype = _genealogyContext.Metatypes.Where(metatype => metatype.Id == MetatypeData.Subscribe.Id).FirstOrDefault();
+                var subscribe = new BusinessObject()
+                {
+                    Id = Guid.NewGuid(),
+                    StartDate = DateTime.Now,
+                    FinishDate = DateTime.Now.AddMonths(1),
+                    UserId = userId,
+                    MetatypeId = ProductData.Subscribe.Id,
+                    Metatype = subscribeMetatype,
+                    IsRemoved = false,
+                    Name = "SUBSCRIBLE",
+                    Title = "Подписка"
+                };
+            }
         }
 
-        if (productId == ProductData.Subscribe.Id)
+        catch (ApplicationException e)
         {
-            var subscribeMetatype = _genealogyContext.Metatypes.Where(metatype => metatype.Id == MetatypeData.Subscribe.Id).FirstOrDefault();
-            var subscribe = new BusinessObject()
-            {
-                Id = Guid.NewGuid(),
-                StartDate = DateTime.Now,
-                FinishDate = DateTime.Now.AddMonths(1),
-                UserId = userId,
-                MetatypeId = ProductData.Subscribe.Id,
-                Metatype = subscribeMetatype,
-                IsRemoved = false,
-                Name = "SUBSCRIBLE",
-                Title = "Подписка"
-            };
-
-            try
-            {
-                _genealogyContext.BusinessObjects.Add(subscribe);
-                return await _genealogyContext.SaveChangesAsync();
-            }
-            catch (ApplicationException e)
-            {
-                _logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
-                //throw e;
-            }
+            _logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
+            //throw e;
         }
+        
         return 0;
     }
 }
