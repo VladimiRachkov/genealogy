@@ -1,23 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Cemetery, CemeteryFilter, Paginator, Person, PersonFilter, Table } from '@models';
-import { ClearPersonList, FetchActiveSubscribe, FetchCemeteryList, FetchCountyList, FetchPersonList, GetCemeteries, GetCemetery } from '@actions';
+import { ClearPersonList, FetchActiveSubscribe, FetchCemeteryList, FetchCountyList, FetchPersonList, GetCemeteries, GetCemetery, GetPersonsCount } from '@actions';
 import { CemeteryState, CountyState, MainState, PersonState } from '@states';
 import { isNil, isEmpty, difference } from 'lodash';
 import { NotifierService } from 'angular-notifier';
 import { NOTIFICATIONS } from '@enums';
 import { FeedbackComponent } from '@shared';
 import { switchMap, switchMapTo, tap } from 'rxjs/operators';
-import { defer, iif, of } from 'rxjs';
+import { defer, iif, Observable, of } from 'rxjs';
+
+declare var Odometer: any;
 
 @Component({
   selector: 'app-necropolis',
   templateUrl: './necropolis.component.html',
   styleUrls: ['./necropolis.component.scss'],
 })
-export class NecropolisComponent implements OnInit {
+export class NecropolisComponent implements OnInit, AfterViewInit {
+
   @ViewChild(FeedbackComponent, { static: false }) feedbackModal: FeedbackComponent;
+  @ViewChild('odometer', { static: false }) odometerElement: ElementRef;
 
   personList: Array<Person> = null;
   searchForm: FormGroup;
@@ -36,6 +40,8 @@ export class NecropolisComponent implements OnInit {
   cemeteries: Array<{ id: string; name: string }>;
 
   countyId?: string = null
+
+  odometer: any
 
   constructor(private store: Store, private notifierService: NotifierService) {}
 
@@ -64,7 +70,23 @@ export class NecropolisComponent implements OnInit {
       );
     }
 
-    this.store.dispatch(new ClearPersonList());
+    this.store.dispatch(new GetPersonsCount()).subscribe(() => {
+      let count = this.store.selectSnapshot(PersonState.allPersonsCount)
+      this.odometer.update(count)
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.odometer = new Odometer({
+      el: this.odometerElement.nativeElement,
+      value: 0,
+    
+      format: '(,ddd)',
+      theme: 'train-station',
+      duration: 1000,
+      animation: 'count'
+    });
+    this.odometer.render()
   }
 
   onSearch() {

@@ -34,6 +34,11 @@ export class PersonState {
     return personList as Array<Person>;
   }
 
+  @Selector()
+  static allPersonsCount({ count }: PersonStateModel): number {
+    return count;
+  }
+
   @Action(FetchPersonList)
   fetchPersonList(ctx: StateContext<PersonStateModel>, { payload: filter }): Observable<Array<PersonDto>> {
     const params: HttpParams = filter;

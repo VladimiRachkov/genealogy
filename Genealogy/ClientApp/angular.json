@@ -28,7 +28,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/odometer/themes/odometer-theme-train-station.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -37,6 +38,7 @@
             },
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/odometer/odometer.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
@@ -97,11 +99,13 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/odometer/themes/odometer-theme-train-station.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/odometer/odometer.js"
             ]
           }
         },
