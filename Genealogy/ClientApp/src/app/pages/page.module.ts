@@ -15,11 +15,10 @@ import { PaymentComponent } from './payment/payment.component';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CustomSelectService } from 'app/core/services/custom-select.service';
-import { JSBAngularFlipClockModule } from 'jsb-angular-flip-clock'
 import { CountUpDirective } from 'app/directives/count-up.directive';
 
 @NgModule({
-  imports: [CommonModule, SharedModule, RouterModule, MaterialModule, FormsModule, NgSelectModule, JSBAngularFlipClockModule],
+  imports: [CommonModule, SharedModule, RouterModule, MaterialModule, FormsModule, NgSelectModule],
   exports: [StartComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, RegisterComponent],
   declarations: [
     StartComponent,

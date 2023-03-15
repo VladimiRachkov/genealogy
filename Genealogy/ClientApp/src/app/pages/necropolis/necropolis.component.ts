@@ -43,6 +43,8 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
 
   odometer: any
 
+  defaultPersonCount = 100000
+
   constructor(private store: Store, private notifierService: NotifierService) {}
 
   ngOnInit() {
@@ -71,8 +73,8 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
     }
 
     this.store.dispatch(new GetPersonsCount()).subscribe(() => {
-      let count = this.store.selectSnapshot(PersonState.allPersonsCount)
-      this.odometer.update(count)
+      const count = this.store.selectSnapshot(PersonState.allPersonsCount)
+      this.odometer.update(count == 0 ? this.defaultPersonCount : count)
     });
   }
 
@@ -80,7 +82,6 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
     this.odometer = new Odometer({
       el: this.odometerElement.nativeElement,
       value: 0,
-    
       format: '(,ddd)',
       theme: 'train-station',
       duration: 1000,
