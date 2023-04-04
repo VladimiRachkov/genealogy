@@ -117,16 +117,21 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.store.dispatch(new FetchPersonList(this.filter)).subscribe(() => {
       this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList) || [];
 
-      const items = this.personList.map<Table.Item>(item => ({
-        id: item.id,
-        values: [
-          `${item.lastname} ${item.firstname} ${item.patronymic}`,
-          item.startDate,
-          item.finishDate,
-          item.cemetery ? item.cemetery.name : null,
-        ],
-        isRemoved: item.isRemoved,
-      }));
+      const items = this.personList.map<Table.Item>(person => {
+        const firstname = !isEmpty(person.firstname) ? person.firstname : '';
+        const lastname = !isEmpty(person.lastname) ? person.lastname : '';
+        const patronymic = !isEmpty(person.patronymic) ? person.patronymic : '';
+        return {
+          id: person.id,
+          values: [
+            `${lastname} ${firstname} ${patronymic}`,
+            person.startDate,
+            person.finishDate,
+            person.cemetery ? person.cemetery.name : null,
+          ],
+          isRemoved: person.isRemoved,
+        }
+      })
 
       this.tableData = {
         fields: ['ФИО', 'Дата рождения', 'Дата смерти', 'Место захоронения'],

@@ -157,7 +157,7 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
         const patronymic = !isEmpty(person.patronymic) ? person.patronymic : '';
         return {
           id: person.id,
-          values: [`${lastname} ${firstname}  ${patronymic}`, person.startDate, person.finishDate],
+          values: [`${lastname} ${firstname} ${patronymic}`, person.startDate, person.finishDate],
           isRemoved: person.isRemoved,
           childs: this.convertToItems(childs, true),
         };
