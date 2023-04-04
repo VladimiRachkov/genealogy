@@ -99,9 +99,9 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
   }
 
   onChangeCounty() {
-    console.log(this.searchForm)
     this.countyId = this.searchForm.value['countyId']
     this.getCemeteries()
+    this.searchForm.patchValue({ 'cemeteryId': null });
   }
 
   private search() {
