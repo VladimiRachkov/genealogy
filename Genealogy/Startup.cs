@@ -53,6 +53,7 @@ namespace SpaPrerendering
 
             services.AddHostedService<PurchaseManageService>();
             // Auto Mapper Configurations
+            
             var mappingConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<AutoMapperProfile>();
