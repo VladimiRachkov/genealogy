@@ -5,8 +5,14 @@
       Для получения дополнительной информации вы можете напрямую связаться со мной: <br />
       <a href="mailto:milaashk@mail.ru">milaashk@mail.ru</a>
     </div>
-    <p class="lead">«Некрополь Калужских погостов» - проект, которому я посвятила 2 года, собрал уже более 50000 имён.</p>
+    <div class="col-12">
+      <span class="lead text-uppercase">Количество записей в некрополе</span>
+    </div>
+    <div class="col-12 mt-2 mb-4 odometer-container">
+      <div #odometer></div>
+    </div>
   </div>
+  
   <div class="col-12" *ngIf="tableData == null">
     <p class="pl-4 pr-4 ml-4 mr-4">
       Теперь собранные мной данные доступны онлайн. Сразу же после регистрации и оплаты абонентской платы (250 рублей) Вы получаете доступ к

@@ -100,7 +100,8 @@ namespace Genealogy.Controllers
             }
             return new NoContentResult();
         }
-
+        
+        [AllowAnonymous]
         [HttpGet("count")]
         public IActionResult GetCount()
         {
