@@ -10,7 +10,7 @@ namespace Genealogy.Migrations
             migrationBuilder.InsertData(
                 table: "Metatypes",
                 columns: new[] { "Id", "Name", "Title" },
-                values: new object[] { Logs.LastLog.Id, Logs.LastLog.Name, "Покупка" });
+                values: new object[] { Logs.LastLog.Id, Logs.LastLog.Name, "" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

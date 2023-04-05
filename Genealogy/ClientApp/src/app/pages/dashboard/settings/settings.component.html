@@ -35,7 +35,7 @@
       Логи
     </h5>
     <hr />
-    <div *ngIf="lastLog$ | async as lastLog">[{{ lastLog.startDate | date: 'dd-MM-yy hh:mm:ss' }}] - {{ lastLog.title }}</div>
+    <div *ngIf="lastLog$ | async as lastLog">[{{ lastLog.startDate | date: 'dd-MM-yy HH:mm:ss' }}] - {{ lastLog.title }}</div>
     <hr />
   </div>
 </div>
