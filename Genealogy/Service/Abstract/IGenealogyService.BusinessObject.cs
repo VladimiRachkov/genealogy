@@ -8,6 +8,7 @@ namespace Genealogy.Service.Astract
     {
         List<BusinessObjectOutDto> GetBusinessObjectsDto(BusinessObjectFilter filter);
         IEnumerable<BusinessObject> GetBusinessObjects(BusinessObjectFilter filter);
+        BusinessObject CreateBusinessObject(BusinessObject bo);
         BusinessObjectOutDto CreateBusinessObjectsFromDto(BusinessObjectInDto boDto);
         BusinessObjectOutDto UpdateBusinessObjectDto(BusinessObjectInDto boDto);
         BusinessObject UpdateBusinessObject(BusinessObject changedBO);

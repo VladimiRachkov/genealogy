@@ -154,8 +154,6 @@ namespace Genealogy.Service.Concrete
         {
             var filter = new BusinessObjectFilter() { MetatypeId = MetatypeData.Purchase.Id };
             var purchases = GetBusinessObjectsDto(filter);
-
-
         }
     }
 

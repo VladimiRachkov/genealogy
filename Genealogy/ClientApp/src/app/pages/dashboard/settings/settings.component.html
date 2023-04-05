@@ -22,7 +22,6 @@
       </div>
       <input type="hidden" formControlName="id" />
       <hr />
-      <hr />
       <div class="btn-group" role="group" aria-label="Toolbar">
         <button type="submit" class="btn btn-outline-primary" [disabled]="settingsForm.invalid">Добавить</button>
         <button type="button" class="btn btn-outline-primary" [disabled]="selectedSetting === null" (click)="onUpdate()">
@@ -30,5 +29,13 @@
         </button>
       </div>
     </form>
+  </div>
+  <div class="col-sm-12">
+    <h5>
+      Логи
+    </h5>
+    <hr />
+    <div *ngIf="lastLog$ | async as lastLog">[{{ lastLog.startDate | date: 'dd-MM-yy hh:mm:ss' }}] - {{ lastLog.title }}</div>
+    <hr />
   </div>
 </div>

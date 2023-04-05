@@ -36,14 +36,17 @@ public class PurchaseManageService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        stoppingToken.Register(() =>
-            _logger.LogDebug($"[{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}] PurchaseManageService background task is stopping."));
+        stoppingToken.Register(() => {
+            _logger.LogDebug($"[{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}] PurchaseManageService background task is stopping.");
+            updateLastLog("PurchaseManageService background task is stopping.");
+        });
 
         try {
             while (!stoppingToken.IsCancellationRequested)
-            {
-                _logger.LogDebug($"[{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}] PurchaseManageService task doing background work.");
+            {   updateLastLog("PurchaseManageService task doing background work.");
                 try {
+                    _logger.LogDebug($"[{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}] PurchaseManageService task doing background work.");
+
                     BusinessObjectFilter filter = new BusinessObjectFilter()
                     {
                         MetatypeId = MetatypeData.Purchase.Id,
@@ -120,6 +123,7 @@ public class PurchaseManageService : BackgroundService
         }
 
         _logger.LogDebug($"PurchaseManageService background task is stopping.");
+        updateLastLog("PurchaseManageService background task is stopping.");
     }
 
     private async Task<int> removePurchase(BusinessObject purchase, string reason)
@@ -189,5 +193,42 @@ public class PurchaseManageService : BackgroundService
         }
         
         return 0;
+    }
+
+    private void updateLastLog(String message) {
+        try {
+            var lastLog = _service.GetBusinessObjects(new BusinessObjectFilter() { MetatypeId = Logs.LastLog.Id }).FirstOrDefault();
+
+            if (lastLog == null) {
+                var lastLogMetatype = _genealogyContext.Metatypes.Where(metatype => metatype.Id == Logs.LastLog.Id).FirstOrDefault();
+
+                if (lastLogMetatype == null) {
+                    return;
+                }
+
+                lastLog = new BusinessObject() {
+                    Id = Guid.NewGuid(),
+                    StartDate = DateTime.Now,
+                    FinishDate = DateTime.Now,
+                    UserId = Users.Admin.Id,
+                    Metatype = lastLogMetatype,
+                    MetatypeId = Logs.LastLog.Id,
+                    IsRemoved = false,
+                    Name = Logs.LastLog.Name,
+                    Title = message
+                };
+
+                _genealogyContext.BusinessObjects.Add(lastLog);
+                _genealogyContext.SaveChangesAsync();
+            } else {
+                lastLog.StartDate = DateTime.Now;
+                lastLog.FinishDate = DateTime.Now;
+                lastLog.Title = message;
+                _service.UpdateBusinessObject(lastLog);
+            }
+        }
+        catch (Exception e) {
+            _logger.LogError($"updateLastLog. Reason: {e.ToString()}");
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { CreateSetting, FetchSetting, FetchSettingList, GetSettingsCount, UpdateSetting } from '@actions';
+import { CreateSetting, FetchSetting, FetchSettingList, GetLastLog, GetSettingsCount, UpdateSetting } from '@actions';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -7,7 +7,6 @@ import { BusinessObject, BusinessObjectFilter, BusinessObjectOutDto, Paginator, 
 import { Select, Store } from '@ngxs/store';
 import { ModalComponent } from '@shared';
 import { SettingState } from '@states';
-import { MailState } from 'app/states/mail.state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -28,12 +27,17 @@ export class SettingsComponent implements OnInit {
   @Select(SettingState.list)
   list$: Observable<BusinessObject[]>;
 
+  @Select(SettingState.lastLog)
+  lastLog$: Observable<BusinessObject>;
+
   tableData$: Observable<Table.Data>;
 
   settingsForm: FormGroup;
 
   selectedId: string;
   selectedSetting: BusinessObject;
+
+
 
   constructor(private store: Store) {}
 
@@ -53,6 +57,10 @@ export class SettingsComponent implements OnInit {
     );
 
     this.fetchList();
+    this.store.dispatch(new GetLastLog()).subscribe(() => {
+      // this.lastLog = this.store.selectSnapshot(SettingState.lastLog)
+      // console.log("TEST", this.lastLog)
+    });
   }
 
   onAdd() {
@@ -87,7 +95,6 @@ export class SettingsComponent implements OnInit {
 
   private updateItem(body: BusinessObjectOutDto) {
     this.store.dispatch(new UpdateSetting(body)).subscribe(() => this.fetchList());
-    
   }
 
   private fetchList() {

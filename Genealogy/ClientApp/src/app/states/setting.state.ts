@@ -2,6 +2,7 @@ import {
   CreateSetting,
   FetchSetting,
   FetchSettingList,
+  GetLastLog,
   GetSettingsCount,
   UpdateSetting,
 } from '@actions';
@@ -20,6 +21,7 @@ export interface SettingStateModel {
   item: BusinessObjectInDto;
   list: BusinessObjectInDto[];
   count: number;
+  lastLog: BusinessObjectInDto;
 }
 
 @State<SettingStateModel>({
@@ -28,6 +30,7 @@ export interface SettingStateModel {
     item: null,
     list: [],
     count: 0,
+    lastLog: null
   },
 })
 @Injectable()
@@ -47,6 +50,11 @@ export class SettingState {
   @Selector()
   static count({ count }: SettingStateModel): number {
     return count;
+  }
+
+  @Selector()
+  static lastLog({ lastLog }: SettingStateModel): BusinessObject {
+    return lastLog;
   }
 
   @Action(FetchSettingList)
@@ -78,5 +86,12 @@ export class SettingState {
   updateCatalogItem(ctx: StateContext<SettingStateModel>, { payload }) {
     const body: BusinessObjectOutDto = { ...payload, metatypeId };
     return this.boService.UpdateBusinessObject(body).pipe(tap(item => ctx.patchState({ item })));
+  }
+
+  @Action(GetLastLog)
+  getLastLog(ctx: StateContext<SettingStateModel>) {
+    const filter: any = { metatypeId: METATYPE_ID.LAST_LOG };
+    const params: HttpParams = filter;
+    return this.boService.FetchBusinessObject(params).pipe(tap(lastLog => ctx.patchState({ lastLog: first(lastLog) })));
   }
 }

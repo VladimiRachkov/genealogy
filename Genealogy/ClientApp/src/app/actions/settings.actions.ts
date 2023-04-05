@@ -22,3 +22,7 @@ export class UpdateSetting {
   static readonly type = '[Settings] Update Setting';
   constructor(readonly payload: BusinessObjectOutDto) {}
 }
+
+export class GetLastLog {
+  static readonly type = '[Settings] Get Last Log';
+}

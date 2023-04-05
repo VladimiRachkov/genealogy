@@ -42,6 +42,12 @@ namespace Genealogy.Service.Concrete
             return businessObjects;
         }
 
+        public BusinessObject CreateBusinessObject(BusinessObject bo)
+        {
+            var result = createBusinessObject(bo);
+            return result;
+        }
+
         public BusinessObjectOutDto CreateBusinessObjectsFromDto(BusinessObjectInDto boDto)
         {
             var bo = _mapper.Map<BusinessObject>(boDto);
