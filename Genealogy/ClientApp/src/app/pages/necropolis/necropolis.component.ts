@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { Select, Store } from '@ngxs/store';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Cemetery, CemeteryFilter, Paginator, Person, PersonFilter, Table } from '@models';
-import { ClearPersonList, FetchActiveSubscribe, FetchCemeteryList, FetchCountyList, FetchPersonList, GetCemeteries, GetCemetery, GetPersonsCount } from '@actions';
+import { ClearPersonList, FetchActiveSubscription, FetchCemeteryList, FetchCountyList, FetchPersonList, GetCemeteries, GetCemetery, GetPersonsCount } from '@actions';
 import { CemeteryState, CountyState, MainState, PersonState } from '@states';
 import { isNil, isEmpty, difference } from 'lodash';
 import { NotifierService } from 'angular-notifier';
@@ -57,7 +57,7 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
     });
 
     if (this.hasAuth) {
-      this.store.dispatch(new FetchActiveSubscribe()).pipe(
+      this.store.dispatch(new FetchActiveSubscription()).pipe(
         tap(() => this.hasSubscription = this.store.selectSnapshot(MainState.hasSubscription)),
         switchMap(() =>
           iif(

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Selector, StateContext, Action } from '@ngxs/store';
-import { FetchActiveSubscribe, FetchPurchases, SetAdminMode, SetAuthorization } from '@actions';
+import { FetchActiveSubscription, FetchBook, FetchPurchases, SetAdminMode, SetAuthorization } from '@actions';
 import { BusinessObject, BusinessObjectFilter, BusinessObjectInDto } from '@models';
 import { ApiService, AuthenticationService } from '@core';
 import { tap } from 'rxjs/operators';
@@ -14,11 +14,12 @@ export interface MainStateModel {
   hasAuth: boolean;
   subscription: BusinessObject;
   purchases: BusinessObject[];
+  book: BusinessObject;
 }
 
 @State<MainStateModel>({
   name: 'main',
-  defaults: { adminMode: false, hasAuth: false, subscription: null, purchases: null },
+  defaults: { adminMode: false, hasAuth: false, subscription: null, purchases: null, book: null },
 })
 @Injectable()
 export class MainState {
@@ -49,6 +50,11 @@ export class MainState {
     return purchases;
   }
 
+  @Selector()
+  static book({ book }: MainStateModel): BusinessObject {
+    return book;
+  }
+
   @Action(SetAdminMode)
   setAdminMode(ctx: StateContext<MainStateModel>, { payload: adminMode }: SetAdminMode) {
     ctx.patchState({ adminMode });
@@ -59,8 +65,8 @@ export class MainState {
     ctx.patchState({ hasAuth });
   }
 
-  @Action(FetchActiveSubscribe)
-  fetchActiveSubscribe(ctx: StateContext<MainStateModel>): FetchActiveSubscribe {
+  @Action(FetchActiveSubscription)
+  fetchActiveSubscription(ctx: StateContext<MainStateModel>): FetchActiveSubscription {
     return this.apiService.get<BusinessObjectInDto>('subscription', null).pipe(tap(subscription => ctx.patchState({ subscription })));
   }
 
@@ -71,4 +77,13 @@ export class MainState {
     const params: HttpParams = filter as any;
     return this.boService.FetchBusinessObjectList(params).pipe(tap(purchases => ctx.patchState({ purchases })));
   }
+
+  @Action(FetchBook)
+  fetchBook(ctx: StateContext<MainStateModel>): FetchActiveSubscription {
+    const userId = this.authService.getUserId();
+    const filter: BusinessObjectFilter = { metatypeId: METATYPE_ID.BOOK, index: 0, step: 1, userId };
+    const params: HttpParams = filter as any;
+    return this.boService.FetchBusinessObjectList(params).pipe(tap(book => ctx.patchState({ book: book[0] })));
+  }
+
 }

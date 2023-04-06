@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Genealogy;
 using Genealogy.Models;
 using Genealogy.Data;
 using System.Linq;
@@ -97,7 +98,7 @@ public class PurchaseManageService : BackgroundService
                                 purchase.Data = JsonConvert.SerializeObject(purchaseProps);
                                 purchase.IsRemoved = true;
                                 await updatePurchase(purchase, "Payment successed.");
-                                await productAction(Guid.Parse(purchaseProps.productId), purchase.UserId);
+                                await _service.ProductAction(Guid.Parse(purchaseProps.productId), purchase.UserId);
                                 break;
 
                             case PaymentStatus.Canceled:
@@ -155,45 +156,59 @@ public class PurchaseManageService : BackgroundService
         return 0;
     }
 
-    private async Task<int> productAction(Guid productId, Guid userId)
-    {
-        try {
-            var product = _service.GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
-            var bookProps = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
+    //private async Task<int> productAction(Guid productId, Guid userId)
+    //{
+        // try {
+        //     var product = _service.GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
+        //     var props = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
+        //     Metatype metatype = null;
+        //     String name = "";
 
-            if (!String.IsNullOrEmpty(bookProps.message))
-            {
-                var user = _service.GetUserById(userId);
-                await _service.SendEmailToUser(product.Title, user.Email, bookProps.message);
-            }
+        //     if (productId == ProductData.Subscription.Id) {
+        //         metatype = _genealogyContext.Metatypes.Where(mt => mt.Id == MetatypeData.Subscription.Id).FirstOrDefault();
+        //         name = ProductData.Subscription.Name;
+        //     }
 
-            if (productId == ProductData.Subscribe.Id)
-            {
-                var subscribeMetatype = _genealogyContext.Metatypes.Where(metatype => metatype.Id == MetatypeData.Subscribe.Id).FirstOrDefault();
-                var subscribe = new BusinessObject()
-                {
-                    Id = Guid.NewGuid(),
-                    StartDate = DateTime.Now,
-                    FinishDate = DateTime.Now.AddMonths(1),
-                    UserId = userId,
-                    MetatypeId = ProductData.Subscribe.Id,
-                    Metatype = subscribeMetatype,
-                    IsRemoved = false,
-                    Name = "SUBSCRIBLE",
-                    Title = "Подписка"
-                };
-                _genealogyContext.BusinessObjects.Add(subscribe);
-                return await _genealogyContext.SaveChangesAsync();
-            }
-        }
+        //     if (productId == ProductData.Book.Id) {
+        //         metatype = _genealogyContext.Metatypes.Where(mt => mt.Id == MetatypeData.Book.Id).FirstOrDefault();
+        //         name = ProductData.Book.Name;
+        //     }
 
-        catch (Exception e)
-        {
-            _logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
-        }
+        //     if (metatype == null) {
+        //         return 0;
+        //     }
+
+        //     var bo = new BusinessObject()
+        //     {
+        //         Id = Guid.NewGuid(),
+        //         StartDate = DateTime.Now,
+        //         FinishDate = DateTime.Now.AddMonths(1),
+        //         UserId = userId,
+        //         MetatypeId = metatype.Id,
+        //         Metatype = metatype,
+        //         IsRemoved = false,
+        //         Name = name,
+        //         Title = "",
+        //         Data = props.message
+        //     };
+
+        //     _genealogyContext.BusinessObjects.Add(bo);
+        //     await _genealogyContext.SaveChangesAsync();
+
+        //     if (!String.IsNullOrEmpty(props.message))
+        //     {
+        //         var user = _service.GetUserById(userId);
+        //         await _service.SendEmailToUser(product.Title, user.Email, props.message);
+        //     }
+        // }
+
+        // catch (Exception e)
+        // {
+        //     _logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
+        // }
         
-        return 0;
-    }
+        // return 0;
+    //}
 
     private void updateLastLog(String message) {
         try {

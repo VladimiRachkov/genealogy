@@ -8,6 +8,6 @@ namespace Genealogy.Service.Astract
     partial interface IGenealogyService
     {
         Task<bool> ProductAction(Guid productId, Guid userId);
-        Task<BusinessObject> ActivatePurchase(Guid purchaseId);
+        Task<BusinessObjectOutDto> ActivatePurchase(Guid purchaseId);
     }
 }

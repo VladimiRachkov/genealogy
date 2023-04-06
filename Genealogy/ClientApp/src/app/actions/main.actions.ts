@@ -8,10 +8,14 @@ export class SetAuthorization {
   constructor(readonly payload: boolean) {}
 }
 
-export class FetchActiveSubscribe {
-  static readonly type = '[Main] Fetch ActiveSubscribe';
+export class FetchActiveSubscription {
+  static readonly type = '[Main] Fetch ActiveSubscription';
 }
 
 export class FetchPurchases {
   static readonly type = '[Main] Fetch Purchases';
+}
+
+export class FetchBook {
+  static readonly type = '[Main] Fetch Book';
 }

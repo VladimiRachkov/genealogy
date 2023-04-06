@@ -16,7 +16,7 @@ namespace Genealogy.Service.Concrete
             var userId = GetCurrentUserId();
             var filter = new BusinessObjectFilter()
             {
-                MetatypeId = MetatypeData.Subscribe.Id
+                MetatypeId = MetatypeData.Subscription.Id
             };
 
             var bos = GetBusinessObjects(filter);

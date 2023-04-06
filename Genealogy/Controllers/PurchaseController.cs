@@ -27,10 +27,10 @@ namespace Genealogy.Controllers
         [Authorize(Roles = "Администратор")]
         public IActionResult Send([FromBody] BusinessObjectFilter filter)
         {
-            Task result;
+            BusinessObjectOutDto result;
             try
             {
-                result = _genealogyService.ActivatePurchase(filter.Id.Value);
+                result = _genealogyService.ActivatePurchase(filter.Id.Value).Result;
             }
             catch (AppException ex)
             {

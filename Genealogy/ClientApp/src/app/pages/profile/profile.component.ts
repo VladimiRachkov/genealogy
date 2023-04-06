@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService, ApiService } from '@core';
 import { Store } from '@ngxs/store';
-import { FetchActiveSubscribe, FetchPurchases, GetUser } from '@actions';
+import { FetchActiveSubscription, FetchBook, FetchPurchases, GetUser } from '@actions';
 import { UserState } from 'app/states/user.state';
 import { BusinessObject, User } from '@models';
 import { environment } from '@env/environment';
@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   subscription: BusinessObject;
   hasSubscription = false;
   purchases: BusinessObject[];
+  book: BusinessObject;
 
   constructor(private authenticationService: AuthenticationService, private store: Store, private apiService: ApiService) {}
 
@@ -26,13 +27,18 @@ export class ProfileComponent implements OnInit {
       this.user = this.store.selectSnapshot<User>(UserState.user);
     });
 
-    this.store.dispatch(new FetchActiveSubscribe()).subscribe(() => {
+    this.store.dispatch(new FetchActiveSubscription()).subscribe(() => {
       this.subscription = this.store.selectSnapshot(MainState.subscription);
       this.hasSubscription = this.store.selectSnapshot(MainState.hasSubscription);
     });
 
     this.store.dispatch(new FetchPurchases()).subscribe(() => {
       this.purchases = this.store.selectSnapshot(MainState.purchases);
+    });
+
+    this.store.dispatch(new FetchBook()).subscribe(() => {
+      this.book = this.store.selectSnapshot(MainState.book);
+      console.log("BOOK", this.book)
     });
   }
 

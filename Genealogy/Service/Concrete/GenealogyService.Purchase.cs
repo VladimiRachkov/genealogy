@@ -14,77 +14,82 @@ namespace Genealogy.Service.Concrete
     {
         public async Task<bool> ProductAction(Guid productId, Guid userId)
         {
-            var product = GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
-            var bookProps = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
+            try {
+                var product = GetBusinessObjects(new BusinessObjectFilter() { Id = productId }).FirstOrDefault();
+                var props = JsonConvert.DeserializeObject<CustomProps.Product>(product.Data);
+                Metatype metatype = null;
+                String name = "";
 
-            if (!String.IsNullOrEmpty(bookProps.message))
-            {
-                try {
-                    var user = GetUserById(userId);
-                    await SendEmailToUser(product.Title, user.Email, bookProps.message);
-                    return true;
+                if (productId == ProductData.Subscription.Id) {
+                    metatype = _unitOfWork.MetatypeRepository.GetByID(MetatypeData.Subscription.Id);
+                    name = ProductData.Subscription.Name;
                 }
-                catch(ApplicationException e) {
-                    Console.WriteLine(e.ToString());
-                    //_logger.LogError();
-                }
-            }
 
-            if (productId == ProductData.Subscribe.Id)
-            {
-                var subscribeMetatype = _unitOfWork.MetatypeRepository.GetByID(MetatypeData.Subscribe.Id);
-                var subscribe = new BusinessObject()
+                if (productId == ProductData.Book.Id) {
+                    metatype = _unitOfWork.MetatypeRepository.GetByID(MetatypeData.Book.Id);
+                    name = ProductData.Book.Name;
+                }
+
+                if (metatype == null) {
+                    return false;
+                }
+
+                var bo = new BusinessObject()
                 {
                     Id = Guid.NewGuid(),
                     StartDate = DateTime.Now,
                     FinishDate = DateTime.Now.AddMonths(1),
                     UserId = userId,
-                    MetatypeId = ProductData.Subscribe.Id,
-                    Metatype = subscribeMetatype,
+                    MetatypeId = metatype.Id,
+                    Metatype = metatype,
                     IsRemoved = false,
-                    Name = "SUBSCRIBLE",
-                    Title = "Подписка"
+                    Name = name,
+                    Title = "",
+                    Data = props.message
                 };
 
-                try
+                _unitOfWork.BusinessObjectRepository.Add(bo);
+                _unitOfWork.Save();
+
+                if (!String.IsNullOrEmpty(props.message))
                 {
-                    createBusinessObject(subscribe, userId);
-                    return true;
-                }
-                catch (ApplicationException e)
-                {
-                    Console.WriteLine(e.ToString());
-                    //_logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
+                    var user = GetUserById(userId);
+                    await SendEmailToUser(product.Title, user.Email, props.message);
                 }
             }
-            return false;
+
+            catch (Exception e)
+            { 
+                Console.WriteLine(e.ToString());
+            }
+        
+            return true;
         }
-        public async Task<BusinessObject> ActivatePurchase(Guid purchaseId)
+
+        public async Task<BusinessObjectOutDto> ActivatePurchase(Guid purchaseId)
         {
             BusinessObject result = null;
 
-            var purchase = GetBusinessObjects(new BusinessObjectFilter() { Id = purchaseId }).FirstOrDefault();
-            var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
-            var productId = Guid.Parse(purchaseProps.productId);
+            try {
+                var purchase = GetBusinessObjects(new BusinessObjectFilter() { Id = purchaseId }).FirstOrDefault();
+                var purchaseProps = JsonConvert.DeserializeObject<CustomProps.Purchase>(purchase.Data);
+                var productId = Guid.Parse(purchaseProps.productId);
 
-            if ( purchase != null)
-            {
-                try {
-                    await ProductAction(productId, purchase.UserId);
-                    // purchaseProps.status = PurchaseStatus.Succeeded;
-                    // purchase.Data = JsonConvert.SerializeObject(purchaseProps);
-                    // purchase.IsRemoved = true;
-                    // result = UpdateBusinessObject(purchase);
-                    СonfirmPurchase(purchase.Id);
-                }
-                catch (ApplicationException e)
+                if (purchase != null)
                 {
-                    Console.WriteLine(e.ToString());
-                    //_logger.LogError($"PurchaseManageService has error. Reason: {e.ToString()}");
+                    purchaseProps.status = PurchaseStatus.Succeeded;
+                    purchase.Data = JsonConvert.SerializeObject(purchaseProps);
+                    purchase.IsRemoved = true;
+                    result = UpdateBusinessObject(purchase);
+                    await ProductAction(productId, purchase.UserId);
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
 
-            return result;
+            return _mapper.Map<BusinessObjectOutDto>(result);;
         }
     }
 }

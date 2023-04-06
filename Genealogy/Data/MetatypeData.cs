@@ -40,11 +40,20 @@ namespace Genealogy.Data
             public static Guid Id { get { return _id; } }
         }
 
-        public static class Subscribe
+        public static class Subscription
         {
             private static Guid _id = new Guid("212a4d4e-2830-4f01-b416-a09397858f11");
             /// <summary>
             /// Метатип Подписка
+            /// </summary>
+            public static Guid Id { get { return _id; } }
+        }
+
+        public static class Book
+        {
+            private static Guid _id = new Guid("8d7a9f26-9b2e-416f-8083-ba1da6ad1876");
+            /// <summary>
+            /// Метатип Книга
             /// </summary>
             public static Guid Id { get { return _id; } }
         }

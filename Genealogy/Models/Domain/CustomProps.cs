@@ -40,11 +40,11 @@ namespace Genealogy.Models
             }
         }
 
-        public class Subscribe
+        public class Subscription
         {
             public string userId { get; set; }
 
-            public Subscribe(string userId)
+            public Subscription(string userId)
             {
                 this.userId = userId;
             }

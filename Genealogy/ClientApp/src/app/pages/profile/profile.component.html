@@ -8,19 +8,17 @@
     <div class="col-10">
       <div class="tab-content">
         <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="profile-tab">
-          <h2>Данные профиля</h2>
+          <h4>{{ user.lastName }} {{ user.firstName }}</h4>
           <ul class="list-group list-group-flush" *ngIf="user">
-            <li class="list-group-item">{{ user.lastName }} {{ user.firstName }}</li>
             <li class="list-group-item">Дата регистрации {{ user.startDate | date: 'dd.MM.yyyy' }}</li>
           </ul>
         </div>
         <div class="tab-content">
-          <h2>Подписка</h2>
+          <h4>Подписка</h4>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <span *ngIf="subscription; else noSubscription"
-                >Подписка активирована до {{ subscription.finishDate | date: 'dd.MM.yyyy' }}</span
-              >
+                >Подписка активирована до {{ subscription.finishDate | date: 'dd.MM.yyyy' }}</span>
               <ng-template #noSubscription>
                 <span>Подписка не активна</span>
               </ng-template>
@@ -28,7 +26,18 @@
           </ul>
         </div>
         <div class="tab-content">
-          <h2>Покупки</h2>
+          <h4>Книга</h4>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <span *ngIf="book; else noBook">{{ book.data }}</span>
+              <ng-template #noBook>
+                <span>Не приобретено</span>
+              </ng-template>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-content">
+          <h4>Покупки</h4>
           <ul class="list-group list-group-flush">
             <li class="list-group-item" *ngFor="let purchase of purchases">
               <span>{{ purchase.startDate | date: 'dd.MM.yyyy' }} - {{ purchase.title }}</span>
