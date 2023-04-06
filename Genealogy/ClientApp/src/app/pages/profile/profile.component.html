@@ -29,7 +29,7 @@
           <h4>Книга</h4>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
-              <span *ngIf="book; else noBook">{{ book.data }}</span>
+              <div *ngIf="book; else noBook" [innerHTML] = "book.data"></div>
               <ng-template #noBook>
                 <span>Не приобретено</span>
               </ng-template>
