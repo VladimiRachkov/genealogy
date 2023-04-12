@@ -32,7 +32,7 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
   tableData: Table.Data;
   paginatorOptions: Paginator = {
     index: 0,
-    step: 10,
+    step: 10000,
     count: 0,
   };
 
@@ -40,6 +40,7 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
   cemeteries: Array<{ id: string; name: string }>;
 
   countyId?: string = null
+  cemeteryId?: string = null
 
   odometer: any
 
@@ -53,7 +54,7 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
     this.searchForm = new FormGroup({
       fio: new FormControl(null, [Validators.required]),
       countyId: new FormControl(null, [Validators.required]),
-      cemeteryId: new FormControl(null, [Validators.required],)
+      cemeteryId: new FormControl(null)
     });
 
     if (this.hasAuth) {
@@ -99,17 +100,34 @@ export class NecropolisComponent implements OnInit, AfterViewInit {
   }
 
   onChangeCounty() {
-    this.countyId = this.searchForm.value['countyId']
-    this.getCemeteries()
+    this.countyId = this.searchForm.value['countyId'];
+    this.getCemeteries();
     this.searchForm.patchValue({ 'cemeteryId': null });
+    this.cemeteryId = null;
+    this.tableData = null;
+  }
+
+  onChangeCemetery() {
+    this.cemeteryId = this.searchForm.value['cemeteryId'];
+    this.tableData = null;
+  }
+
+  onCleanCemetery() {
+    this.cemeteryId = null;
+    this.searchForm.patchValue({ 'cemeteryId': null });
+  }
+
+  onCleanCounty() {
+    this.countyId = null;
+    this.searchForm.patchValue({ "countyId": null });
   }
 
   private search() {
     const { fio, countyId, cemeteryId } = this.searchForm.value;
 
-    if (!isEmpty(fio) && !isNil(cemeteryId)) {
+    if (!isEmpty(fio) && !isNil(countyId)) {
       const { index, step } = this.paginatorOptions;
-      const filter: PersonFilter = { fio: fio.toLowerCase(), cemeteryId, index, step };
+      let filter: PersonFilter = { fio: fio.toLowerCase(), countyId, cemeteryId, index, step };
 
       this.store.dispatch(new FetchPersonList(filter)).subscribe(() => {
         this.personList = this.store.selectSnapshot<Array<Person>>(PersonState.personList);

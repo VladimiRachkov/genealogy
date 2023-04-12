@@ -20,7 +20,7 @@
     </p>
   </div>
   
-  <div class="col-6 pt-2" *ngIf="hasAuth; else regButton">
+  <div class="col-10 col-md-6 pt-2" *ngIf="hasAuth; else regButton">
     <form
       [formGroup]="searchForm"
       (ngSubmit)="onSearch()"
@@ -29,7 +29,7 @@
 
       <div class="mb-3 row">
         <label for="staticEmail" class="col-sm-4 col-form-label">ФИО:</label>
-        <div class="col-sm-8">
+        <div class="col-sm-6 col-md-7 pr-0">
           <input class="form-control"
             type="text" 
             aria-label="Name" 
@@ -42,7 +42,7 @@
       
       <div class="mb-3 row">
         <label for="staticEmail" class="col-sm-4 col-form-label">Уезд:</label>
-        <div class="col-sm-8">
+        <div class="col-6 col-md-7 pr-0">
         <ng-select
           class="custom"
           [items]="counties"
@@ -56,11 +56,16 @@
         >
         </ng-select>
         </div>
+        <div class="col-1" *ngIf="countyId != null">
+          <button type="button" class="btn btn-light remove-button" (click)="onCleanCounty()">
+            <fa-icon class="icon remove" icon="times"></fa-icon>
+          </button>
+        </div>
       </div>
 
       <div class="mb-3 row" *ngIf="countyId != null">
         <label for="staticEmail" class="col-sm-4 col-form-label">Название захоронения</label>
-        <div class="col-sm-8">
+        <div class="col-6 col-md-7 pr-0">
           <ng-select
             class="custom"
             [items]="cemeteries"
@@ -71,8 +76,14 @@
             formControlName="cemeteryId"
             placeholder="Укажите название захоронения"
             disabled="true"
+            (change)="onChangeCemetery()"
           >
           </ng-select>
+        </div>
+        <div class="col-1" *ngIf="cemeteryId != null">
+          <button type="button" class="btn btn-light remove-button" (click)="onCleanCemetery()">
+            <fa-icon class="icon remove" icon="times"></fa-icon>
+          </button>
         </div>
       </div>
 
@@ -95,11 +106,11 @@
     </ng-template>
   </div>
 
-  <div class="col-md-8 col-sm-10 col-xs-12">
+  <div class="col-md-8 col-sm-10 col-xs-12 mt-4">
     <ng-container *ngIf="tableData">
       <necropolis-table [data]="tableData"  *ngIf="tableData.items.length > 0; else emptyList"></necropolis-table>
       <ng-template #emptyList>
-        <h4 class="text-center">Записей не найдено</h4>
+        <h4 class="text-center pt-4">Записей не найдено</h4>
       </ng-template>
     </ng-container>
 

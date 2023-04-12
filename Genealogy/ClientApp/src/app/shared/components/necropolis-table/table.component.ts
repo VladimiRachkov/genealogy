@@ -12,13 +12,22 @@ export class NecropolisTableComponent {
   @Input() showRemoved: boolean = true;
   @Input() showActionButtons: boolean = false;
   @Input() startIndex: number = 0;
+  @Input() size: number = 10;
 
   @Output() change: EventEmitter<string> = new EventEmitter();
   @Output() remove: EventEmitter<string> = new EventEmitter();
   @Output() restore: EventEmitter<string> = new EventEmitter();
 
+  pageNumbers: Array<number> = [];
+  pagedPersons: Array<Table.Data> = [];
+
   ngOnChanges() {
-    console.log(this.data);
+    //TODO: Пагинация
+    this.pageNumbers = [];
+    const pageNumber = this.data.items.length / this.size;
+    for (let i=0; i<pageNumber; i++) {
+      this.pageNumbers.push(i+1);
+    }
   }
 
   onRemove(value: string) {
@@ -37,5 +46,9 @@ export class NecropolisTableComponent {
 
   onToggleRemoved() {
     this.showRemoved = !this.showRemoved;
+  }
+
+  onChangePage(value: number) {
+
   }
 }
