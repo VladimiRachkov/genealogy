@@ -1,14 +1,7 @@
 <div class="row pt-2">
   <div class="col-md-6 col-lg-8">
-    <lancet-table
-      [data]="tableData"
-      [selectedId]="user?.id"
-      (change)="onSelect($event)"
-      (remove)="onRemove($event)"
-      (restore)="onRestore($event)"
-      [showActionButtons]="true"
-      [startIndex]="startIndex"
-    ></lancet-table>
+    <lancet-table [data]="tableData" [selectedId]="user?.id" (change)="onSelect($event)" (remove)="onRemove($event)"
+      (restore)="onRestore($event)" [showActionButtons]="true" [startIndex]="startIndex"></lancet-table>
   </div>
 
   <div class="col-md-6 col-lg-4">
@@ -26,10 +19,16 @@
         <input type="text" class="form-control" id="email" formControlName="email" />
       </div>
       <input type="hidden" formControlName="id" />
-      <div class="btn-group" role="group" aria-label="Basic example">
+      <div class="btn-group" role="group" aria-label="User button group">
         <!-- <button type="button" class="btn btn-primary" [disabled]="hasUserActived" (click)="onBlock()">Заблокировать</button>
         <button type="button" class="btn btn-primary" [disabled]="(user$ | async) == null" (click)="onUpdate()">Изменить</button>
         <button type="reset" class="btn btn-primary" (click)="onReset()">Сброс</button> -->
+        <div *ngIf="user">
+          <button type="button" *ngIf="!hasSubscription; else hasSubscriptionLabel"class="btn btn-secondary" (click)="onAddSubscrible()">Активировать подписку</button>
+          <ng-template #hasSubscriptionLabel>
+            <span>Подписка активирована</span>
+          </ng-template>
+        </div>
       </div>
     </form>
   </div>

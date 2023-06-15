@@ -1,3 +1,5 @@
+import { ProductForUserOutDto, UserFilter } from "@models";
+
 export class SetAdminMode {
   static readonly type = '[Main] Set Admin Mode';
   constructor(readonly payload: boolean) {}
@@ -10,6 +12,7 @@ export class SetAuthorization {
 
 export class FetchActiveSubscription {
   static readonly type = '[Main] Fetch ActiveSubscription';
+  constructor(readonly payload?: UserFilter) {}
 }
 
 export class FetchPurchases {
@@ -18,4 +21,9 @@ export class FetchPurchases {
 
 export class FetchBook {
   static readonly type = '[Main] Fetch Book';
+}
+
+export class AddPurchaseForUser {
+  static readonly type = "[Main] Add Purchase For User"
+  constructor(readonly payload: ProductForUserOutDto) {}
 }

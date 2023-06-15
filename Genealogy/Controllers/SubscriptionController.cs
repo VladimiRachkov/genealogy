@@ -3,6 +3,7 @@ using Genealogy.Service.Astract;
 using Microsoft.AspNetCore.Authorization;
 using Genealogy.Service.Helpers;
 using Genealogy.Models;
+using System;
 
 namespace Genealogy.Controllers
 {
@@ -18,12 +19,12 @@ namespace Genealogy.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] Guid? id)
         {
             BusinessObjectOutDto result = null;
             try
             {
-                result = _genealogyService.GetActiveSubscription();
+                result = _genealogyService.GetActiveSubscription(id);
             }
             catch (AppException ex)
             {

@@ -65,7 +65,7 @@ public class PurchaseManageService : BackgroundService
                             continue;
                         } 
 
-                        if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty || DateTime.Now > purchase.StartDate.AddHours(1)) {
+                        if(Guid.Parse(purchaseProps.paymentId) == Guid.Empty || DateTime.Now > purchase.StartDate.AddHours(2)) {
                             _service.RemoveBusinessObject(purchase.Id);
                             continue;
                         }

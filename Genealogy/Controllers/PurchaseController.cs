@@ -55,5 +55,24 @@ namespace Genealogy.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPost("new")]
+        [Authorize(Roles = "Администратор")]
+        public IActionResult Create([FromBody] PurchaseDto purchaseDto) {
+            bool result = false;
+
+            if (purchaseDto == null || purchaseDto.UserId == null || purchaseDto.ProductId == null) {
+                return BadRequest("Ошибка запроса на создание покупки для пользователя");
+            }
+            try {
+                var userId = purchaseDto.UserId ?? Guid.Empty;
+                var productId = purchaseDto.ProductId ?? Guid.Empty;
+                result = _genealogyService.ProductAction(productId, userId).Result;
+            }
+            catch (AppException ex) {
+                return BadRequest(ex.Message);
+            }
+            return Ok(result);
+        }
     }
 }

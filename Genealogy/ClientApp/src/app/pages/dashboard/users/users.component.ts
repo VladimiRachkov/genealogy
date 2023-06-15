@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { User, Table, UserFilter, UserDto } from '@models';
+import { User, Table, UserFilter, UserDto, BusinessObject, BusinessObjectFilter, ProductForUserOutDto } from '@models';
 import { Store, Select } from '@ngxs/store';
-import { FetchUserList, GetUser, UpdateUser } from '@actions';
-import { UserState } from '@states';
+import { AddPurchaseForUser, FetchActiveSubscription, FetchCatalogItem, FetchUserList, GetUser, UpdateUser } from '@actions';
+import { CatalogState, MainState, UserState } from '@states';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { USER_STATUS } from '@enums';
 import { UserStatusPipe } from 'app/shared/pipes';
+import { switchMap, tap } from 'rxjs/operators';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'dashboard-users',
@@ -20,12 +22,13 @@ export class UsersComponent implements OnInit {
   userList: Array<User>;
   tableData: Table.Data;
   userForm: FormGroup;
-  user: User;
+  user?: User;
   USER_STATUS = USER_STATUS;
   hasUserActived: boolean;
+  hasSubscription: boolean;
   startIndex = 0;
 
-  constructor(private store: Store, private userStatusPipe: UserStatusPipe) {}
+  constructor(private store: Store, private userStatusPipe: UserStatusPipe, private notifierService: NotifierService) {}
 
   ngOnInit() {
     this.userForm = new FormGroup({
@@ -39,12 +42,18 @@ export class UsersComponent implements OnInit {
 
   onSelect(id: string) {
     const filter: UserFilter = { id };
-    this.store.dispatch(new GetUser(filter)).subscribe(() => {
-      this.user = this.store.selectSnapshot<UserDto>(UserState.user) as User;
-      const { id, lastName, firstName, email, status } = this.user;
-      this.userForm.setValue({ id, lastName, firstName, email });
-      this.hasUserActived = this.user.status === USER_STATUS.ACTIVE  || this.user.status === USER_STATUS.PAID;
-    });
+    this.store
+      .dispatch(new GetUser(filter))
+      .pipe(
+        switchMap(() => this.store.dispatch(new FetchActiveSubscription({ id }))),
+        tap(() => (this.hasSubscription = this.store.selectSnapshot(MainState.hasSubscription)))
+      )
+      .subscribe(() => {
+        this.user = this.store.selectSnapshot<UserDto>(UserState.user) as User;
+        const { id, lastName, firstName, email, status } = this.user;
+        this.userForm.setValue({ id, lastName, firstName, email });
+        this.hasUserActived = this.user.status === USER_STATUS.ACTIVE || this.user.status === USER_STATUS.PAID;
+      });
   }
 
   onReset() {
@@ -58,7 +67,7 @@ export class UsersComponent implements OnInit {
       const items = this.userList.map<Table.Item>(item => ({
         id: item.id,
         values: [`${item.lastName} ${item.firstName}`, item.email, this.userStatusPipe.transform(item.status)],
-        isRemoved: item.status == USER_STATUS.BLOCKED
+        isRemoved: item.status == USER_STATUS.BLOCKED,
       }));
 
       this.tableData = {
@@ -74,5 +83,26 @@ export class UsersComponent implements OnInit {
 
   onRestore(id: string) {
     this.store.dispatch(new UpdateUser({ id, status: USER_STATUS.ACTIVE })).subscribe(() => this.updateList());
+  }
+
+  onAddSubscrible() {
+    let filter: BusinessObjectFilter = { name: 'SUBSCRIPTION' };
+    this.store
+      .dispatch(new FetchCatalogItem(filter))
+      .pipe(
+        switchMap(() => {
+          let productId = this.store.selectSnapshot<BusinessObject>(CatalogState.item).id;
+          return this.store.dispatch(new AddPurchaseForUser({ userId: this.user.id, productId: productId }));
+        })
+      )
+      .subscribe(() => {
+        let result = this.store.selectSnapshot<boolean>(MainState.addSubscribleFailed);
+        if (result) {
+          this.notifierService.notify('success', 'Подписка успешно активирована', 'ADD_SUBSCRIBLE_SUCCESS');
+          this.hasSubscription = true;
+        } else {
+          this.notifierService.notify('error', 'Ошибка при активизации подписки', 'ADD_SUBSCRIBLE_FAILED');
+        }
+      });
   }
 }

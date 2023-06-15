@@ -5,6 +5,6 @@ namespace Genealogy.Service.Astract
 {
     partial interface IGenealogyService
     {
-        BusinessObjectOutDto GetActiveSubscription();
+        BusinessObjectOutDto GetActiveSubscription(Guid? requestUserId);
     }
 }

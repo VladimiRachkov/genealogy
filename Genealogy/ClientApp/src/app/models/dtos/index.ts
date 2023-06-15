@@ -10,3 +10,4 @@ export * from './business-object.dto';
 export * from './payment.dto';
 export * from './person-group.dto';
 export * from './county.dto';
+export * from './product.dto';

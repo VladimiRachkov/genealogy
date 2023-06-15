@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { State, Selector, StateContext, Action } from '@ngxs/store';
-import { FetchActiveSubscription, FetchBook, FetchPurchases, SetAdminMode, SetAuthorization } from '@actions';
-import { BusinessObject, BusinessObjectFilter, BusinessObjectInDto } from '@models';
+import { AddPurchaseForUser, FetchActiveSubscription, FetchBook, FetchPurchases, SetAdminMode, SetAuthorization } from '@actions';
+import { BusinessObject, BusinessObjectFilter, BusinessObjectInDto, UserFilter } from '@models';
 import { ApiService, AuthenticationService } from '@core';
 import { tap } from 'rxjs/operators';
 import { isNil } from 'lodash';
 import { BusinessObjectService } from '@repository';
 import { HttpParams } from '@angular/common/http';
 import { METATYPE_ID } from '@enums';
+import { Observable } from 'rxjs';
 
 export interface MainStateModel {
   adminMode: boolean;
@@ -15,11 +16,12 @@ export interface MainStateModel {
   subscription: BusinessObject;
   purchases: BusinessObject[];
   book: BusinessObject;
+  addSubscribleFailed: boolean;
 }
 
 @State<MainStateModel>({
   name: 'main',
-  defaults: { adminMode: false, hasAuth: false, subscription: null, purchases: null, book: null },
+  defaults: { adminMode: false, hasAuth: false, subscription: null, purchases: null, book: null, addSubscribleFailed: null },
 })
 @Injectable()
 export class MainState {
@@ -55,6 +57,12 @@ export class MainState {
     return book;
   }
 
+  @Selector()
+  static addSubscribleFailed({ addSubscribleFailed }: MainStateModel): boolean {
+    return addSubscribleFailed;
+  }
+
+
   @Action(SetAdminMode)
   setAdminMode(ctx: StateContext<MainStateModel>, { payload: adminMode }: SetAdminMode) {
     ctx.patchState({ adminMode });
@@ -66,8 +74,9 @@ export class MainState {
   }
 
   @Action(FetchActiveSubscription)
-  fetchActiveSubscription(ctx: StateContext<MainStateModel>): FetchActiveSubscription {
-    return this.apiService.get<BusinessObjectInDto>('subscription', null).pipe(tap(subscription => ctx.patchState({ subscription })));
+  fetchActiveSubscription(ctx: StateContext<MainStateModel>, { payload: filter }): Observable<any> {
+    const params: HttpParams = filter;
+    return this.apiService.get<BusinessObjectInDto>('subscription', params).pipe(tap(subscription => ctx.patchState({ subscription })));
   }
 
   @Action(FetchPurchases)
@@ -79,11 +88,15 @@ export class MainState {
   }
 
   @Action(FetchBook)
-  fetchBook(ctx: StateContext<MainStateModel>): FetchActiveSubscription {
+  fetchBook(ctx: StateContext<MainStateModel>): FetchBook {
     const userId = this.authService.getUserId();
     const filter: BusinessObjectFilter = { metatypeId: METATYPE_ID.BOOK, index: 0, step: 1, userId };
     const params: HttpParams = filter as any;
     return this.boService.FetchBusinessObjectList(params).pipe(tap(book => ctx.patchState({ book: book[0] })));
   }
 
+  @Action(AddPurchaseForUser)
+  addPurchaseForUser(ctx: StateContext<MainStateModel>, { payload: purchase }: AddPurchaseForUser) {
+    return this.apiService.post<boolean>('purchase/new', purchase).pipe(tap(result => ctx.patchState({ addSubscribleFailed: result })));
+  }
 }

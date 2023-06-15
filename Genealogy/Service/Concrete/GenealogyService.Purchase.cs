@@ -61,6 +61,7 @@ namespace Genealogy.Service.Concrete
             catch (Exception e)
             { 
                 Console.WriteLine(e.ToString());
+                return false;
             }
         
             return true;

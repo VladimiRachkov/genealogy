@@ -9,11 +9,11 @@ namespace Genealogy.Service.Concrete
 {
     public partial class GenealogyService : IGenealogyService
     {
-        public BusinessObjectOutDto GetActiveSubscription()
+        public BusinessObjectOutDto GetActiveSubscription(Guid? requestUserId)
         {
             BusinessObjectOutDto result = null;
 
-            var userId = GetCurrentUserId();
+            var userId = requestUserId == null ? GetCurrentUserId() : requestUserId;
             var filter = new BusinessObjectFilter()
             {
                 MetatypeId = MetatypeData.Subscription.Id
