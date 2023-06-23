@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+.main {
+    width: 60%;
+  }
+
+.sidebar {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    width: 25%;
+    height: 25vh;
+}

@@ -35,7 +35,7 @@ namespace Genealogy.Service.Concrete
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(smtpServer, smtpServerPort, false);
+                await client.ConnectAsync(smtpServer, smtpServerPort, smtpServerSsl);
                 await client.AuthenticateAsync(serviceEmail, serviceEmailPassword);
                 await client.SendAsync(emailMessage);
 

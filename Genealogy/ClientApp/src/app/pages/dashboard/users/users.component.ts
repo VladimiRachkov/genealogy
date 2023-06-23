@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User, Table, UserFilter, UserDto, BusinessObject, BusinessObjectFilter, ProductForUserOutDto } from '@models';
 import { Store, Select } from '@ngxs/store';
 import { AddPurchaseForUser, FetchActiveSubscription, FetchCatalogItem, FetchUserList, GetUser, UpdateUser } from '@actions';
 import { CatalogState, MainState, UserState } from '@states';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { USER_STATUS } from '@enums';
+import { METATYPE_ID, USER_STATUS } from '@enums';
 import { UserStatusPipe } from 'app/shared/pipes';
 import { switchMap, tap } from 'rxjs/operators';
 import { NotifierService } from 'angular-notifier';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'dashboard-users',
@@ -17,6 +18,8 @@ import { NotifierService } from 'angular-notifier';
   providers: [UserStatusPipe],
 })
 export class UsersComponent implements OnInit {
+  @ViewChild('content', { static: false }) content;
+  
   @Select(UserState.user) user$: Observable<User>;
 
   userList: Array<User>;
@@ -28,7 +31,11 @@ export class UsersComponent implements OnInit {
   hasSubscription: boolean;
   startIndex = 0;
 
-  constructor(private store: Store, private userStatusPipe: UserStatusPipe, private notifierService: NotifierService) {}
+  constructor(
+    private store: Store, 
+    private userStatusPipe: UserStatusPipe, 
+    private notifierService: NotifierService, 
+    private modalService: NgbModal) {}
 
   ngOnInit() {
     this.userForm = new FormGroup({
@@ -53,6 +60,7 @@ export class UsersComponent implements OnInit {
         const { id, lastName, firstName, email, status } = this.user;
         this.userForm.setValue({ id, lastName, firstName, email });
         this.hasUserActived = this.user.status === USER_STATUS.ACTIVE || this.user.status === USER_STATUS.PAID;
+        this.openUserDetails()
       });
   }
 
@@ -86,7 +94,7 @@ export class UsersComponent implements OnInit {
   }
 
   onAddSubscrible() {
-    let filter: BusinessObjectFilter = { name: 'SUBSCRIPTION' };
+    let filter: BusinessObjectFilter = { name: 'SUBSCRIPTION', metatypeId: METATYPE_ID.PRODUCT };
     this.store
       .dispatch(new FetchCatalogItem(filter))
       .pipe(
@@ -104,5 +112,15 @@ export class UsersComponent implements OnInit {
           this.notifierService.notify('error', 'Ошибка при активизации подписки', 'ADD_SUBSCRIBLE_FAILED');
         }
       });
+  }
+
+  openUserDetails() {
+    const options: NgbModalOptions = {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'md',
+      windowClass: 'your-custom-dialog-class',
+    };
+
+    this.modalService.open(this.content, options);
   }
 }
