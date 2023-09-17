@@ -272,5 +272,24 @@ namespace Genealogy.Service.Concrete
 
             return result;
         }
+
+        public bool CreatePassword() 
+        {
+            var newPassword = GeneratePassword(8);
+            return true;
+        }
+
+        private string GeneratePassword(int length)
+        {
+            return "TEST";
+            // const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            // StringBuilder res = new StringBuilder();
+            // Random rnd = new Random();
+            // while (0 < length--)
+            // {
+            //     res.Append(valid[rnd.Next(valid.Length)]);
+            // }
+            // return res.ToString();
+        }
     }
 }

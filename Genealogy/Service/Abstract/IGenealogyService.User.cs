@@ -78,5 +78,7 @@ namespace Genealogy.Service.Astract
         bool CheckAdminByUserId(Guid userId);
 
         Guid GetCurrentUserId();
+
+        bool CreatePassword();
     }
 }

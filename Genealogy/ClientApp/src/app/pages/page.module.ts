@@ -16,10 +16,11 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CustomSelectService } from 'app/core/services/custom-select.service';
 import { CountUpDirective } from 'app/directives/count-up.directive';
+import { PasswordRestoreComponent } from './password-restore/password-restore.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule, RouterModule, MaterialModule, FormsModule, NgSelectModule],
-  exports: [StartComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, RegisterComponent],
+  exports: [StartComponent, NecropolisComponent, GakoComponent, PageViewerComponent, LoginComponent, RegisterComponent, PasswordRestoreComponent],
   declarations: [
     StartComponent,
     NecropolisComponent,
@@ -29,7 +30,8 @@ import { CountUpDirective } from 'app/directives/count-up.directive';
     ProfileComponent,
     RegisterComponent,
     PaymentComponent,
-    CountUpDirective
+    CountUpDirective,
+    PasswordRestoreComponent
   ],
   providers: [NotifierService, CustomSelectService],
 })

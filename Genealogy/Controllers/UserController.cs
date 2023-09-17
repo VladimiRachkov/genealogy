@@ -32,6 +32,7 @@ namespace Sirius.Controllers
             _mapper = mapper;
             _configuration = configuration;
         }
+
         [AllowAnonymous]
         [HttpPost("auth")]
         public IActionResult Authenticate([FromBody] AuthenticateUserDto userDto)
@@ -178,6 +179,21 @@ namespace Sirius.Controllers
             {
                 bool isAdmin = _genealogyService.CheckAdminByUserId(id);
                 return StatusCode(200, isAdmin);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("newpass")]
+        public IActionResult CreatePassword([FromBody] AuthenticateUserDto userDto)
+        {
+            try
+            {
+                bool result = _genealogyService.CreatePassword();
+                return StatusCode(200, result);
             }
             catch
             {

@@ -11,6 +11,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register';
 import { PaymentComponent } from './pages/payment/payment.component';
 import { AuthGuard } from './core/guards';
+import { PasswordRestoreComponent } from './pages/password-restore/password-restore.component';
 
 const routes: Routes = [
   {
@@ -56,6 +57,10 @@ const routes: Routes = [
     path: 'payment',
     component: PaymentComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'password-restore',
+    component: PasswordRestoreComponent,
   },
   {
     path: '**',

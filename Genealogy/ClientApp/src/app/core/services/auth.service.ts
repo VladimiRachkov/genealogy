@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '@env/environment';
-import { User } from '@models';
+import { User, UserDto } from '@models';
 import { Store } from '@ngxs/store';
 import { SetAdminMode, SetAuthorization } from '@actions';
 import { Router } from '@angular/router';
@@ -66,4 +66,9 @@ export class AuthenticationService {
 
     return null;
   }
+
+  // createPassword(email: String): Observable<any> {
+  //   let userDto: UserDto =
+  //   this.http.post('/api/user/newpass', )
+  // }
 }

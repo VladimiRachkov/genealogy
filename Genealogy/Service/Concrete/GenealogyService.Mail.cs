@@ -15,32 +15,33 @@ namespace Genealogy.Service.Concrete
         public async Task SendEmailAsync(string subject, string message, string emailFrom, string name)
         {
             var adminEmail = GetSettingValue(Settings.AdminEmail);
-            var serviceEmail = GetSettingValue(Settings.ServiceEmail);
-            var serviceEmailPassword = GetSettingValue(Settings.ServiceEmailPassword);
-            var emailTitle = GetSettingValue(Settings.EmailTitle);
+            await SendEmailToUser(subject, adminEmail, message);
+            // var serviceEmail = GetSettingValue(Settings.ServiceEmail);
+            // var serviceEmailPassword = GetSettingValue(Settings.ServiceEmailPassword);
+            // var emailTitle = GetSettingValue(Settings.EmailTitle);
 
-            var smtpServer = GetSettingValue(Settings.SmtpServer);
-            var smtpServerPort = Convert.ToInt16(GetSettingValue(Settings.SmtpServerPort));
-            var smtpServerSsl = Convert.ToBoolean(GetSettingValue(Settings.SmtpServerSsl));
+            // var smtpServer = GetSettingValue(Settings.SmtpServer);
+            // var smtpServerPort = Convert.ToInt16(GetSettingValue(Settings.SmtpServerPort));
+            // var smtpServerSsl = Convert.ToBoolean(GetSettingValue(Settings.SmtpServerSsl));
 
-            var emailMessage = new MimeMessage();
+            // var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress(emailTitle, serviceEmail));
-            emailMessage.To.Add(new MailboxAddress(subject, adminEmail));
-            emailMessage.Subject = subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
-            {
-                Text = message
-            };
+            // emailMessage.From.Add(new MailboxAddress(emailTitle, serviceEmail));
+            // emailMessage.To.Add(new MailboxAddress(subject, adminEmail));
+            // emailMessage.Subject = subject;
+            // emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            // {
+            //     Text = message
+            // };
 
-            using (var client = new SmtpClient())
-            {
-                await client.ConnectAsync(smtpServer, smtpServerPort, smtpServerSsl);
-                await client.AuthenticateAsync(serviceEmail, serviceEmailPassword);
-                await client.SendAsync(emailMessage);
+            // using (var client = new SmtpClient())
+            // {
+            //     await client.ConnectAsync(smtpServer, smtpServerPort, smtpServerSsl);
+            //     await client.AuthenticateAsync(serviceEmail, serviceEmailPassword);
+            //     await client.SendAsync(emailMessage);
 
-                await client.DisconnectAsync(true);
-            }
+            //     await client.DisconnectAsync(true);
+            // }
         }
 
         public async void SendMessage(BusinessObjectInDto boDto)
